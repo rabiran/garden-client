@@ -1,0 +1,14 @@
+.completed {
+    color: green;
+    font-weight: bold;
+}
+
+.inprogress {
+    color: blue;
+    font-weight: bold;
+}
+
+.failed {
+    color: red;
+    font-weight: bold;
+}

@@ -1,3 +1,19 @@
 .animate {
-    transition: 1s ease-out;
+    height: 5000px;
+    animation: cellExpand 1s ease-out;
 }
+
+/* .cell {
+    padding: 20px;
+    height: 400px;
+    background-color: red;
+    transition: 1s ease-out;
+    animation: cellExpand 1s;
+} */
+
+
+
+@keyframes cellExpand {
+    from {height: 0px}
+    to {height: 400px}
+  }

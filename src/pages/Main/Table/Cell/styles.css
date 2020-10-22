@@ -1,10 +1,11 @@
 .cell {
     padding: 20px;
-    height: 400px;
-    background-color: red;
+    height: 200px;
+    /* background-color: red; */
     transition: 1s ease-out;
     /* animation: cellExpand 1s; */
 }
+
 
 
 @keyframes cellExpand {
