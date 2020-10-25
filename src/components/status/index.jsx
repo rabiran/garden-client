@@ -3,12 +3,12 @@ import './styles.css';
 import Grid from '@material-ui/core/Grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-
+import BuildIcon from '@material-ui/icons/Build';
 export default ({rowData}) => {
 
     let status;
 
-    switch(rowData.status) {
+    switch(rowData?.status?.progress) {
         case 'completed': {
             status = <Grid container direction="row" alignItems="center" className="completed">
                         <DoneIcon/> הסתיים 
@@ -17,7 +17,7 @@ export default ({rowData}) => {
         }
         case 'inprogress': {
             status = <Grid container direction="row" alignItems="center" className="inprogress">
-                        <ErrorOutlineIcon/> בתהליך 
+                        <BuildIcon/> בתהליך 
                     </Grid>;
             break;
         }
@@ -27,6 +27,8 @@ export default ({rowData}) => {
                     </Grid>;
             break;
         }
+        default:
+            break;
     }
     return (
             <>{status} </>

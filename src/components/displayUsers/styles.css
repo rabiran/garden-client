@@ -1,0 +1,8 @@
+.userPaper {
+    width: 50%;
+    min-width: 200px;
+    padding: 5px;
+}
+.userPaper > div {
+    padding: 5px;
+}

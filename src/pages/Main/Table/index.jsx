@@ -12,6 +12,7 @@ import DeleteDialog from 'components/Confirm';
 import tableIcons from 'config/tableIcons';
 
 import DeleteIcon from '@material-ui/icons/Delete';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 export default () => {
 
@@ -44,7 +45,12 @@ export default () => {
                 localization={hebrewLocalization}
                 icons={tableIcons}
                 options={{
-                    selection: true
+                    selection: true,
+                    // style: {
+                    //     'Component-horizontalScrollContainer-12': {
+                    //         maxHeight: 500
+                    //     }
+                    // }
                 }}
                 columns={[
                     {
@@ -63,13 +69,15 @@ export default () => {
                 // ]}
                 data = {tableData}
                 title="מיגרנות"
-                detailPanel={rowData => {
-                    return (
-                        <>
-                            <Cell className='animate' />
-                        </>
-                    )
-                }}
+                detailPanel={ [{
+                    icon: () => <ArrowBackIosIcon fontSize="small" />,
+                    isFreeAction: true,
+                    render: rowData => {
+                        return (
+                            <Cell className='animate' rowData={rowData}/>
+                        )
+                    }
+                }]}
                 onRowClick={(event, rowData, togglePanel) => togglePanel()}
                 actions={[
                     {
