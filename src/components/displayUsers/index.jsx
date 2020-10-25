@@ -8,9 +8,8 @@ import Grid from '@material-ui/core/Grid';
 // import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 export default ({ users }) => {
-    const createdUsers = users?.map(user => 
-                            <div><DoneIcon /> יוזר {user} נוצר </div>
-                        // </Grid>);
+    const createdUsers = users?.map(user => <Grid key={user} container direction="row" alignItems="center"><DoneIcon /> יוזר {user} נוצר </Grid>)
+                       
 
     const nothing = 'אין!';
     console.log(createdUsers);
