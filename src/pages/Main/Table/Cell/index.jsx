@@ -15,26 +15,31 @@ export default ({ rowData }) => {
         <>
             <div className='cell'>
                 <div className="rowFields">
-                    {/* <div> */}
-                    <Grid container alignItems="center">
-                        <AssignmentIcon />          
-                        <Field valueKey={'שלב'} value={rowData.status.step} />
-                    </Grid>
-                    {/* </div> */}
-                    {/* <div> */}
-                    <Grid container alignItems="center">
-                        <LibraryAddCheckIcon />
-                        <Field valueKey={'משימה'} value={rowData.status.subStep} />
-                    </Grid>
-                    {/* </div> */}
-                    <Grid container alignItems="center">
-                        <DomainIcon />
-                        <Field valueKey={'דומיין ראשי'} value={rowData.primaryDomainUser} />
-                    </Grid>
-                    <Grid container alignItems="center">
-                        <HomeIcon />
-                        <Field valueKey={'היררכיה'} value={rowData.hierarchy} />
-                    </Grid>
+                    <div>
+                        <Grid container alignItems="center" >
+                            <AssignmentIcon />
+                            <Field valueKey={'שלב'} value={rowData.status.step} />
+                        </Grid>
+                    </div>
+                    <div>
+                        <Grid container alignItems="center">
+                            <LibraryAddCheckIcon />
+                            <Field valueKey={'משימה'} value={rowData.status.subStep} />
+                        </Grid>
+                    </div>
+                    <div>
+                        <Grid container alignItems="center">
+                            <DomainIcon />
+                            <Field valueKey={'דומיין ראשי'} value={rowData.primaryDomainUser} />
+                        </Grid>
+                    </div>
+                    <div>
+                        <Grid container alignItems="center">
+                            <HomeIcon />
+                            <Field valueKey={'היררכיה'} value={rowData.hierarchy} />
+                        </Grid>
+                    </div>
+
 
                 </div>
                 <div className="rowUsers">
