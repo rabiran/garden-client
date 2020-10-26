@@ -1,4 +1,5 @@
 .header-root {
+  min-height: 5vh;
   flex-grow: 1;
 }
 

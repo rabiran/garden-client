@@ -10,7 +10,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "@material-ui/core/Select";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
-import Alert from "@material-ui/lab/Alert"
 // import CheckIcon from "@material-ui/icons/Check"
 // import SaveIcon from "@material-ui/icons/Save"
 // import CircularProgress from "@material-ui/core/CircularProgress"
@@ -78,9 +77,9 @@ export default () => {
           <div
             style={{
               display: "flex",
-              "flex-direction": "col",
-              "flex-wrap": "wrap",
-              "justify-content": "space-around"
+              flexDirection: 'col',
+              flexWrap: "wrap",
+              justifyContent: "space-around"
             }}
           >
             <DialogContentText>

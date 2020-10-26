@@ -11,11 +11,10 @@ export default () => {
     return (
         <> 
         <div className='GridContainer' >
-            <div style={{ "justify-items": "center","grid-column": "2 / 5","grid-row": "2 / 3"}}>
+            <div className='tableContainer'>
                 <Table />
-                
             </div>
-            <div style={{"grid-column": "5 / 6","grid-row":"4 / 4"}}>
+            <div className='dialogContainer'>
                 <Dialog />
             </div>
 
