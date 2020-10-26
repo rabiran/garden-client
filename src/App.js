@@ -15,6 +15,7 @@ function App() {
       <RTL>
         <ThemeProvider>
           <Header />
+
           <Router history={history}>
             <Switch>
               <Route exact path="/" component={MainPage} />
