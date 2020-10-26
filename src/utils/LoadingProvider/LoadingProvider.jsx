@@ -3,7 +3,6 @@ import React from 'react';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import LoadingContext from './LoadingContext';
 
-
 export default (props) => {
   const [isLoading, setLoading] = React.useState(false);
 

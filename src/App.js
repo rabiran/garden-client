@@ -5,7 +5,7 @@ import AdminPage from 'pages/Admin';
 import Header from 'components/Header';
 import RTL from 'utils/RTL';
 import ThemeProvider from 'utils/ThemeProvider/ThemeProvider';
-import LoadingProvider from 'components/Loading/LoadingProvider';
+import LoadingProvider from 'utils/LoadingProvider/LoadingProvider';
 import history from 'utils/history';
 import { Router } from 'react-router';
 import { Route, Switch } from 'react-router-dom';

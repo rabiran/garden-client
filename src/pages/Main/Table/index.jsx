@@ -14,7 +14,7 @@ import tableIcons from 'config/tableIcons';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useSnackbar } from 'notistack';
-import useLoading from 'components/Loading/useLoading';
+import useLoading from 'utils/LoadingProvider/useLoading';
 
 
 export default () => {
@@ -32,6 +32,7 @@ export default () => {
             setTableData(data);
         }
         fetchData();
+    // eslint-disable-next-line 
     }, [])
 
     const handleOpenDelete = (data) => {
@@ -54,11 +55,6 @@ export default () => {
                 icons={tableIcons}
                 options={{
                     selection: true,
-                    // style: {
-                    //     'Component-horizontalScrollContainer-12': {
-                    //         maxHeight: 500
-                    //     }
-                    // }
                 }}
                 columns={[
                     {
@@ -70,11 +66,6 @@ export default () => {
                     { title: 'תאריך יצירה', field: 'startDate' },
                     { title: 'תאריך סיום', field: 'endDate' },
                 ]}
-                // data={[
-                //     { status: 'הסתיים', fullName: 'חציל אפוי', identifier: 1234521, createDate: '12/02/1421', endDate: '02/08/0002' },
-                //     { status: 'בתהליך', fullName: 'ביצה קשה', identifier: 1234522, createDate: '12/05/1521', endDate: '02/08/4810' },
-                //     { status: 'נכשל', fullName: 'תפוח אדמה', identifier: 1234523, createDate: '12/02/1021', endDate: '02/08/2020' },
-                // ]}
                 data = {tableData}
                 title="מיגרנות"
                 detailPanel={ [{
