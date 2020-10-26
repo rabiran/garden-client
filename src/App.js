@@ -1,9 +1,11 @@
 import React from 'react';
+import { SnackbarProvider } from 'notistack';
 import MainPage from 'pages/Main';
 import AdminPage from 'pages/Admin';
 import Header from 'components/Header';
 import RTL from 'utils/RTL';
 import ThemeProvider from 'utils/ThemeProvider/ThemeProvider';
+import LoadingProvider from 'utils/LoadingProvider/LoadingProvider';
 import history from 'utils/history';
 import { Router } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
@@ -14,15 +16,18 @@ function App() {
     <>
       <RTL>
         <ThemeProvider>
-          <Header />
-
-          <Router history={history}>
-            <Switch>
-              <Route exact path="/" component={MainPage} />
-              <Route exact path="/admin" component={AdminPage} />
-              {/* <ProtectedRoute exact path="/" component={MainPage} /> */}
-            </Switch>
-          </Router>
+          <SnackbarProvider maxSnack={3} style={{ width: '50%' }}>
+            <Header />
+            <LoadingProvider>
+              <Router history={history}>
+                <Switch>
+                  <Route exact path="/" component={MainPage} />
+                  <Route exact path="/admin" component={AdminPage} />
+                  {/* <ProtectedRoute exact path="/" component={MainPage} /> */}
+                </Switch>
+              </Router>
+            </LoadingProvider>
+          </SnackbarProvider>
         </ThemeProvider>
       </RTL>
     </>

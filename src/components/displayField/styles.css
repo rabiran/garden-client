@@ -1,0 +1,9 @@
+.key {
+    font-weight: bold;
+    padding: 5px;
+    text-decoration: underline;
+}
+
+.value {
+    padding: 5px;
+}

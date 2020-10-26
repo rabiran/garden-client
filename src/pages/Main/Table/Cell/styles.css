@@ -1,11 +1,33 @@
 .cell {
-    padding: 20px;
-    height: 200px;
+    /* padding: 20px; */
+    height: auto;
+    display: flex;
     /* background-color: red; */
-    transition: 1s ease-out;
+    /* transition: 1s ease-out; */
     /* animation: cellExpand 1s; */
 }
 
+.rowFields {
+    /* background-color: blue; */
+    width: 50%;
+    /* height: 100%; */
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.rowFields > div {
+    padding: 20px;
+}
+
+.rowUsers {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 50%;
+    /* height: 100%; */
+    padding: 10px;
+}
 
 
 @keyframes cellExpand {
