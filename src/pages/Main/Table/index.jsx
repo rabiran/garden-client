@@ -13,15 +13,22 @@ import tableIcons from 'config/tableIcons';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { useSnackbar } from 'notistack';
+import useLoading from 'components/Loading/useLoading';
+
 
 export default () => {
-
+    const loadingProvider = useLoading();
+    const { enqueueSnackbar } = useSnackbar();
     const [openDelete, setOpenDelete] = React.useState(false);
     const [tableData, setTableData] = React.useState();
 
     React.useEffect(()=> {
         async function fetchData() {
+            loadingProvider.showLoading(true);
             const data = await getImmigrantsApi();
+            enqueueSnackbar('מידע התקבל', {variant: 'success', autoHideDuration: 2000});
+            loadingProvider.showLoading(false);
             setTableData(data);
         }
         fetchData();
@@ -37,6 +44,7 @@ export default () => {
         const newTableData = tableData.filter((item) => !ids.includes(item.id));
         setTableData(newTableData);
         setOpenDelete(false);
+        enqueueSnackbar('נמחק', {variant: 'success', autoHideDuration: 2000})
     }
 
     return (

@@ -1,8 +1,6 @@
 import  React from 'react';
 import './styles.css';
 import Grid from '@material-ui/core/Grid';
-import DoneIcon from '@material-ui/icons/Done';
-// import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 export default ({valueKey, value}) => {
     console.log(valueKey);
@@ -10,9 +8,9 @@ export default ({valueKey, value}) => {
     return (
         <div>
              <Grid container direction="row" alignItems="center">
-                 <DoneIcon />
+                 {/* <DoneIcon /> */}
                  <span className='key'>{valueKey}:</span>
-                 <span className='value'> {value}</span>
+                 <span className='value'>{value}</span>
              </Grid>
              
         </div>

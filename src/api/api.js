@@ -11,7 +11,7 @@ const request = axios.create({
 
 
 const getImmigrantsApi = async () => {
-    if(config.isMock) { await wait(300); return mock } //mockSchedules  or []
+    if(config.isMock) { await wait(1000); return mock } //mockSchedules  or []
     // const res = await request.get(`schedules/mail/${mail}`).catch(err => { throw (err.response) });
     // return res;
 }
