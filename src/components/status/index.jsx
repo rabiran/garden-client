@@ -4,11 +4,11 @@ import Grid from '@material-ui/core/Grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import BuildIcon from '@material-ui/icons/Build';
-export default ({rowData}) => {
-
+export default ({progress}) => {
+    
     let status;
 
-    switch(rowData?.status?.progress) {
+    switch(progress) {
         case 'completed': {
             status = <Grid container direction="row" alignItems="center" className="completed">
                         <DoneIcon/> הסתיים 

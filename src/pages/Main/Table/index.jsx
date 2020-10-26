@@ -59,7 +59,7 @@ export default () => {
                 columns={[
                     {
                         title: 'סטטוס', field: 'status', render: rowData =>
-                            <Status rowData={rowData} />
+                            <Status progress={rowData?.status?.progress} />
                     },
                     { title: 'שם מלא', field: 'fullName' },
                     { title: 'תעודת זהות', field: 'identifier' },
