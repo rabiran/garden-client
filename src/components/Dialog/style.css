@@ -1,0 +1,18 @@
+.root {
+    display: flex;
+    align-items: center;
+}
+.wrapper{
+    display: flex;
+    align-items: center;
+    position:"relative";
+    color : red;
+    
+}
+
+.buttonProgress {
+    color: green;
+    position: "absolute";
+    top: 50%;
+    left: 50%;
+}

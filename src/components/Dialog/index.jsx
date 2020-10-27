@@ -10,64 +10,61 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "@material-ui/core/Select";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
-// import CheckIcon from "@material-ui/icons/Check"
-// import SaveIcon from "@material-ui/icons/Save"
-// import CircularProgress from "@material-ui/core/CircularProgress"
+import CheckIcon from "@material-ui/icons/Check"
+import SaveIcon from "@material-ui/icons/Save"
+import Hotkeys from 'react-hot-keys';
+import CircularProgress from "@material-ui/core/CircularProgress"
+import './style.css'
+import {addImmigrantsApi, getUsernamesPerNameKart} from "../../api/api"
 
-export default () => {
+export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => {
  
-  // const timer = React.useRef();
-  // React.useEffect(()=>{
-  //   return () => {
-  //     clearTimeout(timer.current)
-  //   }
-  // })
   const [loading, setLoading] = React.useState(false);
+  const [userName, setUserName]= React.useState("")
   const [success, setSuccess] = React.useState(false);
-  const [state, setState] = React.useState({
-    openWindow: false,
-    selectedDomain: ""
-  });
-  const handleClickOpen = () => {
-    setState({
-      ...state,
-      ["openWindow"]: true
-    });
-  };
-  const handleChange = (event) => {
-    setState({
-      ...state,
-      ["selectedDomain"]: event.target.value
-    });
-  };
-  const handleClose = () => {
-    //clearTimeout(timer.current)
-    setState({
-      ...state,
-      ["openWindow"]: false
-    });
-  };
-  // const handleRequestClick = () =>{
-  //   timer.current = window.setTimeout(() => {
-  //     if (!loading){
-  //       setSuccess(false);
-  //       setLoading(true);
-  //     }
-  //     timer.current = window.setTimeout(() => {
-  //       setSuccess(true);
-  //       setLoading(false)
-  //     }, 2000)
-  //   })
 
-  // }
+  const handleChange = (event) => {
+    setSelectedDomain(event.target.value)
+  };
+  const handleClose = () => { 
+    setOpenWindow(false)
+  };
+  const handleTextFieldChange = (e) => {
+    setUserName(e.target.value)
+  }
+  const onKeyDown = (keyName, e, handle) =>{
+    console.log("test:onKeyUp",e,handle)
+
+  }
+  const handleRequestClick = async() =>{
+    let res="";
+    try{
+      if (!loading){
+        setSuccess(false);
+        setLoading(true);
+      }
+      res = await addImmigrantsApi(selectedDomain,userName);
+      
+    }catch(e){
+      //SHOW BAD ALERT 
+
+    }
+    finally{
+      setSuccess(true);
+      setLoading(false)
+      setOpenWindow(false)
+      if(res.message =="Success"){
+        //SHOW GOOD ALERT!!!
+      }
+    }
+
+  }
 
   return (
     <div>
-      <Fab  color="primary" aria-label="add" onClick={handleClickOpen} >
-        <AddIcon />
-      </Fab>
       <Dialog
-        open={state.openWindow}
+        open={openWindow}
+        keepMounted={false}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
         dir="rtl"
@@ -85,18 +82,27 @@ export default () => {
             <DialogContentText>
               נא למלא את הטופס בשביל יצירת משתמש בOneAman.
             </DialogContentText>
-            <TextField margin="dense" id="name" label="שם משתמש" type="email" />
+            
+            <Hotkeys
+              keyName="ctrl+k"
+              onKeyDown={this.onkeydown.bind(this)}
+            >
+              <TextField value={userName} type="email" onChange={handleTextFieldChange}></TextField>
+            
+            </Hotkeys>
+
+            
 
             <Select
               native
-              value={state.selectedDomain}
+              value={selectedDomain}
               onChange={handleChange}
               variant="outlined"
             >
               <option label="בחירת דומיין" value=""></option>
-              <option value={10}>8200</option>
-              <option value={20}>Services</option>
-              <option value={30}>Thirty</option>
+              <option value={"8200"}>8200</option>
+              <option value={"Services"}>Services</option>
+              
             </Select>
           </div>
         </DialogContent>
@@ -108,11 +114,32 @@ export default () => {
           <Button
             onClick={handleClose}
             color="primary"
-            style={{ "font-weight": "bold" }}
+            style={{fontWeight:"bold"}}
             variant="contained"
           >
             יצירה
           </Button>
+          <div >
+
+        
+      </div>
+      <div className="root">
+      <div className="wrapper" >
+        <Button
+          variant="contained"
+          color="primary"
+          
+          disabled={loading}
+          onClick={handleRequestClick}
+        >
+          Accept terms
+        </Button>
+        {loading && (
+          <CircularProgress size={24}  className="buttonProgress" />
+        )}
+        
+      </div>
+      </div>
 
         </DialogActions>
   
@@ -123,13 +150,4 @@ export default () => {
 }
 
 //startIcon={<CloudUploadIcon/>} create button
-{/* <div >
-<Fab
-  aria-label="save"
-  color="primary"
-  onClick={handleRequestClick}
->
-  {success ? <CheckIcon /> : <SaveIcon />}
-</Fab>
-{loading && <CircularProgress size={40}/>}
-</div>  */}
+

@@ -2,6 +2,7 @@
 import axios from 'axios';
 import config from 'config';
 import mock from './mock';
+import users from './users';
 import wait from 'utils/wait';
 
 const request = axios.create({
@@ -16,4 +17,17 @@ const getImmigrantsApi = async () => {
     return res;
 }
 
-export { getImmigrantsApi }
+const addImmigrantsApi = async (domain,name) => {
+    const res = await request.post(`immigrant/gardener/me`,{"Domain": domain,"Name": name},{ timeout: 5000}).catch(err => { throw (err.response) });
+    return res;
+}
+const getUsernamesPerNameKart = async (username) =>{
+    if(config.isMock){await wait(1000); return users};
+    const res = await request.get(`immigrant`,{params:{
+        username: username
+    }},{timeout : 10000}).catch(err => { throw (err.response) });
+    return res;
+
+}
+
+export { getImmigrantsApi,addImmigrantsApi, getUsernamesPerNameKart }
