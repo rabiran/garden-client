@@ -10,19 +10,19 @@ export default ({progress}) => {
 
     switch(progress) {
         case 'completed': {
-            status = <Grid container direction="row" alignItems="center" className="completed">
+            status = <Grid container direction="row" alignItems="center" className="completed" wrap="nowrap">
                         <DoneIcon/> הסתיים 
                     </Grid>;
             break;
         }
         case 'inprogress': {
-            status = <Grid container direction="row" alignItems="center" className="inprogress">
+            status = <Grid container direction="row" alignItems="center" className="inprogress" wrap="nowrap">
                         <BuildIcon/> בתהליך 
                     </Grid>;
             break;
         }
         case 'failed': {
-            status = <Grid container direction="row" alignItems="center" className="failed">
+            status = <Grid container direction="row" alignItems="center" className="failed" wrap="nowrap">
                         <ErrorOutlineIcon/> נכשל 
                     </Grid>;
             break;

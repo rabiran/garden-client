@@ -15,10 +15,9 @@ export default ({ rowData }) => {
         <>
             <div className='cell'>
                 <div className="rowFields">
-                    <div>
+                    {/* <div>
                         <Grid container alignItems="center" wrap='nowrap'>
-                            <AssignmentIcon />
-                            <Field valueKey={'שלב'} value={rowData.status.step} />
+                            
                         </Grid>
                     </div>
                     <div>
@@ -38,8 +37,29 @@ export default ({ rowData }) => {
                             <HomeIcon />
                             <Field valueKey={'היררכיה'} value={rowData.hierarchy} />
                         </Grid>
+                    </div> */}
+                    <div className="fieldArea">
+                        <div className="field">
+                            <AssignmentIcon />
+                            <Field valueKey={'שלב'} value={rowData.status.step} />
+                        </div>
+                        <div className="field">
+                            <LibraryAddCheckIcon />
+                            <Field valueKey={'משימה'} value={rowData.status.subStep} />
+                        </div>
                     </div>
-
+                    <div className="fieldArea">
+                        <div className="field">
+                            <DomainIcon />
+                            <Field valueKey={'דומיין ראשי'} value={rowData.primaryDomainUser} />
+                        </div>
+                        {/* <Grid container alignItems="center" wrap="nowrap"> */}
+                        <div className="field">
+                            <HomeIcon />
+                            <Field valueKey={'היררכיה'} value={rowData.hierarchy} />
+                        </div>
+                        {/* </Grid> */}
+                    </div>
 
                 </div>
                 <div className="rowUsers">
