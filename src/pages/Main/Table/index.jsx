@@ -56,10 +56,33 @@ export default () => {
                 options={{
                     selection: true,
                 }}
+                style = {{
+                    ComponentHorizontalScrollContainer12: {
+                    maxHeight: 300,
+                    overflowY: 'scroll'
+                    }
+                }}
                 columns={[
                     {
                         title: 'סטטוס', field: 'status', render: rowData =>
-                            <Status progress={rowData?.status?.progress} />
+                            <Status progress={rowData?.status?.progress} />,
+                        customSort: (a, b) => {
+                            if(a.status.progress < b.status.progress) return -1;
+                            if(a.status.progress > b.status.progress) return 1;
+                            return 0;
+                        },
+                        customFilterAndSearch: (value, rowData) => {
+                            if(value === 'נכשל' || value === 'failed') {
+                                return rowData.status.progress === 'failed';
+                            }
+                            else if(value === 'בתהליך' || value === 'inprogress') {
+                                return rowData.status.progress === 'inprogress';
+                            }
+                            else if(value === 'הסתיים' || value === 'completed') {
+                                return rowData.status.progress === 'completed';
+                            }
+                            return false;
+                         }
                     },
                     { title: 'שם מלא', field: 'fullName' },
                     { title: 'תעודת זהות', field: 'identifier' },

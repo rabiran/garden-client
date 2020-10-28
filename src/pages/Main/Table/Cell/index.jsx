@@ -16,25 +16,25 @@ export default ({ rowData }) => {
             <div className='cell'>
                 <div className="rowFields">
                     <div>
-                        <Grid container alignItems="center" >
+                        <Grid container alignItems="center" wrap='nowrap'>
                             <AssignmentIcon />
                             <Field valueKey={'שלב'} value={rowData.status.step} />
                         </Grid>
                     </div>
                     <div>
-                        <Grid container alignItems="center">
+                        <Grid container alignItems="center" wrap='nowrap'>
                             <LibraryAddCheckIcon />
                             <Field valueKey={'משימה'} value={rowData.status.subStep} />
                         </Grid>
                     </div>
                     <div>
-                        <Grid container alignItems="center">
+                        <Grid container alignItems="center" wrap='nowrap'>
                             <DomainIcon />
                             <Field valueKey={'דומיין ראשי'} value={rowData.primaryDomainUser} />
                         </Grid>
                     </div>
                     <div>
-                        <Grid container alignItems="center">
+                        <Grid container alignItems="center" wrap='nowrap'>
                             <HomeIcon />
                             <Field valueKey={'היררכיה'} value={rowData.hierarchy} />
                         </Grid>

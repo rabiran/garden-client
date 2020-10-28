@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 export default ({valueKey, value}) => {
     return (
         <div>
-             <Grid container direction="row" alignItems="center">
+             <Grid container direction="row" alignItems="center" wrap='nowrap'>
                  <span className='key'>{valueKey}:</span>
                  <span className='value'>{value}</span>
              </Grid>

@@ -20,9 +20,21 @@
     height: 90vh;
 }
 
+.Component-horizontalScrollContainer-12 {
+    max-height: 500px;
+    overflow-y: auto;
+}
 
+/* .MuiTableRow-root {
+    animation: cellExpand 1s;
+} */
+
+/* .MuiTableCell-root {
+    animation: cellExpand 1s;
+
+} */
 
 @keyframes cellExpand {
-    from {height: 0px}
-    to {height: 400px}
+    from {height: 25px}
+    to {height: 100px}
   }
