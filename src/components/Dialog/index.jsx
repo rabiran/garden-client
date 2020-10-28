@@ -14,6 +14,7 @@ import CheckIcon from "@material-ui/icons/Check"
 import SaveIcon from "@material-ui/icons/Save"
 import Hotkeys from 'react-hot-keys';
 import CircularProgress from "@material-ui/core/CircularProgress"
+import AutoComplete from "@material-ui/lab/Autocomplete"
 import './style.css'
 import {addImmigrantsApi, getUsernamesPerNameKart} from "../../api/api"
 
@@ -22,7 +23,6 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   const [loading, setLoading] = React.useState(false);
   const [userName, setUserName]= React.useState("")
   const [success, setSuccess] = React.useState(false);
-
   const handleChange = (event) => {
     setSelectedDomain(event.target.value)
   };
@@ -30,11 +30,22 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
     setOpenWindow(false)
   };
   const handleTextFieldChange = (e) => {
+    e.preventDefault();
+    console.log(e)
     setUserName(e.target.value)
   }
   const onKeyDown = (keyName, e, handle) =>{
+    e.preventDefault();
     console.log("test:onKeyUp",e,handle)
 
+  }
+  const onKeyUp = (keyName, e, handle) =>{
+    e.preventDefault();
+    console.log("test:onKeyUp",e,handle)
+
+  }
+  const keypress = (e) =>{
+    console.log(e.keyCode);
   }
   const handleRequestClick = async() =>{
     let res="";
@@ -84,10 +95,17 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
             </DialogContentText>
             
             <Hotkeys
-              keyName="ctrl+k"
-              onKeyDown={this.onkeydown.bind(this)}
+              
+              keyName="ctrl+k,shift+a"
+              filter={(event) => {
+                   return true;
+                  }}
+              onKeyUp= {onKeyDown.bind(this)}
+              onKeyDown= {onKeyUp.bind(this)}
+              
             >
-              <TextField value={userName} type="email" onChange={handleTextFieldChange}></TextField>
+              <TextField value={userName} type="email" onChange={handleTextFieldChange}  ></TextField>
+              
             
             </Hotkeys>
 
@@ -111,14 +129,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
           <Button onClick={handleClose} color="primary">
             ביטול
           </Button>
-          <Button
-            onClick={handleClose}
-            color="primary"
-            style={{fontWeight:"bold"}}
-            variant="contained"
-          >
-            יצירה
-          </Button>
+
           <div >
 
         
