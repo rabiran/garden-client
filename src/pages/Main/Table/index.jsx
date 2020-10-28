@@ -55,12 +55,14 @@ export default () => {
                 icons={tableIcons}
                 options={{
                     selection: true,
+                    selectionProps: rowData => ({
+                        disabled: rowData.status.progress !== 'completed'
+                    }),
+                    // maxBodyHeight: 700,
+                    debounceInterval: 200,
+                    // exportButton: true
                 }}
                 style = {{
-                    ComponentHorizontalScrollContainer12: {
-                    maxHeight: 300,
-                    overflowY: 'scroll'
-                    }
                 }}
                 columns={[
                     {
@@ -113,3 +115,10 @@ export default () => {
         </>
     )
 }
+
+// style = {{
+//     ComponentHorizontalScrollContainer: {
+//     maxHeight: 300,
+//     overflowY: 'scroll'
+//     }
+// }}
