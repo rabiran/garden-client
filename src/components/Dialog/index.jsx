@@ -23,6 +23,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   const [loading, setLoading] = React.useState(false);
   const [userName, setUserName]= React.useState("")
   const [success, setSuccess] = React.useState(false);
+  const [users , setUsers] = React.useState([]);
   const handleChange = (event) => {
     setSelectedDomain(event.target.value)
   };
@@ -34,19 +35,22 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
     console.log(e)
     setUserName(e.target.value)
   }
-  const onKeyDown = (keyName, e, handle) =>{
-    e.preventDefault();
-    console.log("test:onKeyUp",e,handle)
-
-  }
   const onKeyUp = (keyName, e, handle) =>{
     e.preventDefault();
-    console.log("test:onKeyUp",e,handle)
+    console.log("test:onKeyUp",e,handle);
 
   }
-  const keypress = (e) =>{
-    console.log(e.keyCode);
+  const onKeyDown = async (keyName, e, handle) =>{
+    e.preventDefault();
+    let newUsers = await getUsernamesPerNameKart(userName)
+    let us = newUsers.filter(usnow =>  (usnow.name).includes(userName))
+    console.log(userName)
+    console.log(us);
+    setUsers(us);
+    console.log("test:onKeyDown",e,handle);
+
   }
+
   const handleRequestClick = async() =>{
     let res="";
     try{
@@ -82,35 +86,54 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       >
         <DialogTitle id="form-dialog-title">יצירת משתמש</DialogTitle>
         <DialogContent dividers>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: 'col',
-              flexWrap: "wrap",
-              justifyContent: "space-around"
-            }}
+          <div className="dialogContentContainer"
           >
             <DialogContentText>
               נא למלא את הטופס בשביל יצירת משתמש בOneAman.
             </DialogContentText>
-            
+            <div className="fillingFieldsContainer "> 
+              
+            <div>
             <Hotkeys
               
-              keyName="ctrl+k,shift+a"
+              keyName="enter"
               filter={(event) => {
                    return true;
                   }}
-              onKeyUp= {onKeyDown.bind(this)}
-              onKeyDown= {onKeyUp.bind(this)}
+              onKeyDown= {onKeyDown.bind(this)}
+              onKeyUp = {onKeyUp.bind(this)}
+              
               
             >
-              <TextField value={userName} type="email" onChange={handleTextFieldChange}  ></TextField>
+              <AutoComplete
+                
+                style = {{width:200}}
+                multiple
+                limitTags={2}
+                id="multiple-limit-tags"
+                options={users}
+                getOptionLabel={(option)=> option.name}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="standard"
+                    label="לחיפוש ENTER"
+                    placeholder="משתמש"
+                  />
+                )}
+                onInputChange={handleTextFieldChange}
+
+              >
+
+              </AutoComplete>
+
+            
               
             
             </Hotkeys>
-
+            </div>
             
-
+              <div>
             <Select
               native
               value={selectedDomain}
@@ -122,6 +145,8 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
               <option value={"Services"}>Services</option>
               
             </Select>
+            </div>
+            </div>
           </div>
         </DialogContent>
 
@@ -143,7 +168,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
           disabled={loading}
           onClick={handleRequestClick}
         >
-          Accept terms
+          יצירת משתמש
         </Button>
         {loading && (
           <CircularProgress size={24}  className="buttonProgress" />

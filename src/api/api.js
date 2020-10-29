@@ -12,17 +12,18 @@ const request = axios.create({
 
 
 const getImmigrantsApi = async () => {
-    if(config.isMock) { await wait(1000); return mock } //mockSchedules  or []
+    if(config.isMock) { await wait(2000); return mock } //mockSchedules  or []
     const res = await request.get(`immigrant/gardener/me`).catch(err => { throw (err.response) });
     return res;
 }
 
 const addImmigrantsApi = async (domain,name) => {
+    if(config.isMock){await wait(2000); return users};
     const res = await request.post(`immigrant/gardener/me`,{"Domain": domain,"Name": name},{ timeout: 5000}).catch(err => { throw (err.response) });
     return res;
 }
 const getUsernamesPerNameKart = async (username) =>{
-    if(config.isMock){await wait(1000); return users};
+    if(config.isMock){await wait(2000); return users};
     const res = await request.get(`immigrant`,{params:{
         username: username
     }},{timeout : 10000}).catch(err => { throw (err.response) });
