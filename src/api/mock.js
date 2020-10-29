@@ -3,7 +3,7 @@ export default [
         id: 125435435345,
         status: {
             progress: 'completed',
-            step: 'הסתיים',
+            step: 'target',
             subStep: 'הסתיים',
         },
         primaryDomainUser: 'ads',
@@ -18,7 +18,7 @@ export default [
         id: 225435435345,
         status: {
             progress: 'inprogress',
-            step: 'יוצר יוזר טרגט',
+            step: 'target',
             subStep: 'מכין פיצה',
         },
         primaryDomainUser: 'es',
@@ -33,7 +33,7 @@ export default [
         id: 325435435345,
         status: {
             progress: 'failed',
-            step: 'יוצר יוזר גרביים',
+            step: 'es',
             subStep: 'לובש גרביים',
         },
         primaryDomainUser: 'ads',
@@ -48,7 +48,7 @@ export default [
         id: 125435435345,
         status: {
             progress: 'completed',
-            step: 'הסתיים',
+            step: 'target',
             subStep: 'הסתיים',
         },
         primaryDomainUser: 'ads',
@@ -63,7 +63,7 @@ export default [
         id: 225435435345,
         status: {
             progress: 'inprogress',
-            step: 'יוצר יוזר טרגט',
+            step: 'target',
             subStep: 'מכין פיצה',
         },
         primaryDomainUser: 'es',
@@ -78,7 +78,7 @@ export default [
         id: 325435435345,
         status: {
             progress: 'failed',
-            step: 'יוצר יוזר גרביים',
+            step: 'es',
             subStep: 'לובש גרביים',
         },
         primaryDomainUser: 'ads',

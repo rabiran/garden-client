@@ -8,17 +8,17 @@
 }
 
 .rowFields {
-    width: 50%;
+    width: 25%;
     /* background: cyan; */
     /* height: 100%; */
     display: flex;
     justify-content: flex-start;
-    min-width: 500px;
+    min-width: 250px;
     /* flex-wrap: wrap; */
 }
 
 .fieldArea {
-    width: 50%;
+    width: 100%;
     /* background: yellow; */
     display: flex;
     justify-content: flex-start;
@@ -44,7 +44,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 50%;
+    width: 75%;
     /* height: 100%; */
     padding: 10px;
     min-width: 400px;

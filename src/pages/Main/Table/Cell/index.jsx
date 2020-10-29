@@ -38,7 +38,7 @@ export default ({ rowData }) => {
                             <Field valueKey={'היררכיה'} value={rowData.hierarchy} />
                         </Grid>
                     </div> */}
-                    <div className="fieldArea">
+                    {/* <div className="fieldArea">
                         <div className="field">
                             <AssignmentIcon />
                             <Field valueKey={'שלב'} value={rowData.status.step} />
@@ -47,23 +47,22 @@ export default ({ rowData }) => {
                             <LibraryAddCheckIcon />
                             <Field valueKey={'משימה'} value={rowData.status.subStep} />
                         </div>
-                    </div>
+                    </div> */}
                     <div className="fieldArea">
                         <div className="field">
                             <DomainIcon />
                             <Field valueKey={'דומיין ראשי'} value={rowData.primaryDomainUser} />
                         </div>
-                        {/* <Grid container alignItems="center" wrap="nowrap"> */}
                         <div className="field">
                             <HomeIcon />
                             <Field valueKey={'היררכיה'} value={rowData.hierarchy} />
                         </div>
-                        {/* </Grid> */}
                     </div>
 
                 </div>
                 <div className="rowUsers">
-                    <Users users={rowData.shadowUsers} />
+                    {/* <Users users={rowData.shadowUsers} /> */}
+                    <Users users={rowData.shadowUsers} domains={['ads', 'es', 'target']} step={rowData.status.step} substep={rowData.status.subStep} />
                 </div>
             </div>
         </>
