@@ -21,9 +21,15 @@ import {addImmigrantsApi, getUsernamesPerNameKart} from "../../api/api"
 export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => {
  
   const [loading, setLoading] = React.useState(false);
+  const [loadingInput, setLoadingInput] = React.useState(false);
+  const [openInput, setOpenInput] = React.useState(false);
   const [userName, setUserName]= React.useState("")
   const [success, setSuccess] = React.useState(false);
   const [users , setUsers] = React.useState([]);
+  const [typing, setTyping] = React.useState(false);
+  const [typingTimeout, setTypingTimeout] = React.useState(4000);
+  
+
   const handleChange = (event) => {
     setSelectedDomain(event.target.value)
   };
@@ -32,24 +38,39 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   };
   const handleTextFieldChange = (e) => {
     e.preventDefault();
-    console.log(e)
     setUserName(e.target.value)
-  }
-  const onKeyUp = (keyName, e, handle) =>{
-    e.preventDefault();
-    console.log("test:onKeyUp",e,handle);
 
   }
-  const onKeyDown = async (keyName, e, handle) =>{
-    e.preventDefault();
-    let newUsers = await getUsernamesPerNameKart(userName)
-    let us = newUsers.filter(usnow =>  (usnow.name).includes(userName))
+
+  React.useEffect(()=>{
     console.log(userName)
-    console.log(us);
-    setUsers(us);
-    console.log("test:onKeyDown",e,handle);
+    setTyping(true);
+    let renderTimeout;
+    clearTimeout(renderTimeout);
+    
 
-  }
+    renderTimeout = setTimeout(async () => {
+          console.log("hey")
+      }
+      
+    , typingTimeout);
+
+  }, [userName])
+  // const onKeyUp = (keyName, e, handle) =>{
+  //   e.preventDefault();
+  //   console.log("test:onKeyUp",e,handle);
+
+  // }
+  // const onKeyDown = async (keyName, e, handle) =>{
+  //   e.preventDefault();
+    // let newUsers = await getUsernamesPerNameKart(userName)
+    // let us = newUsers.filter(usnow =>  (usnow.name).includes(userName))
+    // console.log(userName)
+    // console.log(us);
+    // setUsers(us);
+  //   console.log("test:onKeyDown",e,handle);
+
+  // }
 
   const handleRequestClick = async() =>{
     let res="";
@@ -96,12 +117,12 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
             <div>
             <Hotkeys
               
-              keyName="enter"
-              filter={(event) => {
-                   return true;
-                  }}
-              onKeyDown= {onKeyDown.bind(this)}
-              onKeyUp = {onKeyUp.bind(this)}
+              // keyName="enter"
+              // filter={(event) => {
+              //      return true;
+              //     }}
+              // onKeyDown= {onKeyDown.bind(this)}
+              // onKeyUp = {onKeyUp.bind(this)}
               
               
             >
@@ -109,6 +130,13 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                 
                 style = {{width:200}}
                 multiple
+                open={openInput}
+                onOpen={() => {
+                  setOpenInput(true);
+                }}
+                onClose={() => {
+                  setOpenInput(false);
+                }}
                 limitTags={2}
                 id="multiple-limit-tags"
                 options={users}
@@ -119,6 +147,17 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                     variant="standard"
                     label="לחיפוש ENTER"
                     placeholder="משתמש"
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <React.Fragment>
+                          {loadingInput ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </React.Fragment>
+                      )
+                    }}
                   />
                 )}
                 onInputChange={handleTextFieldChange}
