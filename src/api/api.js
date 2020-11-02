@@ -23,7 +23,7 @@ const addImmigrantsApi = async (domain,name) => {
     return res;
 }
 const getUsernamesPerNameKart = async (username) =>{
-    if(config.isMock){await wait(2000); return users};
+    if(config.isMock){await wait(200); return users};
     const res = await request.get(`immigrant`,{params:{
         username: username
     }},{timeout : 10000}).catch(err => { throw (err.response) });

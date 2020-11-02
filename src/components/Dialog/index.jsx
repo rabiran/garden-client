@@ -27,8 +27,10 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   const [success, setSuccess] = React.useState(false);
   const [users , setUsers] = React.useState([]);
   const [typing, setTyping] = React.useState(false);
-  const [typingTimeout, setTypingTimeout] = React.useState(4000);
-  
+  const [typingTimeout, setTypingTimeout] = React.useState(500);
+  const [timeoutVar,setTimeoutVar] = React.useState(null);
+
+  let renderTimeout;
 
   const handleChange = (event) => {
     setSelectedDomain(event.target.value)
@@ -44,28 +46,58 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   }
   const clearLogger = () => {
     return new Promise((resolve,reject) => {
+      setTyping(true);
+      
+      resolve(clearTimeout(renderTimeout));
+      if (userName != "") {
+        renderTimeout = setTimeout(async () => {
+            console.log("hey")
+            let newUsers = await getUsernamesPerNameKart(userName)
+            let us = await  newUsers.filter(usnow =>  (usnow.name).includes(userName))
+            console.log(us)
+            setUsers(us)
+            resolve()
+              
+          }
+          
+        , typingTimeout);
+        }
 
     });
   };
 
   React.useEffect(()=>{
     console.log(userName)
+    
+    // async function fetchData(){
+    //   await clearLogger();
+    // }
+    // fetchData();
     setTyping(true);
-    let renderTimeout;
-    clearTimeout(renderTimeout);
+    
+//     var id = window.setTimeout(function() {}, 0);
+//     console.log(id)
+
+// while (id--) {
+//     window.clearTimeout(id); // will do nothing if no timeout with id is present
+// }
+    clearTimeout(timeoutVar);
     
     if (userName != "") {
-    renderTimeout = setTimeout(async () => {
-        console.log("hey")
-        let newUsers = await getUsernamesPerNameKart(userName)
-        let us = await  newUsers.filter(usnow =>  (usnow.name).includes(userName))
-        console.log(us)
-        setUsers(us)
-          
+      renderTimeout = setTimeout(async () => {
+          console.log("hey")
+          let newUsers = await getUsernamesPerNameKart(userName)
+          let us = await  newUsers.filter(usnow =>  (usnow.name).includes(userName))
+          console.log(us)
+          setUsers(us)
+            
+        }
+        
+      , typingTimeout);
       }
-      
-    , typingTimeout);
-    }
+     setTimeoutVar(renderTimeout)
+    
+
 
   }, [userName])
   // const onKeyUp = (keyName, e, handle) =>{
@@ -157,7 +189,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                   <TextField
                     {...params}
                     variant="standard"
-                    label="לחיפוש ENTER"
+                    label="חפש משתמש"
                     placeholder="משתמש"
                     InputProps={{
                       ...params.InputProps,
