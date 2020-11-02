@@ -100,21 +100,6 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
 
 
   }, [userName])
-  // const onKeyUp = (keyName, e, handle) =>{
-  //   e.preventDefault();
-  //   console.log("test:onKeyUp",e,handle);
-
-  // }
-  // const onKeyDown = async (keyName, e, handle) =>{
-  //   e.preventDefault();
-    // let newUsers = await getUsernamesPerNameKart(userName)
-    // let us = newUsers.filter(usnow =>  (usnow.name).includes(userName))
-    // console.log(userName)
-    // console.log(us);
-    // setUsers(us);
-  //   console.log("test:onKeyDown",e,handle);
-
-  // }
 
   const handleRequestClick = async() =>{
     let res="";
@@ -154,7 +139,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
           <div className="dialogContentContainer"
           >
             <DialogContentText>
-              נא למלא את הטופס בשביל יצירת משתמש בOneAman.
+              נא למלא את הטופס בשביל יצירת משתמש ב.
             </DialogContentText>
             <div className="fillingFieldsContainer "> 
               
@@ -223,9 +208,9 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
               onChange={handleChange}
               variant="outlined"
             >
-              <option label="בחירת דומיין" value=""></option>
-              <option value={"8200"}>8200</option>
-              <option value={"Services"}>Services</option>
+              <option label="בחירת דומיין מרכזי" value=""></option>
+              <option value={"אחד"}>אחד</option>
+              <option value={"שתיים"}>שתיים</option>
               
             </Select>
             </div>
