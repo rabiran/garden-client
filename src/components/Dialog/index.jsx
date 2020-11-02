@@ -38,9 +38,15 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   };
   const handleTextFieldChange = (e) => {
     e.preventDefault();
-    setUserName(e.target.value)
+    setUserName(e.target.value);
+    
 
   }
+  const clearLogger = () => {
+    return new Promise((resolve,reject) => {
+
+    });
+  };
 
   React.useEffect(()=>{
     console.log(userName)
@@ -48,12 +54,18 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
     let renderTimeout;
     clearTimeout(renderTimeout);
     
-
+    if (userName != "") {
     renderTimeout = setTimeout(async () => {
-          console.log("hey")
+        console.log("hey")
+        let newUsers = await getUsernamesPerNameKart(userName)
+        let us = await  newUsers.filter(usnow =>  (usnow.name).includes(userName))
+        console.log(us)
+        setUsers(us)
+          
       }
       
     , typingTimeout);
+    }
 
   }, [userName])
   // const onKeyUp = (keyName, e, handle) =>{
