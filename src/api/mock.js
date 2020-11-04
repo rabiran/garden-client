@@ -3,7 +3,7 @@ export default [
         id: 125435435345,
         status: {
             progress: 'completed',
-            step: 'הסתיים',
+            step: 'target',
             subStep: 'הסתיים',
         },
         primaryDomainUser: 'ads',
@@ -18,7 +18,7 @@ export default [
         id: 225435435345,
         status: {
             progress: 'inprogress',
-            step: 'יוצר יוזר טרגט',
+            step: 'target',
             subStep: 'מכין פיצה',
         },
         primaryDomainUser: 'es',
@@ -33,7 +33,7 @@ export default [
         id: 325435435345,
         status: {
             progress: 'failed',
-            step: 'יוצר יוזר גרביים',
+            step: 'es',
             subStep: 'לובש גרביים',
         },
         primaryDomainUser: 'ads',
@@ -46,7 +46,14 @@ export default [
     },
     {
         id: 125435435345,
-        status: 'completed',
+        status: {
+            progress: 'completed',
+            step: 'target',
+            subStep: 'הסתיים',
+        },
+        primaryDomainUser: 'ads',
+        hierarchy: 'חברת הירקות/טיפשים/צוות חציל',
+        shadowUsers: ['es', 'target'], 
         fullName: 'חציל אפוי',
         identifier: 1234521,
         startDate: '12/02/1421',
@@ -54,7 +61,14 @@ export default [
     },
     {
         id: 225435435345,
-        status: 'inprogress',
+        status: {
+            progress: 'inprogress',
+            step: 'target',
+            subStep: 'מכין פיצה',
+        },
+        primaryDomainUser: 'es',
+        hierarchy: 'חברת הירקות/טיפשים/צוות חציל',
+        shadowUsers: ['es'],
         fullName: 'ביצה קשה',
         identifier: 1234522,
         startDate: '12/05/1521',
@@ -62,10 +76,23 @@ export default [
     },
     {
         id: 325435435345,
-        status: 'failed',
+        status: {
+            progress: 'failed',
+            step: 'es',
+            subStep: 'לובש גרביים',
+        },
+        primaryDomainUser: 'ads',
+        hierarchy: 'חברת הירקות/טיפשים/צוות חציל',
+        shadowUsers: [],
         fullName: 'תפוח אדמה',
         identifier: 1234523,
         startDate: '12/02/1021',
         endDate: '02/08/2020'
     },
 ]
+
+// export const AuthData = {
+//     id: '1',
+//     displayName: 'חציל אפוי',
+//     isAdmin: false
+// }

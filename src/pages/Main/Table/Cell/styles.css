@@ -8,25 +8,47 @@
 }
 
 .rowFields {
-    /* background-color: blue; */
-    width: 50%;
+    width: 25%;
+    /* background: cyan; */
     /* height: 100%; */
     display: flex;
     justify-content: flex-start;
-    flex-wrap: wrap;
+    min-width: 250px;
+    /* flex-wrap: wrap; */
 }
 
-.rowFields > div {
-    padding: 20px;
+.fieldArea {
+    width: 100%;
+    /* background: yellow; */
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    /* align-items: start; */
+    padding: 10px;
 }
+
+.field {
+    display: flex;
+    padding: 5px;
+    
+    /* align-items: center; */
+}
+/* .rowFields > div {
+    background: yellow;
+    width: 50%;
+    padding: 20px;
+    
+} */
 
 .rowUsers {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 50%;
+    width: 75%;
     /* height: 100%; */
     padding: 10px;
+    min-width: 400px;
+
 }
 
 

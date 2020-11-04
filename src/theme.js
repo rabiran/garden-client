@@ -12,7 +12,7 @@ export const lightTheme = responsiveFontSizes(createMuiTheme({
             selected: teal[400],
             expanded: teal[100]
         },
-        primary: teal,
+        primary: { main: teal[700] },
         secondary: red,
         type: 'light'
     },
@@ -33,7 +33,7 @@ export const darkTheme = responsiveFontSizes(createMuiTheme({
         text: {
             primary: "#ffffff"
         },
-        primary: { main: teal[600] },
+        primary: { main: teal[700] },
         secondary: red,
         type: 'dark'
     },
