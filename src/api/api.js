@@ -4,10 +4,23 @@ import config from 'config';
 import mock from './mock';
 import wait from 'utils/wait';
 
+const AuthDataMock = {
+    id: '1',
+    displayName: 'חציל אפוי',
+    isAdmin: false
+}
+
 const request = axios.create({
     // baseURL: config.serverUrl,
     // headers: {auth: localStorage.token}
 });
+
+
+const authApi = async () => {
+    if(config.isMock) { await wait(200); return AuthDataMock } //mockSchedules  or []
+    const res = await request.get(`auth`).catch(err => { throw (err.response) });
+    return res;
+}
 
 
 const getImmigrantsApi = async () => {
@@ -16,4 +29,4 @@ const getImmigrantsApi = async () => {
     return res;
 }
 
-export { getImmigrantsApi }
+export { getImmigrantsApi, authApi }

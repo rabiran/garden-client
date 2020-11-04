@@ -90,3 +90,9 @@ export default [
         endDate: '02/08/2020'
     },
 ]
+
+// export const AuthData = {
+//     id: '1',
+//     displayName: 'חציל אפוי',
+//     isAdmin: false
+// }
