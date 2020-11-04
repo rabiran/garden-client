@@ -5,12 +5,14 @@ import Table from './Table';
 import Dialog from './Dialog'
 import Grid from '@material-ui/core/Grid'
 // const useStyles = makeStyles(styles);
-
+import useAuth from 'utils/AuthProvider/useAuth';
 
 export default () => {
+    const authProvider = useAuth();
+
     return (
         <> 
-        <div className='GridContainer' >
+        {authProvider.getAuth() && <div className='GridContainer' >
             <div className='tableContainer'>
                 <Table />
             </div>
@@ -19,7 +21,7 @@ export default () => {
             </div>
 
             
-        </div>
+        </div>}
         </>
     )
 }
