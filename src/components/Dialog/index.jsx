@@ -10,94 +10,211 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "@material-ui/core/Select";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
-// import CheckIcon from "@material-ui/icons/Check"
-// import SaveIcon from "@material-ui/icons/Save"
-// import CircularProgress from "@material-ui/core/CircularProgress"
+import CheckIcon from "@material-ui/icons/Check"
+import SaveIcon from "@material-ui/icons/Save"
+import Hotkeys from 'react-hot-keys';
+import CircularProgress from "@material-ui/core/CircularProgress"
+import AutoComplete from "@material-ui/lab/Autocomplete"
+import './style.css'
+import {addImmigrantsApi, getUsernamesPerNameKart} from "../../api/api"
 
-export default () => {
+export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => {
  
-  // const timer = React.useRef();
-  // React.useEffect(()=>{
-  //   return () => {
-  //     clearTimeout(timer.current)
-  //   }
-  // })
   const [loading, setLoading] = React.useState(false);
+  const [loadingInput, setLoadingInput] = React.useState(false);
+  const [openInput, setOpenInput] = React.useState(false);
+  const [userName, setUserName]= React.useState("")
   const [success, setSuccess] = React.useState(false);
-  const [state, setState] = React.useState({
-    openWindow: false,
-    selectedDomain: ""
-  });
-  const handleClickOpen = () => {
-    setState({
-      ...state,
-      ["openWindow"]: true
-    });
-  };
-  const handleChange = (event) => {
-    setState({
-      ...state,
-      ["selectedDomain"]: event.target.value
-    });
-  };
-  const handleClose = () => {
-    //clearTimeout(timer.current)
-    setState({
-      ...state,
-      ["openWindow"]: false
-    });
-  };
-  // const handleRequestClick = () =>{
-  //   timer.current = window.setTimeout(() => {
-  //     if (!loading){
-  //       setSuccess(false);
-  //       setLoading(true);
-  //     }
-  //     timer.current = window.setTimeout(() => {
-  //       setSuccess(true);
-  //       setLoading(false)
-  //     }, 2000)
-  //   })
+  const [users , setUsers] = React.useState([]);
+  const [typing, setTyping] = React.useState(false);
+  const [typingTimeout, setTypingTimeout] = React.useState(500);
+  const [timeoutVar,setTimeoutVar] = React.useState(null);
 
-  // }
+  let renderTimeout;
+
+  const handleChange = (event) => {
+    setSelectedDomain(event.target.value)
+  };
+  const handleClose = () => { 
+    setOpenWindow(false)
+  };
+  const handleTextFieldChange = (e) => {
+    e.preventDefault();
+    setUserName(e.target.value);
+    
+
+  }
+  const clearLogger = () => {
+    return new Promise((resolve,reject) => {
+      setTyping(true);
+      
+      resolve(clearTimeout(renderTimeout));
+      if (userName != "") {
+        renderTimeout = setTimeout(async () => {
+            console.log("hey")
+            let newUsers = await getUsernamesPerNameKart(userName)
+            let us = await  newUsers.filter(usnow =>  (usnow.name).includes(userName))
+            console.log(us)
+            setUsers(us)
+            resolve()
+              
+          }
+          
+        , typingTimeout);
+        }
+
+    });
+  };
+
+  React.useEffect(()=>{
+    console.log(userName)
+    
+    // async function fetchData(){
+    //   await clearLogger();
+    // }
+    // fetchData();
+    setTyping(true);
+    
+//     var id = window.setTimeout(function() {}, 0);
+//     console.log(id)
+
+// while (id--) {
+//     window.clearTimeout(id); // will do nothing if no timeout with id is present
+// }
+    clearTimeout(timeoutVar);
+    
+    if (userName != "") {
+      renderTimeout = setTimeout(async () => {
+          console.log("hey")
+          let newUsers = await getUsernamesPerNameKart(userName)
+          let us = await  newUsers.filter(usnow =>  (usnow.name).includes(userName))
+          console.log(us)
+          setUsers(us)
+            
+        }
+        
+      , typingTimeout);
+      }
+     setTimeoutVar(renderTimeout)
+    
+
+
+  }, [userName])
+
+  const handleRequestClick = async() =>{
+    let res="";
+    try{
+      if (!loading){
+        setSuccess(false);
+        setLoading(true);
+      }
+      res = await addImmigrantsApi(selectedDomain,userName);
+      
+    }catch(e){
+      //SHOW BAD ALERT 
+
+    }
+    finally{
+      setSuccess(true);
+      setLoading(false)
+      setOpenWindow(false)
+      if(res.message =="Success"){
+        //SHOW GOOD ALERT!!!
+      }
+    }
+
+  }
 
   return (
     <div>
-      <Fab  color="primary" aria-label="add" onClick={handleClickOpen} >
-        <AddIcon />
-      </Fab>
       <Dialog
-        open={state.openWindow}
+        open={openWindow}
+        keepMounted={false}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
         dir="rtl"
       >
         <DialogTitle id="form-dialog-title">יצירת משתמש</DialogTitle>
         <DialogContent dividers>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: 'col',
-              flexWrap: "wrap",
-              justifyContent: "space-around"
-            }}
+          <div className="dialogContentContainer"
           >
             <DialogContentText>
-              נא למלא את הטופס בשביל יצירת משתמש בOneAman.
+              נא למלא את הטופס בשביל יצירת משתמש ב.
             </DialogContentText>
-            <TextField margin="dense" id="name" label="שם משתמש" type="email" />
+            <div className="fillingFieldsContainer "> 
+              
+            <div>
+            <Hotkeys
+              
+              // keyName="enter"
+              // filter={(event) => {
+              //      return true;
+              //     }}
+              // onKeyDown= {onKeyDown.bind(this)}
+              // onKeyUp = {onKeyUp.bind(this)}
+              
+              
+            >
+              <AutoComplete
+                
+                style = {{width:200}}
+                multiple
+                open={openInput}
+                onOpen={() => {
+                  setOpenInput(true);
+                }}
+                onClose={() => {
+                  setOpenInput(false);
+                }}
+                limitTags={2}
+                id="multiple-limit-tags"
+                options={users}
+                getOptionLabel={(option)=> option.name}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="standard"
+                    label="חפש משתמש"
+                    placeholder="משתמש"
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <React.Fragment>
+                          {loadingInput ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </React.Fragment>
+                      )
+                    }}
+                  />
+                )}
+                onInputChange={handleTextFieldChange}
 
+              >
+
+              </AutoComplete>
+
+            
+              
+            
+            </Hotkeys>
+            </div>
+            
+              <div>
             <Select
               native
-              value={state.selectedDomain}
+              value={selectedDomain}
               onChange={handleChange}
               variant="outlined"
             >
-              <option label="בחירת דומיין" value=""></option>
-              <option value={10}>8200</option>
-              <option value={20}>Services</option>
-              <option value={30}>Thirty</option>
+              <option label="בחירת דומיין מרכזי" value=""></option>
+              <option value={"אחד"}>אחד</option>
+              <option value={"שתיים"}>שתיים</option>
+              
             </Select>
+            </div>
+            </div>
           </div>
         </DialogContent>
 
@@ -105,14 +222,28 @@ export default () => {
           <Button onClick={handleClose} color="primary">
             ביטול
           </Button>
-          <Button
-            onClick={handleClose}
-            color="primary"
-            style={{ "font-weight": "bold" }}
-            variant="contained"
-          >
-            יצירה
-          </Button>
+
+          <div >
+
+        
+      </div>
+      <div className="root">
+      <div className="wrapper" >
+        <Button
+          variant="contained"
+          color="primary"
+          
+          disabled={loading}
+          onClick={handleRequestClick}
+        >
+          יצירת משתמש
+        </Button>
+        {loading && (
+          <CircularProgress size={24}  className="buttonProgress" />
+        )}
+        
+      </div>
+      </div>
 
         </DialogActions>
   
@@ -123,13 +254,4 @@ export default () => {
 }
 
 //startIcon={<CloudUploadIcon/>} create button
-{/* <div >
-<Fab
-  aria-label="save"
-  color="primary"
-  onClick={handleRequestClick}
->
-  {success ? <CheckIcon /> : <SaveIcon />}
-</Fab>
-{loading && <CircularProgress size={40}/>}
-</div>  */}
+
