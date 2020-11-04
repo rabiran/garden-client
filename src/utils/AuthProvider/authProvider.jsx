@@ -3,12 +3,12 @@ import React from 'react';
 import AuthContext from './authContext';
 import { authApi } from 'api/api';
 import { useSnackbar } from 'notistack';
-import useLoading from 'utils/LoadingProvider/useLoading';
+// import useLoading from 'utils/LoadingProvider/useLoading';
 
 export default (props) => {
   const [auth, setAuth] = React.useState(false);
 
-  const loadingProvider = useLoading();
+  // const loadingProvider = useLoading();
   const { enqueueSnackbar } = useSnackbar();
 
   React.useEffect(() => {
@@ -18,10 +18,10 @@ export default (props) => {
 
   const Authenticate = async () => {
     console.log('auth');
-    loadingProvider.showLoading(true);
+    // loadingProvider.showLoading(true);
     const data = await authApi();
     enqueueSnackbar('auth good', { variant: 'success', autoHideDuration: 2000 });
-    loadingProvider.showLoading(false);
+    // loadingProvider.showLoading(false);
     setAuth(data);
   };
 

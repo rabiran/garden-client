@@ -66,7 +66,7 @@ export default ({data, deleteFromTable}) => {
                     { title: 'תאריך יצירה', field: 'startDate',filtering: false },
                     { title: 'תאריך סיום', field: 'endDate', filtering: false },
                 ]}
-                data = {data}
+                data = {data || []}
                 title="מיגרנות"
                 detailPanel={ [{
                     icon: () => <ArrowBackIosIcon fontSize="small" />,

@@ -12,9 +12,11 @@ import logo from 'images/migraine.svg';
 // import MenuItem from '@material-ui/core/MenuItem';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
 import useTheme from 'utils/ThemeProvider/UseTheme';
+import useAuth from 'utils/AuthProvider/useAuth';
 
 export default () => {
   const themeProvider = useTheme();
+  const authProvider = useAuth();
   // const [anchorEl, setAnchorEl] = React.useState(null);
 
   // const handleClick = (event) => {
@@ -24,6 +26,10 @@ export default () => {
   // const handleClose = () => {
   //   setAnchorEl(null);
   // };
+
+  console.log(authProvider.getAuth());
+  const displayName = authProvider.getAuth().fullName || '';
+  const headerName = `שלום ${displayName}`;
 
   return (
     <div className='header-root'>
@@ -37,7 +43,7 @@ export default () => {
             מיגרנה
           </Typography>
           <Typography variant="h6" >
-            שלום חציל אפוי
+            {headerName}
           </Typography>
         </Toolbar>
       </AppBar>

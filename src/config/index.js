@@ -1,3 +1,4 @@
 export default {
-    isMock: true
+    serverUrl: '',
+    isMock: false
 }

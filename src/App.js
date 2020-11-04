@@ -19,9 +19,9 @@ function App() {
       <RTL>
         <ThemeProvider>
           <SnackbarProvider maxSnack={3} style={{ width: '50%' }}>
+              <AuthProvider >
             <Header />
             <LoadingProvider>
-              <AuthProvider >
                 <Router history={history}>
                   <Switch>
                     <Route exact path="/" component={MainPage} />
@@ -30,8 +30,8 @@ function App() {
                     {/* <ProtectedRoute exact path="/" component={MainPage} /> */}
                   </Switch>
                 </Router>
-              </AuthProvider>
             </LoadingProvider>
+              </AuthProvider>
           </SnackbarProvider>
         </ThemeProvider>
       </RTL>
