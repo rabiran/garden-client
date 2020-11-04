@@ -24,8 +24,8 @@ const authApi = async () => {
 
 
 const getImmigrantsApi = async () => {
-    if(config.isMock) { await wait(200); return mock } //mockSchedules  or []
-    const res = await request.get(`immigrant/gardener/me`).catch(err => { throw (err.response) });
+    if(config.isMock) { await wait(1000); return mock } //mockSchedules  or []
+    const res = await request.get(`immigrant`).catch(err => { throw (err.response) });
     return res;
 }
 
