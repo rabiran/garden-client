@@ -12,11 +12,11 @@ import logo from 'images/migraine.svg';
 // import MenuItem from '@material-ui/core/MenuItem';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
 import useTheme from 'utils/ThemeProvider/UseTheme';
-import useAuth from 'utils/AuthProvider/useAuth';
+import useStore from 'utils/StoreProvider/useStore';
 
 export default () => {
   const themeProvider = useTheme();
-  const authProvider = useAuth();
+  const store = useStore();
   // const [anchorEl, setAnchorEl] = React.useState(null);
 
   // const handleClick = (event) => {
@@ -27,8 +27,8 @@ export default () => {
   //   setAnchorEl(null);
   // };
 
-  console.log(authProvider.getAuth());
-  const displayName = authProvider.getAuth().fullName || '';
+  console.log(store.getAuth());
+  const displayName = store.getAuth().fullName || '';
   const headerName = `שלום ${displayName}`;
 
   return (

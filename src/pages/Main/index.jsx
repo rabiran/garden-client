@@ -7,11 +7,11 @@ import Dialog from '..//../components/Dialog'
 import { getImmigrantsApi } from 'api/api';
 import { useSnackbar } from 'notistack';
 import useLoading from 'utils/LoadingProvider/useLoading';
-import useAuth from 'utils/AuthProvider/useAuth';
+// import useAuth from 'utils/AuthProvider/useAuth';
 
 export default () => {
 
-    const authProvider = useAuth();
+    // const authProvider = useAuth();
     const [openWindow, setOpenWindow] = React.useState(false);
     const [selectedDomain, setSelectedDomain] = React.useState("");
     const loadingProvider = useLoading();
@@ -24,15 +24,20 @@ export default () => {
     React.useEffect(() => {
         async function fetchData() {
             loadingProvider.showLoading(true);
-            const data = await getImmigrantsApi();
-            enqueueSnackbar('מידע התקבל', { variant: 'success', autoHideDuration: 2000 });
+            try {
+                const data = await getImmigrantsApi();
+                enqueueSnackbar('מידע התקבל', { variant: 'success', autoHideDuration: 2000 });
+                setTableData(data);
+            }
+            catch {
+                enqueueSnackbar('נכשל', { variant: 'error', autoHideDuration: 2000 });
+            }
             loadingProvider.showLoading(false);
-            setTableData(data);
+            
         }
-        if(authProvider.getAuth())
-            fetchData();
+        fetchData();
         // eslint-disable-next-line 
-    }, [authProvider.getAuth()])
+    }, [])
 
     const deleteFromTable = (data) => {
         const ids = data.map(obj => obj.id);
@@ -43,7 +48,7 @@ export default () => {
 
     return (
         <>
-            {authProvider.getAuth() && <div className='GridContainer'>
+            <div className='GridContainer'>
                 <div className='tableContainer'>
                     <Table data={tableData} deleteFromTable={deleteFromTable} />
                 </div>
@@ -53,7 +58,7 @@ export default () => {
                     </Fab>
                     <Dialog openWindow={openWindow} setOpenWindow={setOpenWindow} selectedDomain={selectedDomain} setSelectedDomain={setSelectedDomain} />
                 </div>
-            </div>}
+            </div>
         </>
     )
 }

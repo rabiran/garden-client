@@ -7,7 +7,7 @@ import Header from 'components/Header';
 import RTL from 'utils/RTL';
 import ThemeProvider from 'utils/ThemeProvider/ThemeProvider';
 import LoadingProvider from 'utils/LoadingProvider/LoadingProvider';
-import AuthProvider from 'utils/AuthProvider/authProvider'
+import StoreProvider from 'utils/StoreProvider/storeProvider'
 import history from 'utils/history';
 import { Router } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
@@ -19,9 +19,9 @@ function App() {
       <RTL>
         <ThemeProvider>
           <SnackbarProvider maxSnack={3} style={{ width: '50%' }}>
-              <AuthProvider >
-            <Header />
-            <LoadingProvider>
+            <StoreProvider >
+              <Header />
+              <LoadingProvider>
                 <Router history={history}>
                   <Switch>
                     <Route exact path="/" component={MainPage} />
@@ -30,8 +30,8 @@ function App() {
                     {/* <ProtectedRoute exact path="/" component={MainPage} /> */}
                   </Switch>
                 </Router>
-            </LoadingProvider>
-              </AuthProvider>
+              </LoadingProvider>
+            </StoreProvider>
           </SnackbarProvider>
         </ThemeProvider>
       </RTL>

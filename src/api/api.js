@@ -7,22 +7,30 @@ import wait from 'utils/wait';
 
 const AuthDataMock = {
     id: '1',
-    displayName: 'חציל אפ וי',
+    fullName: 'חציל אפ וי',
     isAdmin: false
 }
 
+const domainsMock = ['ads', 'es', 'target'];
+
 const request = axios.create({
     baseURL: config.serverUrl,
+    timeout: 5000,
     // headers: {auth: localStorage.token}
 });
 
 
 const authApi = async () => {
-    if(config.isMock) { await wait(2000); return AuthDataMock } //mockSchedules  or []
+    if(config.isMock) { await wait(200); return AuthDataMock } //mockSchedules  or []
     const res = await request.get(`auth`).catch(err => { throw (err.response) });
     return res.data;
 }
 
+const domainsApi = async () => {
+    if(config.isMock) { await wait(200); return domainsMock }
+    const res = await request.get(`api/domains`).catch(err => { throw (err.response) });
+    return res.data;
+}
 
 const getImmigrantsApi = async () => {
     if(config.isMock) { await wait(200); return mock } //mockSchedules  or []
@@ -40,13 +48,13 @@ const getUsernamesPerNameKart = async (username) =>{
     await wait(200); 
     return users;
 
-    if(config.isMock){await wait(200); return users};
-    const res = await request.get(`search`,{params:{
-        username: username
-    }},{timeout : 10000}).catch(err => { throw (err.response) });
-    return res.data;
+    // if(config.isMock){await wait(200); return users};
+    // const res = await request.get(`search`,{params:{
+    //     username: username
+    // }},{timeout : 10000}).catch(err => { throw (err.response) });
+    // return res.data;
 }
 
-export { getImmigrantsApi,addImmigrantsApi, getUsernamesPerNameKart ,authApi }
+export { getImmigrantsApi,addImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi }
 
 
