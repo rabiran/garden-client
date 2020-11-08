@@ -56,7 +56,7 @@ const addImmigrantsApiPromise = async (domain,user) =>{
         arrayPromise.push(new Promise((resolve,reject) =>{
             
             request.post(`api/immigrant`,{"Domain": domain,"Name": element.name}).catch(err => {reject (err.response) })
-            .then(function(response){console.log("finish");resolve(response)});
+            .then(function(response){resolve(response)});
             
             
         }))
