@@ -12,7 +12,7 @@ import Hotkeys from 'react-hot-keys';
 import CircularProgress from "@material-ui/core/CircularProgress"
 import AutoComplete from "@material-ui/lab/Autocomplete"
 import './style.css'
-import {addImmigrantsApi, getUsernamesPerNameKart} from "../../api/api"
+import {addImmigrantsApi, getUsernamesPerNameKart,addImmigrantsApiPromise} from "../../api/api"
 
 export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => {
  
@@ -74,8 +74,8 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
         setSuccess(false);
         setLoading(true);
       }
-      console.log(usersSelected)
-      res = await addImmigrantsApi(selectedDomain,usersSelected);
+      //console.log(usersSelected)
+      res = await addImmigrantsApiPromise(selectedDomain,usersSelected);
       
     }catch(e){
       //SHOW BAD ALERT 
@@ -85,7 +85,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       setSuccess(true);
       setLoading(false)
       setOpenWindow(false)
-      if(res.status() == 200){
+      if(res.status == 200){
         //SHOW GOOD ALERT!!!
       }
     }

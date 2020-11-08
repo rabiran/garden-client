@@ -39,10 +39,34 @@ const getImmigrantsApi = async () => {
     return res.data;
 }
 
-const addImmigrantsApi = async (domain,name) => {
+const addImmigrantsApi = async (domain,user) => {
+    console.log(user[0].name)
     if(config.isMock){await wait(2000); return users};
-    const res = await request.post(`api/immigrant`,{"Domain": domain,"Name": name},{ timeout: 5000}).catch(err => { throw (err.response) });
+    user.forEach(element => {
+        
+    });
+    const res = await request.post(`api/immigrant`,{"Domain": domain,"Name": user}).catch(err => { throw (err.response) });
     return res.data;
+}
+
+const addImmigrantsApiPromise = async (domain,user) =>{
+    let arrayPromise = [];
+    console.log("start")
+    user.forEach(element => {
+        arrayPromise.push(new Promise((resolve,reject) =>{
+            
+            request.post(`api/immigrant`,{"Domain": domain,"Name": element.name}).catch(err => { reject (err.response) })
+            .then(function(response){console.log("Hey");resolve(response)});
+            
+            
+        }))
+    });
+    
+    console.log("hey not started")
+    const results =await Promise.all(arrayPromise)
+    
+    console.log(results)
+    return results;
 }
 const getUsernamesPerNameKart = async (username) =>{
     await wait(200); 
@@ -55,6 +79,6 @@ const getUsernamesPerNameKart = async (username) =>{
     // return res.data;
 }
 
-export { getImmigrantsApi,addImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi }
+export { getImmigrantsApi,addImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise }
 
 
