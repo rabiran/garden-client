@@ -51,18 +51,17 @@ const addImmigrantsApi = async (domain,user) => {
 
 const addImmigrantsApiPromise = async (domain,user) =>{
     let arrayPromise = [];
-    console.log("start")
+    
     user.forEach(element => {
         arrayPromise.push(new Promise((resolve,reject) =>{
             
-            request.post(`api/immigrant`,{"Domain": domain,"Name": element.name}).catch(err => { reject (err.response) })
-            .then(function(response){console.log("Hey");resolve(response)});
+            request.post(`api/immigrant`,{"Domain": domain,"Name": element.name}).catch(err => {reject (err.response) })
+            .then(function(response){console.log("finish");resolve(response)});
             
             
         }))
     });
     
-    console.log("hey not started")
     const results =await Promise.all(arrayPromise)
     
     console.log(results)
