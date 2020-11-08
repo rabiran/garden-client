@@ -62,7 +62,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
           
         , typingTimeout);
         }
-
+ 
     });
   };
 
@@ -82,14 +82,18 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
 //     window.clearTimeout(id); // will do nothing if no timeout with id is present
 // }
     clearTimeout(timeoutVar);
+
     
     if (userName != "") {
+      
       renderTimeout = setTimeout(async () => {
+          setLoadingInput(true)
           console.log("hey")
           let newUsers = await getUsernamesPerNameKart(userName)
           let us = await  newUsers.filter(usnow =>  (usnow.name).includes(userName))
           console.log(us)
           setUsers(us)
+          setLoadingInput(false)
             
         }
         
