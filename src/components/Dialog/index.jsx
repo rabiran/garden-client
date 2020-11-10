@@ -96,6 +96,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   return (
     <div>
       <Dialog
+        
         disableBackdropClick
         open={openWindow}
         keepMounted={false}
@@ -117,7 +118,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
             >
               <AutoComplete
 
-                style = {{width:200}}
+                style = {{width:340}}
                 multiple
                 open={openInput}
                 onOpen={() => {
