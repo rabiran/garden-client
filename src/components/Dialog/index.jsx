@@ -14,8 +14,11 @@ import AutoComplete from "@material-ui/lab/Autocomplete"
 import './style.css'
 import {addImmigrantsApi, getUsernamesPerNameKart,addImmigrantsApiPromise} from "../../api/api"
 
+
 export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => {
  
+
+
   const [loading, setLoading] = React.useState(false);
   const [loadingInput, setLoadingInput] = React.useState(false);
   const [openInput, setOpenInput] = React.useState(false);
@@ -35,12 +38,13 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
     setOpenWindow(false)
   };
   const handleTextFieldChange = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     setUserName(e.target.value);
   }
   
   const handleSelectedUser = (e,values) =>{   
       setUsersSelected(values)
+      setUsers([])
   }
 
 
@@ -94,9 +98,10 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   
 
   return (
-    <div>
+    <div >
       <Dialog
-        
+        //paper= {{position: 'absolute' }}
+
         disableBackdropClick
         open={openWindow}
         keepMounted={false}
@@ -113,13 +118,14 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
             </DialogContentText>
             <div className="fillingFieldsContainer "> 
               
-            <div>
+            <div className="autocomplete">
             <Hotkeys                                          
             >
               <AutoComplete
-
-                style = {{width:340}}
+                
+                style = {{width:340, }}
                 multiple
+                noOptionsText={"לא נמצאו תוצאות"}
                 open={openInput}
                 onOpen={() => {
                   setOpenInput(true);
@@ -132,11 +138,12 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                 id="multiple-limit-tags"
                 options={users}
                 onChange={handleSelectedUser}
-                getOptionLabel={(option)=> option.name}
+                getOptionLabel={(option)=> option.name + option.hierarchy}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     
+
                     
                     variant="standard"
                     label="חפש משתמש"
@@ -144,14 +151,22 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                     
                     InputProps={{
                       ...params.InputProps,
+                      startAdornment: (
+                      <div style={{maxHeight: '70px',overflowY: 'auto'}}>
+                                         
+                          {params.InputProps.startAdornment}
+                      </div>
+                      ),
                       endAdornment: (
                         <React.Fragment>
                           {loadingInput ? (
                             <CircularProgress color="inherit" size={20} />
                           ) : null}
+                          
                           {params.InputProps.endAdornment}
                         </React.Fragment>
                       )
+
                     }}
                   />
                 )}

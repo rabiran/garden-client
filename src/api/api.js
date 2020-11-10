@@ -50,6 +50,7 @@ const addImmigrantsApi = async (domain,user) => {
 }
 
 const addImmigrantsApiPromise = async (domain,user) =>{
+    if(config.isMock) { await wait(2000); return mock } 
     let arrayPromise = [];
     
     user.forEach(element => {
