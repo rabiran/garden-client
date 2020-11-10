@@ -4,6 +4,7 @@ import config from 'config';
 import mock from './mock';
 import users from './users';
 import wait from 'utils/wait';
+import gardeners from './gardeners';
 
 const AuthDataMock = {
     id: '1',
@@ -78,7 +79,13 @@ const getUsernamesPerNameKart = async (username) =>{
     // }},{timeout : 10000}).catch(err => { throw (err.response) });
     // return res.data;
 }
+const getGardeners = async () =>{
+    if(config.isMock) { await wait(2000); return gardeners}
+    const res = await request.get(`api/gardeners`).catch(err => { throw (err.response) });
+    return res.data;
 
-export { getImmigrantsApi,addImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise }
+}
+
+export { getImmigrantsApi,addImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGardeners }
 
 
