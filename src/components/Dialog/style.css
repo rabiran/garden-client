@@ -5,16 +5,17 @@
 .wrapper{
     display: flex;
     align-items: center;
-    position:"relative";
-    color : red;
+    position:relative;
+   
     
 }
 
+
 .buttonProgress {
     color: green;
-    position: "absolute";
-    top: 50%;
-    left: 50%;
+    position: absolute;
+    top: 20%;
+    left: 40%;
 }
 
 .fillingFieldsContainer {
@@ -31,4 +32,9 @@
     flex-wrap: wrap;
     justify-content: space-around;
 }
+
+.autocomplete{
+
+}
+
 

@@ -8,28 +8,27 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 //import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "@material-ui/core/Select";
-import AddIcon from "@material-ui/icons/Add";
-import Fab from "@material-ui/core/Fab";
-import CheckIcon from "@material-ui/icons/Check"
-import SaveIcon from "@material-ui/icons/Save"
 import Hotkeys from 'react-hot-keys';
 import CircularProgress from "@material-ui/core/CircularProgress"
 import AutoComplete from "@material-ui/lab/Autocomplete"
 import './style.css'
-import {addImmigrantsApi, getUsernamesPerNameKart} from "../../api/api"
+import {addImmigrantsApi, getUsernamesPerNameKart,addImmigrantsApiPromise} from "../../api/api"
+
 
 export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => {
  
+
+
   const [loading, setLoading] = React.useState(false);
   const [loadingInput, setLoadingInput] = React.useState(false);
   const [openInput, setOpenInput] = React.useState(false);
   const [userName, setUserName]= React.useState("")
   const [success, setSuccess] = React.useState(false);
   const [users , setUsers] = React.useState([]);
-  const [typing, setTyping] = React.useState(false);
-  const [typingTimeout, setTypingTimeout] = React.useState(500);
   const [timeoutVar,setTimeoutVar] = React.useState(null);
+  const [usersSelected,setUsersSelected] = React.useState(Object[{}])
 
+  const typingTimeout = 500;
   let renderTimeout;
 
   const handleChange = (event) => {
@@ -39,48 +38,17 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
     setOpenWindow(false)
   };
   const handleTextFieldChange = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     setUserName(e.target.value);
-    
-
   }
-  const clearLogger = () => {
-    return new Promise((resolve,reject) => {
-      setTyping(true);
-      
-      resolve(clearTimeout(renderTimeout));
-      if (userName != "") {
-        renderTimeout = setTimeout(async () => {
-            console.log("hey")
-            let newUsers = await getUsernamesPerNameKart(userName)
-            let us = await  newUsers.filter(usnow =>  (usnow.name).includes(userName))
-            console.log(us)
-            setUsers(us)
-            resolve()
-              
-          }
-          
-        , typingTimeout);
-        }
- 
-    });
-  };
+  
+  const handleSelectedUser = (e,values) =>{   
+      setUsersSelected(values)
+      setUsers([])
+  }
+
 
   React.useEffect(()=>{
-    console.log(userName)
-    
-    // async function fetchData(){
-    //   await clearLogger();
-    // }
-    // fetchData();
-    setTyping(true);
-    
-//     var id = window.setTimeout(function() {}, 0);
-//     console.log(id)
-
-// while (id--) {
-//     window.clearTimeout(id); // will do nothing if no timeout with id is present
-// }
     clearTimeout(timeoutVar);
 
     
@@ -88,10 +56,8 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       
       renderTimeout = setTimeout(async () => {
           setLoadingInput(true)
-          console.log("hey")
           let newUsers = await getUsernamesPerNameKart(userName)
           let us = await  newUsers.filter(usnow =>  (usnow.name).includes(userName))
-          console.log(us)
           setUsers(us)
           setLoadingInput(false)
             
@@ -112,7 +78,8 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
         setSuccess(false);
         setLoading(true);
       }
-      res = await addImmigrantsApi(selectedDomain,userName);
+      //console.log(usersSelected)
+      res = await addImmigrantsApiPromise(selectedDomain,usersSelected);
       
     }catch(e){
       //SHOW BAD ALERT 
@@ -122,16 +89,20 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       setSuccess(true);
       setLoading(false)
       setOpenWindow(false)
-      if(res.message =="Success"){
+      if(res.status == 200){
         //SHOW GOOD ALERT!!!
       }
     }
 
   }
+  
 
   return (
-    <div>
+    <div >
       <Dialog
+        //paper= {{position: 'absolute' }}
+
+        disableBackdropClick
         open={openWindow}
         keepMounted={false}
         onClose={handleClose}
@@ -147,52 +118,60 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
             </DialogContentText>
             <div className="fillingFieldsContainer "> 
               
-            <div>
-            <Hotkeys
-              
-              // keyName="enter"
-              // filter={(event) => {
-              //      return true;
-              //     }}
-              // onKeyDown= {onKeyDown.bind(this)}
-              // onKeyUp = {onKeyUp.bind(this)}
-              
-              
+            <div className="autocomplete">
+            <Hotkeys                                          
             >
               <AutoComplete
                 
-                style = {{width:200}}
+                style = {{width:340, }}
                 multiple
+                noOptionsText={"לא נמצאו תוצאות"}
                 open={openInput}
                 onOpen={() => {
                   setOpenInput(true);
                 }}
+                autoSelect={true}
                 onClose={() => {
                   setOpenInput(false);
                 }}
                 limitTags={2}
                 id="multiple-limit-tags"
                 options={users}
-                getOptionLabel={(option)=> option.name}
+                onChange={handleSelectedUser}
+                getOptionLabel={(option)=> option.name + option.hierarchy}
                 renderInput={(params) => (
                   <TextField
                     {...params}
+                    
+
+                    
                     variant="standard"
                     label="חפש משתמש"
                     placeholder="משתמש"
+                    
                     InputProps={{
                       ...params.InputProps,
+                      startAdornment: (
+                      <div style={{maxHeight: '70px',overflowY: 'auto'}}>
+                                         
+                          {params.InputProps.startAdornment}
+                      </div>
+                      ),
                       endAdornment: (
                         <React.Fragment>
                           {loadingInput ? (
                             <CircularProgress color="inherit" size={20} />
                           ) : null}
+                          
                           {params.InputProps.endAdornment}
                         </React.Fragment>
                       )
+
                     }}
                   />
                 )}
+                
+                
                 onInputChange={handleTextFieldChange}
 
               >
