@@ -199,6 +199,9 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
             </div>
             </div>
           </div>
+          <div>
+            בקשה
+          </div>
         </DialogContent>
 
         <DialogActions>

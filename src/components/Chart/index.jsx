@@ -7,31 +7,48 @@ import HighchartsReact from 'highcharts-react-official'
 export default () =>{
     
     const [gardeners,setGardeners] = React.useState([])
+
+    function switchCountKeyToY(dataArray){
+        let output = dataArray.map( s => ({y:s.count}) );
+        return output;
+
+    }
     
     React.useEffect(()=>{
 
         async function fetchData(){
             let gardenersArr= await getGardeners();   
-            let gardenerCountArr = await gardenersArr.map((elem => elem.count))
+            let gardenerCountArr = gardenersArr.map((elem => elem.count))
             console.log(gardenersArr)
-
+            let newYarray = switchCountKeyToY(gardenersArr);
             setGardeners(gardenersArr)
         };
         fetchData();
     },[])
 
     const options = {
+        credits: {
+            enabled: true,
+            text: "יקסורפ השירגו קפא ימותל טידרק",
+            
+
+        },
+
+
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            type: 'pie'
+            type: 'pie',
+
         },
         title: {
-            text: 'כמות בקשות לפי גנן'
+            text: 'כמות בקשות לפי גנן',
+            useHTML: true,
         },
         tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
+            useHTML: true,
         },
         accessibility: {
             point: {
@@ -44,35 +61,40 @@ export default () =>{
               cursor: 'pointer',
               dataLabels: {
                 enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-              }
+                format: '<b>{point.name}</b>: {point.percentage:.1f}% ',
+                useHTML: true,
+              },
+              animation: {
+                duration: 2000,
+                // Uses Math.easeOutBounce
+                easing: 'easeOutBounce'
+            }
+
             }
         },
         series: [{
-            name: 'Count Percentage',
+            name: 'כמות אחוזים',
             colorByPoint: true,
             type: 'pie',
             data: gardeners,
 
-        }],
-        legend: {
-           
-                reversed: true,
-                rtl: true,
-            
 
-        }
+        }],
+
         
     }
 
     
 
     return(
+        <div className="container">
         <HighchartsReact
+            
             highcharts={Highcharts}
             options={options}
             
         />
+        </div>
 
     );
 }
