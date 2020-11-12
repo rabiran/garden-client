@@ -1,6 +1,7 @@
 import React from 'react';
 import './styles.css';
 import Table from './Table';
+import BetterTable from './BetterTable';
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import Dialog from '..//../components/Dialog'
@@ -50,7 +51,8 @@ export default () => {
         <>
             <div className='GridContainer'>
                 <div className='tableContainer'>
-                    <Table data={tableData} deleteFromTable={deleteFromTable} />
+                    {/* <Table data={tableData} deleteFromTable={deleteFromTable} /> */}
+                    <BetterTable data={tableData} deleteFromTable={deleteFromTable}/>
                 </div>
                 <div className='dialogContainer'>
                     <Fab color="primary" aria-label="add" onClick={handleClickOpen} >
