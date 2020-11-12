@@ -33,8 +33,9 @@
     justify-content: space-around;
 }
 
-.autocomplete{
-
+.regex{
+    font-weight: bold;
+    color: red;
 }
 
 

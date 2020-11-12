@@ -40,33 +40,24 @@ const getImmigrantsApi = async () => {
     return res.data;
 }
 
-const addImmigrantsApi = async (domain,user) => {
-    console.log(user[0].name)
-    if(config.isMock){await wait(2000); return users};
-    user.forEach(element => {
-        
-    });
-    const res = await request.post(`api/immigrant`,{"Domain": domain,"Name": user}).catch(err => { throw (err.response) });
-    return res.data;
-}
 
-const addImmigrantsApiPromise = async (domain,user) =>{
-    if(config.isMock) { await wait(2000); return mock } 
+const addImmigrantsApiPromise = async (domain,usersToCreate) =>{
+    //if(config.isMock) { await wait(2000); return mock } 
     let arrayPromise = [];
-    
-    user.forEach(element => {
+    console.log(usersToCreate)
+    usersToCreate.forEach(element => {
         arrayPromise.push(new Promise((resolve,reject) =>{
             
-            request.post(`api/immigrant`,{"Domain": domain,"Name": element.name}).catch(err => {reject (err.response) })
-            .then(function(response){resolve(response)});
+            request.post(`api/immigrant`,{"Domain": domain,"Name": element.name}).catch(err => {reject (element) })
+            .then(function(response){resolve(element)});
             
             
         }))
     });
     
-    const results =await Promise.all(arrayPromise)
-    
+    const results =await Promise.allSettled(arrayPromise)
     console.log(results)
+    
     return results;
 }
 const getUsernamesPerNameKart = async (username) =>{
@@ -86,6 +77,6 @@ const getGardeners = async () =>{
 
 }
 
-export { getImmigrantsApi,addImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGardeners }
+export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGardeners }
 
 

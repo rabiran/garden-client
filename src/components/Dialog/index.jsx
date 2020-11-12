@@ -26,23 +26,41 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   const [success, setSuccess] = React.useState(false);
   const [users , setUsers] = React.useState([]);
   const [timeoutVar,setTimeoutVar] = React.useState(null);
-  const [usersSelected,setUsersSelected] = React.useState(Object[{}])
+  const [usersSelected,setUsersSelected] = React.useState([])
+  const [postStatuses,setPostStatuses] = React.useState([])
+
+  const [userValidation,setUserValidation] = React.useState(false)
+  const [domainValidation,setDomainValidation] = React.useState(false)
+
+
+  const errorMessageField ='שדה ריק נא בחר משתמש!';
+  
+
+
 
   const typingTimeout = 500;
   let renderTimeout;
 
-  const handleChange = (event) => {
+  const handleChangedDomain = (event) => {
     setSelectedDomain(event.target.value)
+    setDomainValidation(false)
+
   };
   const handleClose = () => { 
     setOpenWindow(false)
   };
   const handleTextFieldChange = (e) => {
-    //e.preventDefault();
+    
+    if(userValidation){
+      setUserValidation(false)
+    }
     setUserName(e.target.value);
   }
   
   const handleSelectedUser = (e,values) =>{   
+      if(userValidation){
+        setUserValidation(false)
+      }
       setUsersSelected(values)
       setUsers([])
   }
@@ -57,41 +75,76 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       renderTimeout = setTimeout(async () => {
           setLoadingInput(true)
           let newUsers = await getUsernamesPerNameKart(userName)
-          let us = await  newUsers.filter(usnow =>  (usnow.name).includes(userName))
+          let us =  newUsers.filter(usnow =>  (usnow.name).includes(userName))
           setUsers(us)
           setLoadingInput(false)
             
         }
         
       , typingTimeout);
-      }
+    }
      setTimeoutVar(renderTimeout)
     
 
 
   }, [userName])
+  
+  const regexHandleRequestClick = () =>{
+    let ans = usersSelected.length !=0 && selectedDomain !="";
+    console.log("ans:"+ans)
+    if (ans){
+      return true;
+    }
+
+
+    return false;
+  }
 
   const handleRequestClick = async() =>{
-    let res="";
+    let statusResults;
+    if(usersSelected.length==0){
+      setUserValidation(true)
+    }
+    if(selectedDomain == ""){
+      setDomainValidation(true)
+    }
     try{
       if (!loading){
         setSuccess(false);
         setLoading(true);
       }
-      //console.log(usersSelected)
-      res = await addImmigrantsApiPromise(selectedDomain,usersSelected);
+      if(!regexHandleRequestClick()){
+        setSuccess(false);
+        setLoading(false);
+        return;
+      }    
+      statusResults = await addImmigrantsApiPromise(selectedDomain,usersSelected);
+      
+      setSuccess(true);
+      setLoading(false);
+      
+      
+      let arrStatuses =[];
+      let foundReject = false;
+      console.log(statusResults)
+      await statusResults.forEach(res =>{
+        arrStatuses.push(res.status)
+        if(res.status =="rejected"){
+          foundReject = true;
+        }
+      })
+      setPostStatuses(arrStatuses)
+      if(foundReject){ 
+        setOpenWindow(true);
+      }else{
+        setOpenWindow(true);
+      }
+      
+      
       
     }catch(e){
       //SHOW BAD ALERT 
 
-    }
-    finally{
-      setSuccess(true);
-      setLoading(false)
-      setOpenWindow(false)
-      if(res.status == 200){
-        //SHOW GOOD ALERT!!!
-      }
     }
 
   }
@@ -101,7 +154,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
     <div >
       <Dialog
         //paper= {{position: 'absolute' }}
-
+        
         disableBackdropClick
         open={openWindow}
         keepMounted={false}
@@ -118,7 +171,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
             </DialogContentText>
             <div className="fillingFieldsContainer "> 
               
-            <div className="autocomplete">
+            <div >
             <Hotkeys                                          
             >
               <AutoComplete
@@ -137,12 +190,13 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                 limitTags={2}
                 id="multiple-limit-tags"
                 options={users}
+                
                 onChange={handleSelectedUser}
                 getOptionLabel={(option)=> option.name + option.hierarchy}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    
+
 
                     
                     variant="standard"
@@ -164,10 +218,15 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                           ) : null}
                           
                           {params.InputProps.endAdornment}
+                          
                         </React.Fragment>
                       )
+                      
 
                     }}
+                    
+                    error = {(userValidation)}
+                    helperText={(userValidation) ? errorMessageField: ""}
                   />
                 )}
                 
@@ -188,8 +247,11 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
             <Select
               native
               value={selectedDomain}
-              onChange={handleChange}
+              onChange={handleChangedDomain}
               variant="outlined"
+              error = {(domainValidation)}
+                    
+              
             >
               <option label="בחירת דומיין מרכזי" value=""></option>
               <option value={"אחד"}>אחד</option>
@@ -199,8 +261,8 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
             </div>
             </div>
           </div>
-          <div>
-            בקשה
+          <div >
+            {postStatuses.map((el,index)=> <p className="regex" key={index}>{el}</p>)}
           </div>
         </DialogContent>
 
