@@ -16,17 +16,17 @@ export default ({ rowData }) => {
                     <div className="fieldArea">
                         <div className="field">
                             <DomainIcon />
-                            <Field valueKey={'דומיין ראשי'} value={rowData.primaryDomainUser} />
+                            <Field valueKey={'דומיין ראשי'} value={rowData?.primaryDomainUser} />
                         </div>
                         <div className="field">
                             <HomeIcon />
-                            <Field valueKey={'היררכיה'} value={rowData.hierarchy} />
+                            <Field valueKey={'היררכיה'} value={rowData?.hierarchy} />
                         </div>
                     </div>
 
                 </div>
                 <div className="rowUsers">
-                    <Users users={rowData.shadowUsers} domains={store.getDomains()} step={rowData.status.step} substep={rowData.status.subStep} />
+                    <Users users={rowData?.shadowUsers} domains={store.getDomains()} step={rowData?.status?.step} substep={rowData?.status?.subStep} />
                 </div>
             </div>
         </>

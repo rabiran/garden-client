@@ -8,11 +8,12 @@ import DeleteDialog from 'components/Confirm';
 import tableIcons from 'config/tableIcons';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-
+import Collapse from '@material-ui/core/Collapse';
 
 export default ({data, deleteFromTable}) => {
     const [openDelete, setOpenDelete] = React.useState(false);
-    
+    const [open, setOpen] = React.useState(false);
+
     const handleOpenDelete = (data) => {
         setOpenDelete(data);
     }
@@ -73,11 +74,11 @@ export default ({data, deleteFromTable}) => {
                     isFreeAction: true,
                     render: rowData => {
                         return (
-                            <Cell className='animate' rowData={rowData}/>
+                            <Collapse in={open} timeout="auto" unmountOnExit><Cell className='animate' rowData={rowData}/></Collapse>
                         )
                     }
                 }]}
-                onRowClick={(event, rowData, togglePanel) => togglePanel()}
+                onRowClick={(event, rowData, togglePanel) => { setOpen(true); togglePanel()}}
                 actions={[
                     {
                         tooltip: 'Remove All Selected Users',
