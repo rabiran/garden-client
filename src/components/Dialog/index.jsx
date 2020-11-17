@@ -12,7 +12,12 @@ import Hotkeys from 'react-hot-keys';
 import CircularProgress from "@material-ui/core/CircularProgress"
 import AutoComplete from "@material-ui/lab/Autocomplete"
 import './style.css'
-import {addImmigrantsApi, getUsernamesPerNameKart,addImmigrantsApiPromise} from "../../api/api"
+import {addImmigrantsApi, getUsernamesPerNameKart,addImmigrantsApiPromise,domainsApi} from "../../api/api"
+import { blue, red } from "@material-ui/core/colors";
+import { Chip } from "@material-ui/core";
+import DoneIcon from '@material-ui/icons/Done';
+import {Paper} from "@material-ui/core"
+import useStore from 'utils/StoreProvider/useStore';
 
 
 export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => {
@@ -28,14 +33,22 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   const [timeoutVar,setTimeoutVar] = React.useState(null);
   const [usersSelected,setUsersSelected] = React.useState([])
   const [postStatuses,setPostStatuses] = React.useState([])
-
+  const [domainsColor, setDomainsColor] = React.useState([])
   const [userValidation,setUserValidation] = React.useState(false)
   const [domainValidation,setDomainValidation] = React.useState(false)
 
+  const colors = ["Khaki","Aquamarine","Coral","grey","LightBlue","Violet"]
+  const store = useStore();
+  const domains = store.getDomains();
 
   const errorMessageField ='שדה ריק נא בחר משתמש!';
   
-
+  const styles = {
+    dialogPaper: {
+      minHeight: '80vh',
+      maxHeight: '80vh'
+    },
+  };
 
 
   const typingTimeout = 500;
@@ -64,7 +77,6 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       setUsersSelected(values)
       setUsers([])
   }
-
 
   React.useEffect(()=>{
     clearTimeout(timeoutVar);
@@ -149,20 +161,35 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
 
   }
   
+  console.log("===================");
+  console.log(domains);
+  console.log("===================");
 
   return (
     <div >
       <Dialog
-        //paper= {{position: 'absolute' }}
-        
+        PaperProps={{
+          style: {
+            maxWidth: '50vw',
+            minWidth: '50vw',
+            maxHeight: '60vh',
+            minHeight: '60vh',
+            
+          },
+        }}
         disableBackdropClick
         open={openWindow}
+        
         keepMounted={false}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
         dir="rtl"
       >
-        <DialogTitle id="form-dialog-title">יצירת משתמש</DialogTitle>
+        <DialogTitle id="form-dialog-title">יצירת משתמש
+          <div style={{textAlign:"left",height: "100px", display: "flex",flexWrap: "nowrap",justifyContent:"flex-end",direction:"row",overflow: "auto"}}>
+            <Paper style={{position: "fixed"}}> {(domains) ? domains.map((el,index)=> <div style={{backgroundColor: colors[index]}} key={index}>{el}</div>) : null} </Paper>
+          </div>
+        </DialogTitle>
         <DialogContent dividers>
           <div className="dialogContentContainer"
           >
@@ -172,11 +199,16 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
             <div className="fillingFieldsContainer "> 
               
             <div >
-            <Hotkeys                                          
-            >
+
+                                        <div style={{maxHeight: '100px',gap:'5px',overflowY: 'auto', display: "flex", flexWrap: "nowrap" , flexDirection: "column", justifyContent: "flex-start"}}>
+                             {(usersSelected != undefined && usersSelected.length>0) ? (usersSelected?.map((el,index)=> <Chip style={{ backgroundColor: colors[domains.indexOf((el?.domainUsers[0]?.dataSource))], minHeight:"30px" }} key={index} label={(el.name)}/>)) : null}            
+
+                            
+                      </div>
               <AutoComplete
                 
-                style = {{width:340, }}
+                tag={{color: "blue"}}
+                style = {{width:340,}}
                 multiple
                 noOptionsText={"לא נמצאו תוצאות"}
                 open={openInput}
@@ -194,9 +226,11 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                 onChange={handleSelectedUser}
                 getOptionLabel={(option)=> option.name + option.hierarchy}
                 renderInput={(params) => (
+                  
+
                   <TextField
                     {...params}
-
+                    // display: "flex", flexWrap: "nowrap" , flexDirection: "column"
 
                     
                     variant="standard"
@@ -204,12 +238,18 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                     placeholder="משתמש"
                     
                     InputProps={{
+                      
                       ...params.InputProps,
                       startAdornment: (
-                      <div style={{maxHeight: '70px',overflowY: 'auto'}}>
-                                         
-                          {params.InputProps.startAdornment}
-                      </div>
+                      // <div style={{maxHeight: '70px',gap:'4px',overflowY: 'auto', display: "flex", flexWrap: "nowrap" , flexDirection: "column"}}>
+                      //        {(usersSelected != undefined && usersSelected?.length>0) ? (usersSelected?.map((el,index)=> <Chip style={{ backgroundColor: domains[parseInt(el?.domainUsers[0]?.dataSource)-1].color, }} key={index} label={(el.name)}/>)) : null}            
+                      //       {console.log(usersSelected)/* {params.InputProps.startAdornment} */}
+                      //       {console.log(domains)}
+                      //       {console.log(parseInt(usersSelected[0]?.domainUsers[0].dataSource))}
+                            
+
+                      // </div>
+                    <div></div>
                       ),
                       endAdornment: (
                         <React.Fragment>
@@ -240,7 +280,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
             
               
             
-            </Hotkeys>
+       
             </div>
             
               <div>
@@ -254,8 +294,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
               
             >
               <option label="בחירת דומיין מרכזי" value=""></option>
-              <option value={"אחד"}>אחד</option>
-              <option value={"שתיים"}>שתיים</option>
+              {domains.map((el,index)=> <option  key={index} value={el}>{el}</option>)}
               
             </Select>
             </div>

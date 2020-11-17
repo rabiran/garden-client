@@ -57,7 +57,9 @@ export default () => {
                         <AddIcon />
                     </Fab>
                     <Dialog openWindow={openWindow} setOpenWindow={setOpenWindow} selectedDomain={selectedDomain} setSelectedDomain={setSelectedDomain} />
+
                 </div>
+                
             </div>
         </>
     )

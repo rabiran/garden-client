@@ -12,7 +12,9 @@ const AuthDataMock = {
     isAdmin: false
 }
 
-const domainsMock = ['ads', 'es', 'target'];
+const domainsMock = ['1', '2','3'];
+// const domainsMock = ['dsdsadsadsadsa', 'dsadsadsadsa','dsaaadsadasdsa',];
+
 
 const request = axios.create({
     baseURL: config.serverUrl,
@@ -28,6 +30,7 @@ const authApi = async () => {
 }
 
 const domainsApi = async () => {
+    console.log(domainsMock)
     if(config.isMock) { await wait(200); return domainsMock }
     const res = await request.get(`api/domains`).catch(err => { throw (err.response) });
     return res.data;
