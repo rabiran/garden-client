@@ -8,14 +8,11 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 //import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "@material-ui/core/Select";
-import Hotkeys from 'react-hot-keys';
 import CircularProgress from "@material-ui/core/CircularProgress"
 import AutoComplete from "@material-ui/lab/Autocomplete"
 import './style.css'
-import {addImmigrantsApi, getUsernamesPerNameKart,addImmigrantsApiPromise,domainsApi} from "../../api/api"
-import { blue, red } from "@material-ui/core/colors";
+import { getUsernamesPerNameKart,addImmigrantsApiPromise} from "../../api/api"
 import { Chip } from "@material-ui/core";
-import DoneIcon from '@material-ui/icons/Done';
 import {Paper} from "@material-ui/core"
 import useStore from 'utils/StoreProvider/useStore';
 
@@ -42,13 +39,6 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   const domains = store.getDomains();
 
   const errorMessageField ='שדה ריק נא בחר משתמש!';
-  
-  const styles = {
-    dialogPaper: {
-      minHeight: '80vh',
-      maxHeight: '80vh'
-    },
-  };
 
 
   const typingTimeout = 500;
@@ -76,13 +66,14 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       }
       setUsersSelected(values)
       setUsers([])
+      setPostStatuses([])
   }
 
   React.useEffect(()=>{
     clearTimeout(timeoutVar);
 
     
-    if (userName != "") {
+    if (userName != undefined && userName.length > 2) {
       
       renderTimeout = setTimeout(async () => {
           setLoadingInput(true)
@@ -162,7 +153,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   }
   
   console.log("===================");
-  console.log(domains);
+  console.log(usersSelected);
   console.log("===================");
 
   return (
@@ -206,6 +197,10 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                             
                       </div>
               <AutoComplete
+                // onEmptied={()=>{
+                //   setUsersSelected([]);
+                //   console.log("heyy")
+                // }}
                 
                 tag={{color: "blue"}}
                 style = {{width:340,}}
