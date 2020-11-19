@@ -52,7 +52,7 @@ export default () => {
             <div className='GridContainer'>
                 <div className='tableContainer'>
                     {/* <Table data={tableData} deleteFromTable={deleteFromTable} /> */}
-                    <BetterTable data={tableData} deleteFromTable={deleteFromTable}/>
+                    <BetterTable data={tableData || []} deleteFromTable={deleteFromTable}/>
                 </div>
                 <div className='dialogContainer'>
                     <Fab color="primary" aria-label="add" onClick={handleClickOpen} >

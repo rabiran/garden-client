@@ -74,7 +74,7 @@ export default ({data, deleteFromTable}) => {
                     isFreeAction: true,
                     render: rowData => {
                         return (
-                            <Collapse in={open} timeout="auto" unmountOnExit><Cell className='animate' rowData={rowData}/></Collapse>
+                            <Cell className='animate' rowData={rowData}/>
                         )
                     }
                 }]}

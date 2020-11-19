@@ -1,14 +1,19 @@
 .cell {
     /* padding: 20px; */
     height: auto;
-    display: flex;
+
+    /* display: flex; */
+
     /* background-color: red; */
     /* transition: 1s ease-out; */
     /* animation: cellExpand 1s; */
 }
 
 .rowFields {
-    width: 25%;
+
+    /* width: 25%;
+     */
+     
     /* background: cyan; */
     /* height: 100%; */
     display: flex;
