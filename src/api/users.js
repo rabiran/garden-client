@@ -16,6 +16,7 @@ export default [
     {
         "name": "מתן אינגבר",
         "id": "777777",
+        "hierarchy": "עמף ממ'ד/צוות SDI/תוכניתן מס1",
         "domainUsers":[{
             "dataSource": "1",
             "uniqueId": "matan@gmail.com"

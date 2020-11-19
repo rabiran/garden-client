@@ -14,13 +14,18 @@ import './style.css'
 import { getUsernamesPerNameKart,addImmigrantsApiPromise} from "../../api/api"
 import { Chip } from "@material-ui/core";
 import {Paper} from "@material-ui/core"
-import useStore from 'utils/StoreProvider/useStore';
+import MaterialTable from 'material-table'
+import hebrewLocalization from 'config/tableHebrew';
+import DeleteOutlined from '@material-ui/icons/DeleteOutlined'
+import AddIcon from '@material-ui/icons/Add'
+import tableIcons from 'config/tableIcons';
+import Fab from '@material-ui/core/Fab'
 
 
-export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => {
+export default ({openWindow,setOpenWindow}) => {
  
 
-
+  
   const [loading, setLoading] = React.useState(false);
   const [loadingInput, setLoadingInput] = React.useState(false);
   const [openInput, setOpenInput] = React.useState(false);
@@ -32,21 +37,25 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   const [postStatuses,setPostStatuses] = React.useState([])
   const [domainsColor, setDomainsColor] = React.useState([])
   const [userValidation,setUserValidation] = React.useState(false)
-  const [domainValidation,setDomainValidation] = React.useState(false)
+  const [uniqueIdValidation,setUniqueIdValidation] = React.useState(false)
+  const [lastUserSelectedUniqueId,setLastUserSelectedUniqueId] = React.useState("")
+  const [lastUserSelected, setLastUserSelected] = React.useState(null)
+  const errorMessageFieldEmpty ='שדה ריק נא בחר משתמש!';
+  const errorMessageUserExists = 'משתמש כבר קיים בטבלה!';
+  const [errorMessageField,setErrorMessageField] = React.useState(errorMessageFieldEmpty)
 
   const colors = ["Khaki","Aquamarine","Coral","grey","LightBlue","Violet"]
-  const store = useStore();
-  const domains = store.getDomains();
 
-  const errorMessageField ='שדה ריק נא בחר משתמש!';
+
+
 
 
   const typingTimeout = 500;
   let renderTimeout;
 
   const handleChangedDomain = (event) => {
-    setSelectedDomain(event.target.value)
-    setDomainValidation(false)
+    setLastUserSelectedUniqueId(event.target.value)
+    setUniqueIdValidation(false)
 
   };
   const handleClose = () => { 
@@ -59,12 +68,41 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
     }
     setUserName(e.target.value);
   }
+  const handleAddUser = (e)=>{
+    if(lastUserSelectedUniqueId == ""){
+      setUniqueIdValidation(true)
+    }
+    if(lastUserSelected == null | lastUserSelected == undefined){
+      setUserValidation(true)
+    }
+    if(lastUserSelectedUniqueId != ""){     
+      //usersSelected.push(lastUserSelected);
+      console.log(usersSelected)
+      async function fetchData(){
+        let foundUser =await usersSelected.find(user => user.id === lastUserSelected.id)
+        if(foundUser ==undefined || foundUser == -1){
+          setUsersSelected(usersSelected.concat(lastUserSelected))
+        }else{
+          setErrorMessageField(errorMessageUserExists);
+          setUserValidation(true);
+        }
+      };
+      fetchData();
+      
+      setLastUserSelected(null);
+      setLastUserSelectedUniqueId("");
   
-  const handleSelectedUser = (e,values) =>{   
+      
+    }
+
+  }
+  
+  const handleSelectedUser = (e,value) =>{   
       if(userValidation){
         setUserValidation(false)
       }
-      setUsersSelected(values)
+      setLastUserSelected(value)
+      
       setUsers([])
       setPostStatuses([])
   }
@@ -78,7 +116,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       renderTimeout = setTimeout(async () => {
           setLoadingInput(true)
           let newUsers = await getUsernamesPerNameKart(userName)
-          let us =  newUsers.filter(usnow =>  (usnow.name).includes(userName))
+          let us =   newUsers.filter(usnow =>  (usnow.name).includes(userName))
           setUsers(us)
           setLoadingInput(false)
             
@@ -93,8 +131,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   }, [userName])
   
   const regexHandleRequestClick = () =>{
-    let ans = usersSelected.length !=0 && selectedDomain !="";
-    console.log("ans:"+ans)
+    let ans = usersSelected.length !=0; //&& lastUserSelected !="";
     if (ans){
       return true;
     }
@@ -106,11 +143,11 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   const handleRequestClick = async() =>{
     let statusResults;
     if(usersSelected.length==0){
+      setErrorMessageField(errorMessageFieldEmpty);
       setUserValidation(true)
+      
     }
-    if(selectedDomain == ""){
-      setDomainValidation(true)
-    }
+
     try{
       if (!loading){
         setSuccess(false);
@@ -121,7 +158,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
         setLoading(false);
         return;
       }    
-      statusResults = await addImmigrantsApiPromise(selectedDomain,usersSelected);
+      statusResults = await addImmigrantsApiPromise(lastUserSelectedUniqueId,usersSelected); //NEED TO CHANGE !!!!
       
       setSuccess(true);
       setLoading(false);
@@ -161,10 +198,10 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       <Dialog
         PaperProps={{
           style: {
-            maxWidth: '50vw',
-            minWidth: '50vw',
-            maxHeight: '60vh',
-            minHeight: '60vh',
+            maxWidth: '70vw',
+            minWidth: '70vw',
+            maxHeight: '80vh',
+            minHeight: '80vh',
             
           },
         }}
@@ -177,9 +214,9 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
         dir="rtl"
       >
         <DialogTitle id="form-dialog-title">יצירת משתמש
-          <div style={{textAlign:"left",height: "100px", display: "flex",flexWrap: "nowrap",justifyContent:"flex-end",direction:"row",overflow: "auto"}}>
+          {/* <div style={{textAlign:"left",height: "100px", display: "flex",flexWrap: "nowrap",justifyContent:"flex-end",direction:"row",overflow: "auto"}}>
             <Paper style={{position: "fixed"}}> {(domains) ? domains.map((el,index)=> <div style={{backgroundColor: colors[index]}} key={index}>{el}</div>) : null} </Paper>
-          </div>
+          </div> */}
         </DialogTitle>
         <DialogContent dividers>
           <div className="dialogContentContainer"
@@ -191,20 +228,14 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
               
             <div >
 
-                                        <div style={{maxHeight: '100px',gap:'5px',overflowY: 'auto', display: "flex", flexWrap: "nowrap" , flexDirection: "column", justifyContent: "flex-start"}}>
-                             {(usersSelected != undefined && usersSelected.length>0) ? (usersSelected?.map((el,index)=> <Chip style={{ backgroundColor: colors[domains.indexOf((el?.domainUsers[0]?.dataSource))], minHeight:"30px" }} key={index} label={(el.name)}/>)) : null}            
+                {/* <div style={{maxHeight: '100px',gap:'5px',overflowY: 'auto', display: "flex", flexWrap: "nowrap" , flexDirection: "column", justifyContent: "flex-start"}}>
+                 {(usersSelected != undefined && usersSelected.length>0) ? (usersSelected?.map((el,index)=> <Chip style={{ backgroundColor: colors[domains.indexOf((el?.domainUsers[0]?.dataSource))], minHeight:"30px" }} key={index} label={(el.name)}/>)) : null}                   
+              </div> */}
 
-                            
-                      </div>
               <AutoComplete
-                // onEmptied={()=>{
-                //   setUsersSelected([]);
-                //   console.log("heyy")
-                // }}
                 
                 tag={{color: "blue"}}
                 style = {{width:340,}}
-                multiple
                 noOptionsText={"לא נמצאו תוצאות"}
                 open={openInput}
                 onOpen={() => {
@@ -236,14 +267,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                       
                       ...params.InputProps,
                       startAdornment: (
-                      // <div style={{maxHeight: '70px',gap:'4px',overflowY: 'auto', display: "flex", flexWrap: "nowrap" , flexDirection: "column"}}>
-                      //        {(usersSelected != undefined && usersSelected?.length>0) ? (usersSelected?.map((el,index)=> <Chip style={{ backgroundColor: domains[parseInt(el?.domainUsers[0]?.dataSource)-1].color, }} key={index} label={(el.name)}/>)) : null}            
-                      //       {console.log(usersSelected)/* {params.InputProps.startAdornment} */}
-                      //       {console.log(domains)}
-                      //       {console.log(parseInt(usersSelected[0]?.domainUsers[0].dataSource))}
-                            
 
-                      // </div>
                     <div></div>
                       ),
                       endAdornment: (
@@ -281,20 +305,73 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
               <div>
             <Select
               native
-              value={selectedDomain}
+              value={lastUserSelectedUniqueId}
               onChange={handleChangedDomain}
               variant="outlined"
-              error = {(domainValidation)}
+              error = {(uniqueIdValidation)}
                     
               
             >
-              <option label="בחירת דומיין מרכזי" value=""></option>
-              {domains.map((el,index)=> <option  key={index} value={el}>{el}</option>)}
-              
+              {console.log("whatsapp lastuser")}
+              {console.log(lastUserSelected)}
+              <option label="בחירת יוניק מרכזי" value=""></option>
+              {(lastUserSelected != null) ? lastUserSelected.domainUsers.map((el,index)=> <option  key={index} value={el.uniqueId}>{el.uniqueId}</option>) : null}
+              {console.log(lastUserSelected)}
+              {console.log("hey")}
             </Select>
+            <Fab color="primary" variant="extended" onClick={handleAddUser} style={{marginRight: "30px"}}>
+                <AddIcon/>
+                הוסף
+            </Fab>
+            
             </div>
             </div>
           </div>
+          
+          <div>
+              <MaterialTable
+                 
+                 style={{marginTop: "50px"}}
+                 title="משתמשים שנוספו"
+                 localization={hebrewLocalization}
+                 columns={[
+                    {title: "שם", field: 'name'},
+                    {title: "מספר אישי", field: 'id'},
+                    {title: "היררכיה", field: 'hierarchy'},
+                     {title: "יוניק ראשי",field: 'domainUsers', render: rowData => <p> {JSON.stringify(rowData.domainUsers)}</p>},
+                    // {title: "דומיין ראשי", field: 'primaryDomain'}
+                 ]}
+                 options={{
+                   selection: true,
+                   debounceInterval: 200,
+
+                 }}
+                 
+                 actions={[
+                   {
+                     icon: () => <DeleteOutlined/>,
+                     tooltip: 'מחק משתמש',
+                     onClick: (event, rowData)=>{
+
+                     }
+                   }
+
+                 ]}
+                 icons={tableIcons}
+                 data={(usersSelected != undefined && usersSelected.length >0) ? JSON.parse(JSON.stringify(usersSelected)): [] }
+              
+              
+              
+              
+              />
+
+
+
+              
+
+          </div>
+
+
           <div >
             {postStatuses.map((el,index)=> <p className="regex" key={index}>{el}</p>)}
           </div>
