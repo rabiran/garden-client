@@ -40,8 +40,8 @@ export default () => {
         // eslint-disable-next-line 
     }, [])
 
-    const deleteFromTable = (data) => {
-        const ids = data.map(obj => obj.id);
+    const deleteFromTable = (ids) => {
+        // const ids = data.map(obj => obj.id);
         const newTableData = tableData.filter((item) => !ids.includes(item.id));
         setTableData(newTableData);
         enqueueSnackbar('נמחק', { variant: 'success', autoHideDuration: 2000 })

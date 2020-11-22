@@ -15,7 +15,8 @@ import { getComparator, stableSort } from 'utils/tableUtils';
 
 import TablePagination from '@material-ui/core/TablePagination';
 
-import TextField from '@material-ui/core/TextField';
+import DeleteDialog from 'components/Confirm';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function EnhancedTable({data = []}) {
+export default function EnhancedTable({data = [], deleteFromTable}) {
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
@@ -49,7 +50,23 @@ export default function EnhancedTable({data = []}) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [rows, setRows] = React.useState(data);
-    
+    const [filters, setFilters] = React.useState({
+        completed: true,
+        inprogress: true, 
+        failed: true,
+    });
+    const [openDelete, setOpenDelete] = React.useState(false);
+
+    const handleOpenDelete = () => {
+        setOpenDelete(selected);
+    }
+
+    const handleConfirmDelete = () => {
+        deleteFromTable(openDelete);
+        setOpenDelete(false);
+        setSelected([]);
+    }
+
     React.useEffect(()=> {
         setRows(data);
     },[data]);
@@ -100,46 +117,13 @@ export default function EnhancedTable({data = []}) {
 
     const isSelected = (id) => selected.indexOf(id) !== -1;
     
-    const searchHandler = (e) => {
-        let msg = e.target.value;
-        // const newSelecteds = rows.map((n) => n.id);
-
-        // setSelected([rows[0].id])
-        let matchedRows = [];
-        if(msg) {
-            // for(let dataRow of data) {
-            //     let values = Object.values(dataRow);
-            //     for(let valueStr of values) {
-            //         if(String(valueStr).includes(msg)) {
-            //             matchedRows.push(dataRow);
-            //             break;
-            //         }
-            //     }
-            // }
-            matchedRows = data.filter((dataRow) => {
-                let values = Object.values(dataRow);
-                let found = false;
-                for(let value of values) {
-                    let term = String(value);
-                    term = term.toLowerCase();
-                    let filterValue = msg.toLowerCase();
-                    if(term.includes(filterValue)) found = true;
-                }
-                return found;
-            })
-        }
-        else {
-            matchedRows = data;
-        }
-        // console.log(matchedRows);
-        setRows(matchedRows);
-    }
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
 
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <CustomToolBar numSelected={selected.length} />
+                <CustomToolBar numSelected={selected.length} setRows={setRows} data={data}  filters={filters} setFilters={setFilters} handleOpenDelete={handleOpenDelete} />
                 <TableContainer  style={{maxHeight: 600}}>
                     <Table
                         className={classes.table}
@@ -157,8 +141,10 @@ export default function EnhancedTable({data = []}) {
                             onRequestSort={handleRequestSort}
                             rowCount={rows.length}
                         />
+
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
+                                .filter(obj =>  filters[obj.status.progress])
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
                                     const isItemSelected = isSelected(row.id);
@@ -179,7 +165,7 @@ export default function EnhancedTable({data = []}) {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={(rows.filter(obj =>  filters[obj.status.progress])).length}
                     rowsPerPage={rowsPerPage}
                     labelRowsPerPage='שורות בעמוד:'
                     nextIconButtonText='עמוד הבא'
@@ -192,7 +178,7 @@ export default function EnhancedTable({data = []}) {
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
             </Paper>
-            <TextField id="outlined-basic" label="Outlined" variant="outlined" onChange={searchHandler} />
+            <DeleteDialog open={openDelete ? true : false} setOpen={setOpenDelete} item={openDelete} onConfirm={handleConfirmDelete}/>
         </div>
     );
 }
