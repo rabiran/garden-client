@@ -5,6 +5,9 @@ import Users from 'components/displayUsers';
 import DomainIcon from '@material-ui/icons/Domain';
 import HomeIcon from '@material-ui/icons/Home';
 import useStore from 'utils/StoreProvider/useStore';
+import Button from '@material-ui/core/Button';
+import PauseIcon from '@material-ui/icons/Pause';
+import AccessibleForwardIcon from '@material-ui/icons/AccessibleForward';
 
 export default ({ rowData }) => {
     const store = useStore();
@@ -23,12 +26,25 @@ export default ({ rowData }) => {
                             <Field valueKey={'היררכיה'} value={rowData?.hierarchy} />
                         </div>
                     </div>
-
-                </div>
-                <div className="rowUsers">
-                    <Users users={rowData?.shadowUsers} domains={store.getDomains()} step={rowData?.status?.step} substep={rowData?.status?.subStep} />
-                </div>
-            </div>
+                    <div className="fieldArea">
+                        <div className="buttonsArea">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<PauseIcon />}
+                            > עצור </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<AccessibleForwardIcon />}
+                            > מה זה </Button>
+                        </div>
+                    </div>
+                        </div>
+                        <div className="rowUsers">
+                            <Users users={rowData?.shadowUsers} domains={store.getDomains()} step={rowData?.status?.step} substep={rowData?.status?.subStep} />
+                        </div>
+                    </div>
         </>
     )
 }
