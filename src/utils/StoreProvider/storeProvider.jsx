@@ -22,7 +22,7 @@ export default (props) => {
     console.log('auth');
     // loadingProvider.showLoading(true);
     const data = await authApi();
-    enqueueSnackbar('auth good', { variant: 'success', autoHideDuration: 2000 });
+    // enqueueSnackbar('auth good', { variant: 'success', autoHideDuration: 2000 });
     // loadingProvider.showLoading(false);
     setAuth(data);
   };
@@ -31,7 +31,7 @@ export default (props) => {
     console.log('domains');
     // loadingProvider.showLoading(true);
     const data = await domainsApi();
-    enqueueSnackbar('got domains', { variant: 'success', autoHideDuration: 2000 });
+    // enqueueSnackbar('got domains', { variant: 'success', autoHideDuration: 2000 });
     // loadingProvider.showLoading(false);
     setDomains(data);
   };

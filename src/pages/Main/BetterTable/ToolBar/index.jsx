@@ -12,6 +12,8 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
 import Checkbox from '@material-ui/core/Checkbox';
+import PauseIcon from '@material-ui/icons/Pause';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 const useToolbarStyles = makeStyles((theme) => ({
     root: {
@@ -53,7 +55,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 export default (props) => {
     const classes = useToolbarStyles();
-    const { numSelected, data, setRows, filters, setFilters, handleOpenDelete } = props;
+    const { numSelected, data, setRows, filters, setFilters, handleOpenDelete, handlePause } = props;
 
     const handleChange = (event) => {
         setFilters({ ...filters, [event.target.name]: event.target.checked });
@@ -100,12 +102,23 @@ export default (props) => {
                 [classes.highlight]: numSelected > 0,
             })}
         >
-            {numSelected > 0 &&
-                <Tooltip title="Delete">
+            {numSelected > 0 && <>
+                <Tooltip title="מחק">
                     <IconButton aria-label="delete" onClick={handleOpenDelete}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
+                <Tooltip title="השעיה">
+                    <IconButton aria-label="delete" onClick={() => handlePause(true)}>
+                        <PauseIcon />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="בטל השעיה">
+                    <IconButton aria-label="delete" onClick={() => handlePause(false)}>
+                        <PlayArrowIcon />
+                    </IconButton>
+                </Tooltip>
+            </>
             }
 
             {numSelected > 0 ? (
@@ -151,11 +164,11 @@ export default (props) => {
                         name="failed"
                         inputProps={{ 'aria-label': 'primary checkbox' }}
                     />
-                    נכשל    
+                    נכשל
                 </div>
             </div>
-            
-            <div className={classes.searchField}> 
+
+            <div className={classes.searchField}>
                 <TextField id="outlined-basic" placeholder="חפש" onChange={searchHandler} InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">

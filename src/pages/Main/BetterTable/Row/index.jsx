@@ -1,4 +1,5 @@
 import React from 'react';
+import './styles.css';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -16,7 +17,7 @@ export default (props) => {
 
     return (
         <React.Fragment>
-            <TableRow className='' hover
+            <TableRow className={row.paused ? 'row': ''} hover
                 onClick={(e) => { e.stopPropagation(); setOpen(!open) }}
                 role="checkbox"
                 aria-checked={isItemSelected}

@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function EnhancedTable({data = [], deleteFromTable}) {
+export default function EnhancedTable({data = [], deleteFromTable, changePauseState}) {
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
@@ -65,6 +65,10 @@ export default function EnhancedTable({data = [], deleteFromTable}) {
         deleteFromTable(openDelete);
         setOpenDelete(false);
         setSelected([]);
+    }
+
+    const handlePause = (pause) => {
+        changePauseState(pause, selected);
     }
 
     React.useEffect(()=> {
@@ -123,7 +127,14 @@ export default function EnhancedTable({data = [], deleteFromTable}) {
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <CustomToolBar numSelected={selected.length} setRows={setRows} data={data}  filters={filters} setFilters={setFilters} handleOpenDelete={handleOpenDelete} />
+                <CustomToolBar 
+                    numSelected={selected.length} 
+                    setRows={setRows}
+                    data={data} 
+                    filters={filters} 
+                    setFilters={setFilters}
+                    handleOpenDelete={handleOpenDelete}
+                    handlePause = {handlePause} />
                 <TableContainer  style={{maxHeight: 600}}>
                     <Table
                         className={classes.table}

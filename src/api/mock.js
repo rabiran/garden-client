@@ -21,6 +21,7 @@ export default [
             step: 'target',
             subStep: 'מכין פיצה',
         },
+        paused: true,
         primaryDomainUser: 'es',
         hierarchy: 'חברת הירקות/טיפשים/צוות חציל',
         shadowUsers: ['es'],
