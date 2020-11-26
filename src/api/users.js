@@ -11,6 +11,9 @@ export default [
         },{
             "dataSource": "2",
             "uniqueId": "hey@lol.com",
+        },{
+            "dataSource": "One",
+            "uniqueId": "hey@oneyone.com",
         },],
     },
     {
@@ -29,7 +32,7 @@ export default [
     {
         "name": "גרישה פרוסקי",
         "id": "66666ruskyparusky",
-        "mail": "maehpatleha@gmail.com",
+        
         "hierarchy": "עמף ממ'ד/צוות SDI/תוכניתן מס1",
         "domainUsers":[{
             "dataSource": "2",

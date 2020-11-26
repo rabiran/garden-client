@@ -43,6 +43,7 @@ export default ({openWindow,setOpenWindow}) => {
   const [lastUserSelected, setLastUserSelected] = React.useState(null)
   const errorMessageFieldEmpty ='שדה ריק נא בחר משתמש!';
   const errorMessageUserExists = 'משתמש כבר קיים בטבלה!';
+  const errorMessageUserHasOne= 'משתמש כבר קיים בוואן!';
   const [errorMessageField,setErrorMessageField] = React.useState(errorMessageFieldEmpty)
 
 
@@ -101,6 +102,17 @@ export default ({openWindow,setOpenWindow}) => {
       
       async function fetchData(){
         if(lastUserSelected!=null){
+          let foundOne = await lastUserSelected.domainUsers.find((ds)=> ds.dataSource == "One")
+          if(foundOne != undefined){
+            setErrorMessageField(errorMessageUserHasOne);
+            setUserValidation(true);
+            setUniqueIdValidation(true);
+            setLastUserSelected(null);
+            setLastUserSelectedUniqueId(-1);
+            return;
+
+          }
+
           let foundUser =await usersSelected.find(user => user.id === lastUserSelected.id)
         
           if(foundUser == undefined){
@@ -184,12 +196,6 @@ export default ({openWindow,setOpenWindow}) => {
 
   const handleRequestClick = async() =>{
     let statusResults;
-    if(usersSelected.length==0){
-      setErrorMessageField(errorMessageFieldEmpty);
-      setUniqueIdValidation(true)
-      setUserValidation(true)
-      
-    }
 
     try{
       if (!loading){
@@ -199,6 +205,9 @@ export default ({openWindow,setOpenWindow}) => {
       if(usersSelected.length ==0){
         setSuccess(false);
         setLoading(false);
+        setErrorMessageField(errorMessageFieldEmpty);
+        setUniqueIdValidation(true)
+        setUserValidation(true)
         return;
       }    
       statusResults = await addImmigrantsApiPromise(usersSelected); //NEED TO CHANGE !!!! method api too\!!
@@ -209,15 +218,15 @@ export default ({openWindow,setOpenWindow}) => {
       
       let arrStatuses =[];
       let foundReject = false;
-      console.log(statusResults)
       await statusResults.forEach(res =>{
-        arrStatuses.push(res.status)
+        let status = (res.status == "rejected" ? "נכשל" : "הצליח")
+        arrStatuses.push(status+": "+ res.reason.id+" "+ res.reason.name)
         if(res.status =="rejected"){
           foundReject = true;
         }
       })
       setPostStatuses(arrStatuses)
-      if(foundReject){ 
+      if(foundReject){ // one or more of them failed
         setOpenWindow(true);
       }else{
         setOpenWindow(true);
@@ -432,7 +441,7 @@ export default ({openWindow,setOpenWindow}) => {
 
 
           <div >
-            {postStatuses.map((el,index)=> <p className="regex" key={index}>{el}</p>)}
+            {postStatuses.map((el,index)=> <p className="regex" color={"red"} key={index}>{el}</p>)}
           </div>
         </DialogContent>
 
