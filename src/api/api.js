@@ -44,14 +44,17 @@ const getImmigrantsApi = async () => {
 }
 
 
-const addImmigrantsApiPromise = async (domain,usersToCreate) =>{
+const addImmigrantsApiPromise = async (usersToCreate) =>{
+
+    // NEED TO CHANGE !!!
+
     //if(config.isMock) { await wait(2000); return mock } 
     let arrayPromise = [];
     console.log(usersToCreate)
     usersToCreate.forEach(element => {
         arrayPromise.push(new Promise((resolve,reject) =>{
             
-            request.post(`api/immigrant`,{"Domain": domain,"Name": element.name}).catch(err => {reject (element) })
+            request.post(`api/immigrant`,{"Domain": "CHANGE!!","Name": element.name}).catch(err => {reject (element) })
             .then(function(response){resolve(element)});
             
             

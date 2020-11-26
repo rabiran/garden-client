@@ -19,13 +19,20 @@
 }
 
 .fillingFieldsContainer {
-    display: flex;
+    display: inline-flex !important;
+    
+   
     flex-direction: row;
     flex-wrap:  wrap;
+    justify-items: center;
     justify-content: flex-start;
     gap: 15px;
 }
 
+.fillingFieldsContainer div{
+    
+    margin-top: auto; 
+}
 .dialogContentContainer {
     display: flex;
     flex-direction: column;

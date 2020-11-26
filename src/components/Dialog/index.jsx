@@ -20,7 +20,8 @@ import DeleteOutlined from '@material-ui/icons/DeleteOutlined'
 import AddIcon from '@material-ui/icons/Add'
 import tableIcons from 'config/tableIcons';
 import Fab from '@material-ui/core/Fab'
-
+import Grid from '@material-ui/core/Grid'
+import { ContactSupportOutlined } from "@material-ui/icons";
 
 export default ({openWindow,setOpenWindow}) => {
  
@@ -35,29 +36,44 @@ export default ({openWindow,setOpenWindow}) => {
   const [timeoutVar,setTimeoutVar] = React.useState(null);
   const [usersSelected,setUsersSelected] = React.useState([])
   const [postStatuses,setPostStatuses] = React.useState([])
-  const [domainsColor, setDomainsColor] = React.useState([])
+
   const [userValidation,setUserValidation] = React.useState(false)
   const [uniqueIdValidation,setUniqueIdValidation] = React.useState(false)
-  const [lastUserSelectedUniqueId,setLastUserSelectedUniqueId] = React.useState("")
+  const [lastUserSelectedUniqueIdIndex,setLastUserSelectedUniqueId] = React.useState(-1)
   const [lastUserSelected, setLastUserSelected] = React.useState(null)
   const errorMessageFieldEmpty ='שדה ריק נא בחר משתמש!';
   const errorMessageUserExists = 'משתמש כבר קיים בטבלה!';
   const [errorMessageField,setErrorMessageField] = React.useState(errorMessageFieldEmpty)
 
-  const colors = ["Khaki","Aquamarine","Coral","grey","LightBlue","Violet"]
 
 
 
 
 
-  const typingTimeout = 500;
+  const typingTimeout = 700;
   let renderTimeout;
 
   const handleChangedDomain = (event) => {
     setLastUserSelectedUniqueId(event.target.value)
     setUniqueIdValidation(false)
 
+
   };
+  const handleRowChangedDomain = (oldData,event) => {
+
+    setLastUserSelectedUniqueId(event.target.value)
+    setUsersSelected(usersSelected.map(user =>{
+      if(user.id == oldData.id){
+        user.primaryUniqueIdIndex = event.target.value;
+      }
+      return user;
+    }))
+
+
+
+  };
+
+  
   const handleClose = () => { 
     setOpenWindow(false)
   };
@@ -65,32 +81,42 @@ export default ({openWindow,setOpenWindow}) => {
     
     if(userValidation){
       setUserValidation(false)
+      setUniqueIdValidation(false)
     }
     setUserName(e.target.value);
   }
+
   const handleAddUser = (e)=>{
-    if(lastUserSelectedUniqueId == ""){
+    
+    if(lastUserSelected == null){
+      setUserValidation(true)
+      setUniqueIdValidation(true)
+      setErrorMessageField(errorMessageFieldEmpty)
+    }
+    if(lastUserSelectedUniqueIdIndex == -1){
       setUniqueIdValidation(true)
     }
-    if(lastUserSelected == null | lastUserSelected == undefined){
-      setUserValidation(true)
-    }
-    if(lastUserSelectedUniqueId != ""){     
-      //usersSelected.push(lastUserSelected);
-      console.log(usersSelected)
+
+    if(lastUserSelectedUniqueIdIndex != -1){     
+      
       async function fetchData(){
-        let foundUser =await usersSelected.find(user => user.id === lastUserSelected.id)
-        if(foundUser ==undefined || foundUser == -1){
-          setUsersSelected(usersSelected.concat(lastUserSelected))
-        }else{
-          setErrorMessageField(errorMessageUserExists);
-          setUserValidation(true);
+        if(lastUserSelected!=null){
+          let foundUser =await usersSelected.find(user => user.id === lastUserSelected.id)
+        
+          if(foundUser == undefined){
+            let obj = await Object.assign(lastUserSelected , {primaryUniqueIdIndex: lastUserSelectedUniqueIdIndex})
+            setUsersSelected(usersSelected.concat(obj))
+          }else{
+            setErrorMessageField(errorMessageUserExists);
+            setUserValidation(true);
+            setUniqueIdValidation(true);
+          }
         }
       };
       fetchData();
       
       setLastUserSelected(null);
-      setLastUserSelectedUniqueId("");
+      setLastUserSelectedUniqueId(-1);
   
       
     }
@@ -98,10 +124,35 @@ export default ({openWindow,setOpenWindow}) => {
   }
   
   const handleSelectedUser = (e,value) =>{   
-      if(userValidation){
-        setUserValidation(false)
+
+      if(value == null || value ==""){
+        setLastUserSelected(null)
+        
+        setErrorMessageField(errorMessageFieldEmpty)
+        
+        return;
       }
       setLastUserSelected(value)
+      async function fetchData(){
+        const index =  await value.domainUsers.findIndex((element) =>{
+
+          if(value.mail == undefined){
+            return false;
+          }
+          if(element.uniqueId == undefined){
+            return false;
+          }
+          return element.uniqueId.toLowerCase() == value.mail.toLowerCase()
+        } )
+        if(index == -1){
+          
+          setLastUserSelectedUniqueId(0)
+          return;
+        }
+        setLastUserSelectedUniqueId(index)
+      };
+      fetchData();
+      
       
       setUsers([])
       setPostStatuses([])
@@ -130,20 +181,12 @@ export default ({openWindow,setOpenWindow}) => {
 
   }, [userName])
   
-  const regexHandleRequestClick = () =>{
-    let ans = usersSelected.length !=0; //&& lastUserSelected !="";
-    if (ans){
-      return true;
-    }
-
-
-    return false;
-  }
 
   const handleRequestClick = async() =>{
     let statusResults;
     if(usersSelected.length==0){
       setErrorMessageField(errorMessageFieldEmpty);
+      setUniqueIdValidation(true)
       setUserValidation(true)
       
     }
@@ -153,12 +196,12 @@ export default ({openWindow,setOpenWindow}) => {
         setSuccess(false);
         setLoading(true);
       }
-      if(!regexHandleRequestClick()){
+      if(usersSelected.length ==0){
         setSuccess(false);
         setLoading(false);
         return;
       }    
-      statusResults = await addImmigrantsApiPromise(lastUserSelectedUniqueId,usersSelected); //NEED TO CHANGE !!!!
+      statusResults = await addImmigrantsApiPromise(usersSelected); //NEED TO CHANGE !!!! method api too\!!
       
       setSuccess(true);
       setLoading(false);
@@ -189,9 +232,6 @@ export default ({openWindow,setOpenWindow}) => {
 
   }
   
-  console.log("===================");
-  console.log(usersSelected);
-  console.log("===================");
 
   return (
     <div >
@@ -214,9 +254,6 @@ export default ({openWindow,setOpenWindow}) => {
         dir="rtl"
       >
         <DialogTitle id="form-dialog-title">יצירת משתמש
-          {/* <div style={{textAlign:"left",height: "100px", display: "flex",flexWrap: "nowrap",justifyContent:"flex-end",direction:"row",overflow: "auto"}}>
-            <Paper style={{position: "fixed"}}> {(domains) ? domains.map((el,index)=> <div style={{backgroundColor: colors[index]}} key={index}>{el}</div>) : null} </Paper>
-          </div> */}
         </DialogTitle>
         <DialogContent dividers>
           <div className="dialogContentContainer"
@@ -224,18 +261,15 @@ export default ({openWindow,setOpenWindow}) => {
             <DialogContentText>
               נא למלא את הטופס בשביל יצירת משתמש ב.
             </DialogContentText>
-            <div className="fillingFieldsContainer "> 
+            
+            <div className="fillingFieldsContainer"> 
               
             <div >
 
-                {/* <div style={{maxHeight: '100px',gap:'5px',overflowY: 'auto', display: "flex", flexWrap: "nowrap" , flexDirection: "column", justifyContent: "flex-start"}}>
-                 {(usersSelected != undefined && usersSelected.length>0) ? (usersSelected?.map((el,index)=> <Chip style={{ backgroundColor: colors[domains.indexOf((el?.domainUsers[0]?.dataSource))], minHeight:"30px" }} key={index} label={(el.name)}/>)) : null}                   
-              </div> */}
-
               <AutoComplete
                 
-                tag={{color: "blue"}}
-                style = {{width:340,}}
+                
+                style = {{width:340}}
                 noOptionsText={"לא נמצאו תוצאות"}
                 open={openInput}
                 onOpen={() => {
@@ -245,9 +279,11 @@ export default ({openWindow,setOpenWindow}) => {
                 onClose={() => {
                   setOpenInput(false);
                 }}
+        
                 limitTags={2}
                 id="multiple-limit-tags"
                 options={users}
+                
                 
                 onChange={handleSelectedUser}
                 getOptionLabel={(option)=> option.name + option.hierarchy}
@@ -302,30 +338,31 @@ export default ({openWindow,setOpenWindow}) => {
        
             </div>
             
-              <div>
+            <div> 
             <Select
               native
-              value={lastUserSelectedUniqueId}
+              style={{width:"200px",}}
+              value={lastUserSelectedUniqueIdIndex}
               onChange={handleChangedDomain}
-              variant="outlined"
-              error = {(uniqueIdValidation)}
-                    
               
+              error = {(uniqueIdValidation)}      
             >
-              {console.log("whatsapp lastuser")}
-              {console.log(lastUserSelected)}
-              <option label="בחירת יוניק מרכזי" value=""></option>
-              {(lastUserSelected != null) ? lastUserSelected.domainUsers.map((el,index)=> <option  key={index} value={el.uniqueId}>{el.uniqueId}</option>) : null}
-              {console.log(lastUserSelected)}
-              {console.log("hey")}
+
+              
+              {(lastUserSelected != null) ? lastUserSelected.domainUsers.map((el,index)=> <option  key={index} value={index}>{el.uniqueId}</option>) : null}
+
             </Select>
+            </div>
+            <div >
             <Fab color="primary" variant="extended" onClick={handleAddUser} style={{marginRight: "30px"}}>
                 <AddIcon/>
                 הוסף
             </Fab>
+            </div>
+            
             
             </div>
-            </div>
+          
           </div>
           
           <div>
@@ -338,8 +375,20 @@ export default ({openWindow,setOpenWindow}) => {
                     {title: "שם", field: 'name'},
                     {title: "מספר אישי", field: 'id'},
                     {title: "היררכיה", field: 'hierarchy'},
-                     {title: "יוניק ראשי",field: 'domainUsers', render: rowData => <p> {JSON.stringify(rowData.domainUsers)}</p>},
-                    // {title: "דומיין ראשי", field: 'primaryDomain'}
+                    {title: "שינוי יוניק", render: rowData =>  
+                    
+                    <Select
+                    native
+                    value={rowData.primaryUniqueIdIndex}
+                    onChange={(e) => handleRowChangedDomain(rowData,e)}
+                   
+                       
+                  >                                   
+                    {(rowData != null) ? rowData.domainUsers.map((el,index)=> <option  key={index} value={index}>{el.uniqueId}</option>) : null}
+                  </Select>},
+                 
+                    {title: "דומיין מרכזי", render: rowData => <p> {JSON.parse(JSON.stringify(rowData.domainUsers[rowData.primaryUniqueIdIndex]["dataSource"]))}</p>},
+                    
                  ]}
                  options={{
                    selection: true,
@@ -350,9 +399,19 @@ export default ({openWindow,setOpenWindow}) => {
                  actions={[
                    {
                      icon: () => <DeleteOutlined/>,
-                     tooltip: 'מחק משתמש',
+                     tooltip: 'מחק משתמשים',
                      onClick: (event, rowData)=>{
+                      let newArr=usersSelected;
+                      async function DeleteUsers(){
+                        await rowData.forEach(userToDel => {
+                          newArr = newArr.filter((element)=> {return element.id != userToDel.id})
+                           
+                        });
+                        setUsersSelected(newArr)
+                      }
+                      DeleteUsers();
 
+                       
                      }
                    }
 
