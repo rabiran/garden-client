@@ -40,7 +40,7 @@ export default () => {
           </IconButton>
           <img alt="Remy Sharp" src={logo} className='offset' width="50" height="50" />
           <Typography variant="h5" className='offset header-title'>
-            מיגרנה
+            מיגרציה
           </Typography>
           <Typography variant="h6" >
             {headerName}

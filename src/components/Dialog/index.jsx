@@ -196,7 +196,7 @@ export default ({openWindow,setOpenWindow}) => {
 
   const handleRequestClick = async() =>{
     let statusResults;
-
+    setPostStatuses([])
     try{
       if (!loading){
         setSuccess(false);
@@ -220,16 +220,17 @@ export default ({openWindow,setOpenWindow}) => {
       let foundReject = false;
       await statusResults.forEach(res =>{
         let status = (res.status == "rejected" ? "נכשל" : "הצליח")
-        arrStatuses.push(status+": "+ res.reason.id+" "+ res.reason.name)
+        
         if(res.status =="rejected"){
           foundReject = true;
+          arrStatuses.push(status+": "+ res.reason.id+" "+ res.reason.name)
         }
       })
       setPostStatuses(arrStatuses)
       if(foundReject){ // one or more of them failed
         setOpenWindow(true);
       }else{
-        setOpenWindow(true);
+        setOpenWindow(false);
       }
       
       
@@ -384,7 +385,7 @@ export default ({openWindow,setOpenWindow}) => {
                     {title: "שם", field: 'name'},
                     {title: "מספר אישי", field: 'id'},
                     {title: "היררכיה", field: 'hierarchy'},
-                    {title: "שינוי יוניק", render: rowData =>  
+                    {title: "שינוי יוז'ר ראשי", render: rowData =>  
                     
                     <Select
                     native
@@ -396,7 +397,7 @@ export default ({openWindow,setOpenWindow}) => {
                     {(rowData != null) ? rowData.domainUsers.map((el,index)=> <option  key={index} value={index}>{el.uniqueId}</option>) : null}
                   </Select>},
                  
-                    {title: "דומיין מרכזי", render: rowData => <p> {JSON.parse(JSON.stringify(rowData.domainUsers[rowData.primaryUniqueIdIndex]["dataSource"]))}</p>},
+                    {title: "דומיין", render: rowData => <p> {JSON.parse(JSON.stringify(rowData.domainUsers[rowData.primaryUniqueIdIndex]["dataSource"]))}</p>},
                     
                  ]}
                  options={{
@@ -441,7 +442,7 @@ export default ({openWindow,setOpenWindow}) => {
 
 
           <div >
-            {postStatuses.map((el,index)=> <p className="regex" color={"red"} key={index}>{el}</p>)}
+            {postStatuses.map((el,index)=> <p className="regex" key={index}>{el}</p>)}
           </div>
         </DialogContent>
 
@@ -463,7 +464,7 @@ export default ({openWindow,setOpenWindow}) => {
           disabled={loading}
           onClick={handleRequestClick}
         >
-          יצירת משתמש
+          יצירה
         </Button>
         {loading && (
           <CircularProgress size={24}  className="buttonProgress" />
