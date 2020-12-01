@@ -42,8 +42,8 @@ export default (props) => {
                 </TableCell>
                 <TableCell>{row.fullName}</TableCell>
                 <TableCell>{row.identifier}</TableCell>
-                <TableCell>{row.startDate}</TableCell>
-                <TableCell >{row.endDate}</TableCell>
+                <TableCell>{(new Date(row.startDate).toLocaleDateString('en-GB')) || '-'}</TableCell>
+                <TableCell >{(new Date(row.endDate).toLocaleDateString('en-GB')) || '-'}</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={100}>

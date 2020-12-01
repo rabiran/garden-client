@@ -11,8 +11,8 @@ export default [
         shadowUsers: ['es', 'target'], 
         fullName: 'חציל אפוי',
         identifier: 1234521,
-        startDate: '12/02/1421',
-        endDate: '02/08/0002'
+        startDate: '02/12/1421, 00:00:00',
+        endDate: '02/08/1529, 00:00:00'
     },
     {
         id: 225435435345,
@@ -27,7 +27,7 @@ export default [
         shadowUsers: ['es'],
         fullName: 'ביצה קשה',
         identifier: 1234522,
-        startDate: '12/05/1521',
+        startDate: '12/05/1523',
         endDate: '02/08/4810'
     },
     {
@@ -42,7 +42,7 @@ export default [
         shadowUsers: [],
         fullName: 'תפוח אדמה',
         identifier: 1234523,
-        startDate: '12/02/1021',
+        startDate: '12/02/1001',
         endDate: '02/08/2020'
     },
     {
@@ -57,7 +57,7 @@ export default [
         shadowUsers: ['es', 'target'], 
         fullName: 'חציל אפוי',
         identifier: 1234521,
-        startDate: '12/02/1421',
+        startDate: '12/02/1428',
         endDate: '02/08/0002'
     },
     {

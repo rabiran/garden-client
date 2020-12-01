@@ -50,10 +50,14 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [rows, setRows] = React.useState(data);
+    // const [rowsByDate, setRowsByDate] = React.useState(data);
+    // const [startDateFilter, setStartDateFilter] 
     const [filters, setFilters] = React.useState({
         completed: true,
         inprogress: true, 
         failed: true,
+        startDate: {from: null, to: null},
+        endDate: {from: null, to: null},
     });
     const [openDelete, setOpenDelete] = React.useState(false);
 
@@ -123,6 +127,30 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
     
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+    const startFilter = (obj) => {
+        const from = filters.startDate.from;
+        const to = filters.startDate.to;
+        const startDate = new Date(obj.startDate);
+
+        if(!from && !to) return true;
+        else if(from && !to) return startDate >= from;
+        else if(!from && to) return startDate <= to;
+        else return startDate >= from && startDate <= to
+    }
+
+    const endFilter = (obj) => {
+        const from = filters.endDate.from;
+        const to = filters.endDate.to;
+        const endDate = new Date(obj.endDate);
+
+        if(!from && !to) return true;
+        else if(from && !to) return endDate >= from;
+        else if(!from && to) return endDate <= to;
+        else return endDate >= from && endDate <= to
+    }
+    
+    const paginationFilter = () => (rows.filter(startFilter).filter(endFilter).filter(obj =>  filters[obj.status.progress])).length
+    const pageCount = paginationFilter();
 
     return (
         <div className={classes.root}>
@@ -155,6 +183,8 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
 
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
+                                .filter(startFilter)
+                                .filter(endFilter)
                                 .filter(obj =>  filters[obj.status.progress])
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
@@ -176,7 +206,7 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={(rows.filter(obj =>  filters[obj.status.progress])).length}
+                    count={pageCount}
                     rowsPerPage={rowsPerPage}
                     labelRowsPerPage='שורות בעמוד:'
                     nextIconButtonText='עמוד הבא'

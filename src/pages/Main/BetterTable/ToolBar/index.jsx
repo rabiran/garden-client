@@ -14,6 +14,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import Checkbox from '@material-ui/core/Checkbox';
 import PauseIcon from '@material-ui/icons/Pause';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import FilterListIcon from '@material-ui/icons/FilterList';
+
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+
+import DateFilter from 'components/DateFilter';
 
 const useToolbarStyles = makeStyles((theme) => ({
     root: {
@@ -32,16 +38,17 @@ const useToolbarStyles = makeStyles((theme) => ({
                 backgroundColor: theme.palette.secondary.dark,
             },
     title: {
-        flex: '1 1 50%',
+        flex: '1 1 25%',
     },
     filterArea: {
         display: 'flex',
-        justifyContent: 'space-around',
+        // justifyContent: 'space-around',
         alignItems: 'center',
         // background: 'green',
-        minWidth: 300,
-        width: '35%',
-        margin: 10
+        minWidth: 200,
+        // width: '10%',
+        margin: 10,
+        paddingRight: 20,
     },
     checkBox: {
         marginLeft: 200,
@@ -58,25 +65,29 @@ export default (props) => {
     const { numSelected, data, setRows, filters, setFilters, handleOpenDelete, handlePause } = props;
 
     const handleChange = (event) => {
-        setFilters({ ...filters, [event.target.name]: event.target.checked });
+        console.log(event.target.dataset.name);
+        const checked = filters[event.target.dataset.name];
+        setFilters({ ...filters, [event.target.dataset.name]: !checked });
     };
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [openDateFilter, setOpenDateFilter] = React.useState(false);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleOpenDateFilter = () => {
+        setOpenDateFilter(true);
+    }
 
     const searchHandler = (e) => {
         let msg = e.target.value;
-        // const newSelecteds = rows.map((n) => n.id);
-
-        // setSelected([rows[0].id])
         let matchedRows = [];
         if (msg) {
-            // for(let dataRow of data) {
-            //     let values = Object.values(dataRow);
-            //     for(let valueStr of values) {
-            //         if(String(valueStr).includes(msg)) {
-            //             matchedRows.push(dataRow);
-            //             break;
-            //         }
-            //     }
-            // }
             matchedRows = data.filter((dataRow) => {
                 let values = Object.values(dataRow);
                 let found = false;
@@ -92,91 +103,123 @@ export default (props) => {
         else {
             matchedRows = data;
         }
-        // console.log(matchedRows);
         setRows(matchedRows);
     }
 
     return (
-        <Toolbar
-            className={clsx(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
-        >
-            {numSelected > 0 && <>
-                <Tooltip title="מחק">
-                    <IconButton aria-label="delete" onClick={handleOpenDelete}>
-                        <DeleteIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="השעיה">
-                    <IconButton aria-label="delete" onClick={() => handlePause(true)}>
-                        <PauseIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="בטל השעיה">
-                    <IconButton aria-label="delete" onClick={() => handlePause(false)}>
-                        <PlayArrowIcon />
-                    </IconButton>
-                </Tooltip>
-            </>
-            }
+        <>
+            <Toolbar
+                className={clsx(classes.root, {
+                    [classes.highlight]: numSelected > 0,
+                })}
+            >
+                {numSelected > 0 && <>
+                    <Tooltip title="מחק">
+                        <IconButton aria-label="delete" onClick={handleOpenDelete}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="השעיה">
+                        <IconButton aria-label="delete" onClick={() => handlePause(true)}>
+                            <PauseIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="בטל השעיה">
+                        <IconButton aria-label="delete" onClick={() => handlePause(false)}>
+                            <PlayArrowIcon />
+                        </IconButton>
+                    </Tooltip>
+                </>
+                }
 
-            {numSelected > 0 ? (
-                <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-                    {numSelected} נבחרו
-                </Typography>
-            ) : (
-                    <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                        מיגרציות
+                {numSelected > 0 ? (
+                    <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
+                        {numSelected} נבחרו
                     </Typography>
-                )}
+                ) : (
+                        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+                            מיגרציות
+                        </Typography>
+                    )}
 
-            <div className={classes.filterArea}>
-                <Typography variant="h6" id="tableTitle" component="div">
-                    מיין:
-                </Typography>
-                <div className={classes.checkbox}>
-                    <Checkbox
-                        checked={filters.completed}
-                        onChange={handleChange}
-                        color="primary"
-                        name="completed"
-                        inputProps={{ 'aria-label': 'primary checkbox' }}
-                    />
-                    הסתיים
+                <div className={classes.searchField}>
+                    <TextField id="outlined-basic" placeholder="חפש לפי קבוצה" onChange={searchHandler} InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }} />
                 </div>
-                <div className={classes.checkbox}>
-                    <Checkbox
-                        checked={filters.inprogress}
-                        onChange={handleChange}
-                        color="primary"
-                        name="inprogress"
-                        inputProps={{ 'aria-label': 'primary checkbox' }}
-                    />
-                    בתהליך
-                </div>
-                <div className={classes.checkbox}>
-
-                    <Checkbox
-                        checked={filters.failed}
-                        onChange={handleChange}
-                        color="primary"
-                        name="failed"
-                        inputProps={{ 'aria-label': 'primary checkbox' }}
-                    />
-                    נכשל
-                </div>
+                <div className={classes.filterArea} >
+                    <IconButton aria-label="filter" onClick={handleOpenDateFilter}>
+                        <FilterListIcon />
+                    </IconButton>
+                מיין לפי תאריך
             </div>
+                <div className={classes.filterArea}>
+                    <IconButton aria-label="filter" onClick={handleClick}>
+                        <FilterListIcon />
+                    </IconButton>
+                מיין לפי סטטוס
 
-            <div className={classes.searchField}>
-                <TextField id="outlined-basic" placeholder="חפש" onChange={searchHandler} InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <SearchIcon />
-                        </InputAdornment>
-                    ),
-                }} />
-            </div>
-        </Toolbar>
+                <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                    >
+                        <MenuItem onClick={handleChange} data-name="completed">
+                            <>
+                                <Checkbox
+                                    checked={filters.completed}
+                                    // onChange={handleChange}
+                                    color="primary"
+                                    // name="completed"
+                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                />
+                            הסתיים
+                        </>
+                        </MenuItem>
+                        <MenuItem onClick={handleChange} data-name="inprogress">
+                            <>
+                                <Checkbox
+                                    checked={filters.inprogress}
+                                    // onChange={handleChange}
+                                    color="primary"
+                                    // name="inprogress"
+                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                />
+                            בתהליך
+                        </>
+                        </MenuItem>
+                        <MenuItem onClick={handleChange} data-name="failed">
+                            <>
+                                <Checkbox
+                                    checked={filters.failed}
+                                    // onChange={handleChange}
+                                    color="primary"
+                                    // name="failed"
+                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                />
+                            נכשל
+                        </>
+                        </MenuItem>
+                    </Menu>
+                </div>
+
+                <div className={classes.searchField}>
+                    <TextField id="outlined-basic" placeholder="חפש" onChange={searchHandler} InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }} />
+                </div>
+            </Toolbar>
+            <DateFilter open={openDateFilter} setOpen={setOpenDateFilter}/>
+        </>
     );
 };
