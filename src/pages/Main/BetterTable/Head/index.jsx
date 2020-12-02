@@ -13,6 +13,8 @@ const headCells = [
     { id: 'identifier', numeric: false, disablePadding: false, label: 'תעודת זהות' },
     { id: 'startDate', numeric: false, disablePadding: false, label: 'תאריך יצירה' },
     { id: 'endDate', numeric: false, disablePadding: false, label: 'תאריך סיום' },
+    { id: 'currentStep', numeric: false, disablePadding: false, label: 'שלב נוכחי' },
+    { id: 'currentSubStep', numeric: false, disablePadding: false, label: 'תת שלב נוכחי' },
 ];
 
 

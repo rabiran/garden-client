@@ -48,7 +48,7 @@ export default [
     {
         id: 125435435346,
         status: {
-            progress: 'completed',
+            progress: 'paused',
             step: 'target',
             subStep: 'הסתיים',
         },
@@ -63,7 +63,7 @@ export default [
     {
         id: 225435435349,
         status: {
-            progress: 'inprogress',
+            progress: 'haha',
             step: 'target',
             subStep: 'מכין פיצה',
         },

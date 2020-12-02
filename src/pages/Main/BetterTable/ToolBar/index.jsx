@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -66,6 +65,11 @@ export default (props) => {
 
     const handleChange = (event) => {
         console.log(event.target.dataset.name);
+        // const name = event.target.dataset.name;
+        // if(name === 'all') {
+        //     const checked = filters.all;
+        //     setFilters({...filters, completed: !checked, inprogress: !checked, })
+        // }
         const checked = filters[event.target.dataset.name];
         setFilters({ ...filters, [event.target.dataset.name]: !checked });
     };
@@ -82,6 +86,11 @@ export default (props) => {
 
     const handleOpenDateFilter = () => {
         setOpenDateFilter(true);
+    }
+
+    const setDateFilter = (dateFilter) => {
+        const { startDate, endDate } = dateFilter;
+        setFilters({...filters, startDate: startDate, endDate: endDate});
     }
 
     const searchHandler = (e) => {
@@ -173,7 +182,7 @@ export default (props) => {
                         <MenuItem onClick={handleChange} data-name="completed">
                             <>
                                 <Checkbox
-                                    checked={filters.completed}
+                                    checked={filters.completed || filters.all}
                                     // onChange={handleChange}
                                     color="primary"
                                     // name="completed"
@@ -185,7 +194,7 @@ export default (props) => {
                         <MenuItem onClick={handleChange} data-name="inprogress">
                             <>
                                 <Checkbox
-                                    checked={filters.inprogress}
+                                    checked={filters.inprogress || filters.all}
                                     // onChange={handleChange}
                                     color="primary"
                                     // name="inprogress"
@@ -197,13 +206,37 @@ export default (props) => {
                         <MenuItem onClick={handleChange} data-name="failed">
                             <>
                                 <Checkbox
-                                    checked={filters.failed}
+                                    checked={filters.failed || filters.all}
                                     // onChange={handleChange}
                                     color="primary"
                                     // name="failed"
                                     inputProps={{ 'aria-label': 'primary checkbox' }}
                                 />
                             נכשל
+                        </>
+                        </MenuItem>
+                        <MenuItem onClick={handleChange} data-name="paused">
+                            <>
+                                <Checkbox
+                                    checked={filters.paused || filters.all}
+                                    // onChange={handleChange}
+                                    color="primary"
+                                    // name="failed"
+                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                />
+                            בהשעיה
+                        </>
+                        </MenuItem>
+                        <MenuItem onClick={handleChange} data-name="others">
+                            <>
+                                <Checkbox
+                                    checked={filters.others}
+                                    // onChange={handleChange}
+                                    color="primary"
+                                    // name="failed"
+                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                />
+                            אחרים
                         </>
                         </MenuItem>
                     </Menu>
@@ -219,7 +252,7 @@ export default (props) => {
                     }} />
                 </div>
             </Toolbar>
-            <DateFilter open={openDateFilter} setOpen={setOpenDateFilter}/>
+            <DateFilter open={openDateFilter} setOpen={setOpenDateFilter} setDateFilter={setDateFilter} currentDateFilters={filters}/>
         </>
     );
 };

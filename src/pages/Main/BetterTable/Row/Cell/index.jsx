@@ -27,7 +27,7 @@ export default ({ rowData }) => {
                         </div>
                     </div>
                     <div className="fieldArea">
-                        <div className="buttonsArea">
+                        {/* <div className="buttonsArea">
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -38,7 +38,7 @@ export default ({ rowData }) => {
                                 color="primary"
                                 startIcon={<AccessibleForwardIcon />}
                             > מה זה </Button>
-                        </div>
+                        </div> */}
                     </div>
                         </div>
                         <div className="rowUsers">

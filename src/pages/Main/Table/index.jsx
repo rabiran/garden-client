@@ -2,7 +2,7 @@ import React from 'react';
 import './styles.css';
 import Status from 'components/status';
 import MaterialTable from 'material-table'
-import Cell from './Cell';
+import Cell from '../BetterTable/Row/Cell';
 import hebrewLocalization from 'config/tableHebrew';
 import DeleteDialog from 'components/Confirm';
 import tableIcons from 'config/tableIcons';

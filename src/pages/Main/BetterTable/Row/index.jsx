@@ -8,7 +8,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import Collapse from '@material-ui/core/Collapse';
 
-import Cell from '../../Table/Cell';
+import Cell from './Cell';
 import Status from 'components/status';
 
 export default (props) => {
@@ -44,6 +44,8 @@ export default (props) => {
                 <TableCell>{row.identifier}</TableCell>
                 <TableCell>{(new Date(row.startDate).toLocaleDateString('en-GB')) || '-'}</TableCell>
                 <TableCell >{(new Date(row.endDate).toLocaleDateString('en-GB')) || '-'}</TableCell>
+                <TableCell >{row?.status?.step}</TableCell>
+                <TableCell >{row?.status?.subStep}</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={100}>
