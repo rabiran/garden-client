@@ -135,7 +135,7 @@ export default ({ open, setOpen, setDateFilter, currentDateFilters }) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary" variant="contained">
-                    לא
+                    סגור
                 </Button>
                 <Button onClick={clearFilters} color="primary" variant="contained">
                     מחק מיון תאריכים

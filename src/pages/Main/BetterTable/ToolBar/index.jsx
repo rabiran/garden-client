@@ -182,7 +182,7 @@ export default (props) => {
                         <MenuItem onClick={handleChange} data-name="completed">
                             <>
                                 <Checkbox
-                                    checked={filters.completed || filters.all}
+                                    checked={filters.completed}
                                     // onChange={handleChange}
                                     color="primary"
                                     // name="completed"
@@ -194,7 +194,7 @@ export default (props) => {
                         <MenuItem onClick={handleChange} data-name="inprogress">
                             <>
                                 <Checkbox
-                                    checked={filters.inprogress || filters.all}
+                                    checked={filters.inprogress}
                                     // onChange={handleChange}
                                     color="primary"
                                     // name="inprogress"
@@ -206,7 +206,7 @@ export default (props) => {
                         <MenuItem onClick={handleChange} data-name="failed">
                             <>
                                 <Checkbox
-                                    checked={filters.failed || filters.all}
+                                    checked={filters.failed}
                                     // onChange={handleChange}
                                     color="primary"
                                     // name="failed"
@@ -218,7 +218,7 @@ export default (props) => {
                         <MenuItem onClick={handleChange} data-name="paused">
                             <>
                                 <Checkbox
-                                    checked={filters.paused || filters.all}
+                                    checked={filters.paused}
                                     // onChange={handleChange}
                                     color="primary"
                                     // name="failed"

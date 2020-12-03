@@ -9,6 +9,7 @@ import { getImmigrantsApi, deleteImmigrantApi, pauseStateApi } from 'api/api';
 import { useSnackbar } from 'notistack';
 import useLoading from 'utils/LoadingProvider/useLoading';
 import settledParser from 'utils/settledParser';
+import useStore from 'utils/StoreProvider/useStore';
 
 // import useAuth from 'utils/AuthProvider/useAuth';
 
@@ -23,22 +24,25 @@ export default () => {
     const handleClickOpen = () => {
         setOpenWindow(true)
     };
+    const store = useStore();
 
     React.useEffect(() => {
-        async function fetchData() {
-            loadingProvider.showLoading(true);
-            try {
-                const data = await getImmigrantsApi();
-                enqueueSnackbar('מידע התקבל', { variant: 'success', autoHideDuration: 2000 });
-                setTableData(data);
-            }
-            catch {
-                enqueueSnackbar('נכשל', { variant: 'error', autoHideDuration: 2000 });
-            }
-            loadingProvider.showLoading(false);
+        console.log('hello');
+        // async function fetchData() {
+        //     loadingProvider.showLoading(true);
+        //     try {
+        //         const data = await getImmigrantsApi();
+        //         enqueueSnackbar('מידע התקבל', { variant: 'success', autoHideDuration: 2000 });
+        //         setTableData(data);
+        //     }
+        //     catch {
+        //         enqueueSnackbar('נכשל', { variant: 'error', autoHideDuration: 2000 });
+        //     }
+        //     loadingProvider.showLoading(false);
             
-        }
-        fetchData();
+        // }
+        // fetchData();
+        // setTableData(store.getTableData())
         // eslint-disable-next-line 
     }, [])
 
@@ -55,8 +59,8 @@ export default () => {
             enqueueSnackbar(`נמחק ${id}`, { variant: 'success', autoHideDuration: 4000 });
             succesfulIds.push(id);
         }
-        const newTableData = tableData.filter((item) => !succesfulIds.includes(item.id));
-        setTableData(newTableData);
+        const newTableData = store.getTableData().filter((item) => !succesfulIds.includes(item.id));
+        store.updateTableData(newTableData);
     }
 
     const changePauseState = async (pauseState, ids) => {
@@ -82,7 +86,7 @@ export default () => {
             <div className='GridContainer'>
                 <div className='tableContainer'>
                     {/* <Table data={tableData} deleteFromTable={deleteFromTable} /> */}
-                    <BetterTable data={tableData || []} deleteFromTable={deleteFromTable} changePauseState={changePauseState}/>
+                    <BetterTable data={store.getTableData() || []} deleteFromTable={deleteFromTable} changePauseState={changePauseState}/>
                 </div>
                 <div className='dialogContainer'>
                     <Fab color="primary" aria-label="add" onClick={handleClickOpen} >

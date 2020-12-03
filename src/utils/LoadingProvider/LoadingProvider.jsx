@@ -10,13 +10,17 @@ export default (props) => {
     setLoading(loading);
   };
 
+  const getLoading = () => {
+    return isLoading;
+  }
   const contextValue = {
-    showLoading: showLoading
+    showLoading: showLoading,
+    getLoading: getLoading
   }
 
   return (
     <LoadingContext.Provider value={contextValue}>
-      {isLoading && <LinearProgress color="secondary" />}
+      {/* {isLoading && <LinearProgress color="secondary" />} */}
       {props.children}
     </LoadingContext.Provider>
   );

@@ -57,7 +57,7 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
         inprogress: true, 
         failed: true,
         paused: true,
-        others: false,
+        others: true,
         startDate: {from: null, to: null},
         endDate: {from: null, to: null},
     });
@@ -154,18 +154,12 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
     const statusFilters = (obj) =>  {
         const isExist = filters[obj.status.progress];
         if(isExist) return true;
-        else if(filters.others) {
+        else if(filters.others && isExist === undefined) {
             return true;
         }
-        // if(filters.others) {
-        //     return true;
-        // }
-        // else {
-        //     return false;
-        // }
-        // return filters[obj.status.progress]
+        return false;
     }
-    const paginationFilter = () => (rows.filter(startFilter).filter(endFilter).filter(obj =>  filters[obj.status.progress])).length
+    const paginationFilter = () => (rows.filter(startFilter).filter(endFilter).filter(statusFilters)).length
     const pageCount = paginationFilter();
 
     return (

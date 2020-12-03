@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from '@material-ui/core/Avatar';
 import logo from 'images/migraine.svg';
+import RefreshIcon from '@material-ui/icons/Refresh';
 // import Menu from '@material-ui/core/Menu';
 // import MenuItem from '@material-ui/core/MenuItem';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
@@ -37,6 +38,9 @@ export default () => {
         <Toolbar>
           <IconButton edge="start" className='' color="inherit" aria-label="menu" onClick={() => themeProvider.themeSwitch()}>
             <Brightness2Icon />
+          </IconButton>
+          <IconButton edge="end" className='' color="inherit" aria-label="menu" onClick={() => store.fetchTableData()}>
+            <RefreshIcon />
           </IconButton>
           <img alt="Remy Sharp" src={logo} className='offset' width="50" height="50" />
           <Typography variant="h5" className='offset header-title'>
