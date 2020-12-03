@@ -63,18 +63,20 @@ export default (props) => {
     const classes = useToolbarStyles();
     const { numSelected, data, setRows, filters, setFilters, handleOpenDelete, handlePause } = props;
 
-    const handleChange = (event) => {
-        console.log(event.target.dataset.name);
-        // const name = event.target.dataset.name;
-        // if(name === 'all') {
-        //     const checked = filters.all;
-        //     setFilters({...filters, completed: !checked, inprogress: !checked, })
-        // }
-        const checked = filters[event.target.dataset.name];
-        setFilters({ ...filters, [event.target.dataset.name]: !checked });
-    };
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [openDateFilter, setOpenDateFilter] = React.useState(false);
+    const handleChange = (event) => {
+        const type = event.target.dataset.name || event.target.value;
+        if(type === 'all') {
+            const checked = Object.values(filters).every(o => o);
+            setFilters({...filters, completed: !checked, inprogress: !checked, failed: !checked, paused: !checked, others: !checked })
+
+        }
+        else {
+            const checked = filters[type];
+            setFilters({ ...filters, [type]: !checked });
+        }
+    };
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -179,10 +181,24 @@ export default (props) => {
                         open={Boolean(anchorEl)}
                         onClose={handleClose}
                     >
+                        <MenuItem onClick={handleChange} data-name="all">
+                            <>
+                                <Checkbox
+                                    checked={Object.values(filters).every(o => o)}
+                                    value="all"
+                                    // onChange={handleChange}
+                                    color="primary"
+                                    // name="failed"
+                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                />
+                            הכל
+                        </>
+                        </MenuItem>
                         <MenuItem onClick={handleChange} data-name="completed">
                             <>
                                 <Checkbox
                                     checked={filters.completed}
+                                    value="completed"
                                     // onChange={handleChange}
                                     color="primary"
                                     // name="completed"
@@ -195,7 +211,8 @@ export default (props) => {
                             <>
                                 <Checkbox
                                     checked={filters.inprogress}
-                                    // onChange={handleChange}
+                                    value="inprogress"
+                                    // onClick={() => null}
                                     color="primary"
                                     // name="inprogress"
                                     inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -207,6 +224,7 @@ export default (props) => {
                             <>
                                 <Checkbox
                                     checked={filters.failed}
+                                    value="failed"
                                     // onChange={handleChange}
                                     color="primary"
                                     // name="failed"
@@ -219,6 +237,7 @@ export default (props) => {
                             <>
                                 <Checkbox
                                     checked={filters.paused}
+                                    value="paused"
                                     // onChange={handleChange}
                                     color="primary"
                                     // name="failed"
@@ -231,6 +250,7 @@ export default (props) => {
                             <>
                                 <Checkbox
                                     checked={filters.others}
+                                    value="others"
                                     // onChange={handleChange}
                                     color="primary"
                                     // name="failed"

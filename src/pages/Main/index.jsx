@@ -80,10 +80,10 @@ export default () => {
         // const newTableData = tableData.filter((item) => !succesfulIds.includes(item.id));
         // setTableData(newTableData);
     }
-
+    // GridContainer
     return (
-        <>
-            <div className='GridContainer'>
+        <> 
+            {/* <div className='tableFlex'> */}
                 <div className='tableContainer'>
                     {/* <Table data={tableData} deleteFromTable={deleteFromTable} /> */}
                     <BetterTable data={store.getTableData() || []} deleteFromTable={deleteFromTable} changePauseState={changePauseState}/>
@@ -94,7 +94,7 @@ export default () => {
                     </Fab>
                     <Dialog openWindow={openWindow} setOpenWindow={setOpenWindow} selectedDomain={selectedDomain} setSelectedDomain={setSelectedDomain} />
                 </div>
-            </div>
+            {/* </div> */}
         </>
     )
 }
