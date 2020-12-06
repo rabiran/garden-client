@@ -1,6 +1,6 @@
 import React from 'react';
 import './styles.css';
-import Table from './Table';
+// import Table from './Table';
 import BetterTable from './BetterTable';
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
