@@ -3,6 +3,7 @@ import { SnackbarProvider } from 'notistack';
 import MainPage from 'pages/Main';
 import AdminPage from 'pages/Admin';
 import UnathorizedPage from 'pages/Unathorized';
+import Charts from 'pages/Charts';
 import Header from 'components/Header';
 import RTL from 'utils/RTL';
 import ThemeProvider from 'utils/ThemeProvider/ThemeProvider';
@@ -27,6 +28,7 @@ function App() {
                     <Route exact path="/" component={MainPage} />
                     <Route exact path="/admin" component={AdminPage} />
                     <Route exact path="/unathorized" component={UnathorizedPage} />
+                    <Route exact path="/charts" component={Charts} />
                     {/* <ProtectedRoute exact path="/" component={MainPage} /> */}
                   </Switch>
                 </Router>

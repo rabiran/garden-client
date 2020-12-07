@@ -74,7 +74,7 @@ const getUsernamesPerNameKart = async (username) =>{
     // return res.data;
 }
 const getGardeners = async () =>{
-    if(config.isMock) { await wait(2000); return gardeners}
+    if(config.isMock) { await wait(300); return gardeners}
     const res = await request.get(`api/gardeners`).catch(err => { throw (err.response) });
     return res.data;
 
