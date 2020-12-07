@@ -4,6 +4,9 @@ import Grid from '@material-ui/core/Grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import BuildIcon from '@material-ui/icons/Build';
+import PauseIcon from '@material-ui/icons/Pause';
+import FeedbackIcon from '@material-ui/icons/Feedback';
+
 export default ({progress}) => {
     
     let status;
@@ -27,10 +30,19 @@ export default ({progress}) => {
                     </Grid>;
             break;
         }
+        case 'paused': {
+            status = <Grid container direction="row" alignItems="center" className="paused" wrap="nowrap">
+                        <PauseIcon/> בהשעיה 
+                    </Grid>;
+            break;
+        }
         default:
+            status = <Grid container direction="row" alignItems="center" className="unknown" wrap="nowrap">
+                        <FeedbackIcon/> {progress} 
+                    </Grid>;
             break;
     }
     return (
-            <>{status} </>
+            <>{status}</>
     );
 }
