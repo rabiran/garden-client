@@ -14,15 +14,16 @@ import './style.css'
 import { getUsernamesPerNameKart,addImmigrantsApiPromise} from "../../api/api"
 import { Chip } from "@material-ui/core";
 import {Paper} from "@material-ui/core"
-import MaterialTable from 'material-table'
-import hebrewLocalization from 'config/tableHebrew';
-import DeleteOutlined from '@material-ui/icons/DeleteOutlined'
 import AddIcon from '@material-ui/icons/Add'
-import tableIcons from 'config/tableIcons';
 import Fab from '@material-ui/core/Fab'
 import Grid from '@material-ui/core/Grid'
 import { ContactSupportOutlined } from "@material-ui/icons";
 import logo from 'images/migraine.svg';
+import DialogsTable from '../DialogsTable'
+import domainsMap from '../../api/domainsMap'
+
+
+
 export default ({openWindow,setOpenWindow}) => {
  
 
@@ -58,23 +59,16 @@ export default ({openWindow,setOpenWindow}) => {
     setLastUserSelectedUniqueId(event.target.value)
     setUniqueIdValidation(false)
 
-
-  };
-  const handleRowChangedDomain = (oldData,event) => {
-
-    setLastUserSelectedUniqueId(event.target.value)
-    setUsersSelected(usersSelected.map(user =>{
-      if(user.id == oldData.id){
-        user.primaryUniqueIdIndex = event.target.value;
-      }
-      return user;
-    }))
-
-
-
   };
 
-  
+  const existenceUniqueId = async(uniqueId)=>{
+    let splited = uniqueId.split('@',1)
+    let found = domainsMap.find((dm) => splited == dm[0] )
+    if (found !=undefined){
+      ////WORKWORKWORK
+    }
+  }
+
   const handleClose = () => { 
     setOpenWindow(false)
   };
@@ -102,7 +96,7 @@ export default ({openWindow,setOpenWindow}) => {
       
       async function fetchData(){
         if(lastUserSelected!=null){
-          let foundOne = await lastUserSelected.domainUsers.find((ds)=> ds.dataSource == "One")
+          let foundOne =  lastUserSelected.domainUsers.find((ds)=> ds.dataSource == "One")
           if(foundOne != undefined){
             setErrorMessageField(errorMessageUserHasOne);
             setUserValidation(true);
@@ -113,10 +107,10 @@ export default ({openWindow,setOpenWindow}) => {
 
           }
 
-          let foundUser =await usersSelected.find(user => user.id === lastUserSelected.id)
+          let foundUser = usersSelected.find(user => user.id === lastUserSelected.id)
         
           if(foundUser == undefined){
-            let obj = await Object.assign(lastUserSelected , {primaryUniqueIdIndex: lastUserSelectedUniqueIdIndex})
+            let obj = Object.assign(lastUserSelected , {primaryUniqueIdIndex: lastUserSelectedUniqueIdIndex})
             setUsersSelected(usersSelected.concat(obj))
           }else{
             setErrorMessageField(errorMessageUserExists);
@@ -136,10 +130,11 @@ export default ({openWindow,setOpenWindow}) => {
   }
   const findFirstDataSIndex = async(domainUsersArr) =>{
 
-      const result = await domainUsersArr.find((element) => element.dataSource == "1" || element.dataSource == "2")
+      const result = domainUsersArr.find((element) => element.dataSource == "1" || element.dataSource == "2")
       return result;
 
   }
+  
   
   
   const handleSelectedUser = async(e,value) =>{   
@@ -153,7 +148,7 @@ export default ({openWindow,setOpenWindow}) => {
       }
       setLastUserSelected(value)
       async function fetchData(){
-        const index =  await value.domainUsers.findIndex((element) =>{
+        const index = value.domainUsers.findIndex((element) =>{
 
           if(value.mail == undefined){
             return false;
@@ -171,7 +166,7 @@ export default ({openWindow,setOpenWindow}) => {
           return false;
         } )
         if(index == -1){
-          //const res= await findFirstDataSIndex(value.domainUsers)
+          //const res= findFirstDataSIndex(value.domainUsers)
           //setLastUserSelectedUniqueId(res)
           setLastUserSelectedUniqueId(0)
           return;
@@ -233,7 +228,7 @@ export default ({openWindow,setOpenWindow}) => {
       
       let arrStatuses =[];
       let foundReject = false;
-      await statusResults.forEach(res =>{
+      statusResults.forEach(res =>{
         let status = (res.status == "rejected" ? "נכשל" : "הצליח")
         
         if(res.status =="rejected"){
@@ -292,8 +287,7 @@ export default ({openWindow,setOpenWindow}) => {
             <div >
 
               <AutoComplete
-                
-                
+                               
                 style = {{width:340}}
                 noOptionsText={"לא נמצאו תוצאות"}
                 open={openInput}
@@ -386,77 +380,13 @@ export default ({openWindow,setOpenWindow}) => {
                 הוסף
             </Fab>
             </div>
-            
-            
+
             </div>
           
           </div>
+
+          <DialogsTable usersSelected={usersSelected} setUsersSelected={setUsersSelected} setLastUserSelectedUniqueId={setLastUserSelectedUniqueId}/>
           
-          <div>
-              <MaterialTable
-                 
-                 style={{marginTop: "50px"}}
-                 title="משתמשים שנוספו"
-                 localization={hebrewLocalization}
-                 columns={[
-                    {title: "שם", field: 'name'},
-                    {title: "מספר אישי", field: 'id'},
-                    {title: "היררכיה", field: 'hierarchy'},
-                    {title: "שינוי יוז'ר ראשי", render: rowData =>  
-                    
-                    <Select
-                    native
-                    value={rowData.primaryUniqueIdIndex}
-                    onChange={(e) => handleRowChangedDomain(rowData,e)}
-                   
-                       
-                  >                                   
-                    {(rowData != null) ? rowData.domainUsers.map((el,index)=> <option  key={index} value={index}>{el.uniqueId}</option>) : null}
-                  </Select>},
-                 
-                    {title: "דומיין", render: rowData => <p> {JSON.parse(JSON.stringify(rowData.domainUsers[rowData.primaryUniqueIdIndex]["dataSource"]))}</p>},
-                    
-                 ]}
-                 options={{
-                   selection: true,
-                   debounceInterval: 200,
-
-                 }}
-                 
-                 actions={[
-                   {
-                     icon: () => <DeleteOutlined/>,
-                     tooltip: 'מחק משתמשים',
-                     onClick: (event, rowData)=>{
-                      let newArr=usersSelected;
-                      async function DeleteUsers(){
-                        await rowData.forEach(userToDel => {
-                          newArr = newArr.filter((element)=> {return element.id != userToDel.id})
-                           
-                        });
-                        setUsersSelected(newArr)
-                      }
-                      DeleteUsers();
-
-                       
-                     }
-                   }
-
-                 ]}
-                 icons={tableIcons}
-                 data={(usersSelected != undefined && usersSelected.length >0) ? JSON.parse(JSON.stringify(usersSelected)): [] }
-              
-              
-              
-              
-              />
-
-
-
-              
-
-          </div>
-
 
           <div >
             {postStatuses.map((el,index)=> <p className="regex" key={index}>{el}</p>)}
@@ -497,6 +427,4 @@ export default ({openWindow,setOpenWindow}) => {
     </div>
   );
 }
-
-//startIcon={<CloudUploadIcon/>} create button
 
