@@ -22,7 +22,7 @@ import tableIcons from 'config/tableIcons';
 import Fab from '@material-ui/core/Fab'
 import Grid from '@material-ui/core/Grid'
 import { ContactSupportOutlined } from "@material-ui/icons";
-
+import logo from 'images/migraine.svg';
 export default ({openWindow,setOpenWindow}) => {
  
 
@@ -134,8 +134,15 @@ export default ({openWindow,setOpenWindow}) => {
     }
 
   }
+  const findFirstDataSIndex = async(domainUsersArr) =>{
+
+      const result = await domainUsersArr.find((element) => element.dataSource == "1" || element.dataSource == "2")
+      return result;
+
+  }
   
-  const handleSelectedUser = (e,value) =>{   
+  
+  const handleSelectedUser = async(e,value) =>{   
 
       if(value == null || value ==""){
         setLastUserSelected(null)
@@ -154,10 +161,18 @@ export default ({openWindow,setOpenWindow}) => {
           if(element.uniqueId == undefined){
             return false;
           }
-          return element.uniqueId.toLowerCase() == value.mail.toLowerCase()
+
+          if( element.uniqueId.toLowerCase() == value.mail.toLowerCase()){
+            if(element.dataSource == "1" || element.dataSource == "2"){
+              return true;
+            }
+            return false;
+          }
+          return false;
         } )
         if(index == -1){
-          
+          //const res= await findFirstDataSIndex(value.domainUsers)
+          //setLastUserSelectedUniqueId(res)
           setLastUserSelectedUniqueId(0)
           return;
         }
@@ -340,11 +355,7 @@ export default ({openWindow,setOpenWindow}) => {
 
               >
 
-              </AutoComplete>
-
-            
-              
-            
+              </AutoComplete>   
        
             </div>
             
@@ -359,7 +370,13 @@ export default ({openWindow,setOpenWindow}) => {
             >
 
               
-              {(lastUserSelected != null) ? lastUserSelected.domainUsers.map((el,index)=> <option  key={index} value={index}>{el.uniqueId}</option>) : null}
+              {(lastUserSelected != null) ? lastUserSelected.domainUsers.map((el,index)=> <option  
+              data-imsg-src={logo}
+              key={index} value={index}>{el.uniqueId}
+              
+              </option>
+              
+              ) : null}
 
             </Select>
             </div>
