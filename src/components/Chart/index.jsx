@@ -5,9 +5,8 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { CommentSharp } from '@material-ui/icons'
 
-export default ({data, isDark}) => {
+export default ({data, isDark, title}) => {
 
-    // const [gardeners, setGardeners] = React.useState([])
 
     function switchCountKeyToY(dataArray) {
         let output = dataArray.map(s => ({ y: s.count }));
@@ -15,21 +14,7 @@ export default ({data, isDark}) => {
 
     }
 
-    console.log('hello?');
-    console.log(isDark);
-
     const color = isDark ? 'white' : 'black';
-    // React.useEffect(() => {
-
-    //     async function fetchData() {
-    //         let gardenersArr = await getGardeners();
-    //         let gardenerCountArr = gardenersArr.map((elem => elem.count))
-    //         console.log(gardenersArr)
-    //         let newYarray = switchCountKeyToY(gardenersArr);
-    //         setGardeners(gardenersArr)
-    //     };
-    //     fetchData();
-    // }, [])
 
     const options = {
         credits: {
@@ -47,12 +32,12 @@ export default ({data, isDark}) => {
             type: 'pie',
             backgroundColor: 'transparent',
             color: color,
-            width: 600,
+            // width: '100%',
             
 
         },
         title: {
-            text: 'כמות בקשות לפי גנן',
+            text: title,
             style: { color: color } ,
             useHTML: true,
         },
@@ -122,7 +107,7 @@ export default ({data, isDark}) => {
     return (
         <div className="container">
             <HighchartsReact
-
+                // containerProps={{ style: { width: "100%" } }}
                 highcharts={Highcharts}
                 options={options}
 

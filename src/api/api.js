@@ -4,7 +4,10 @@ import config from 'config';
 import mock from './mock';
 import users from './users';
 import wait from 'utils/wait';
-import gardeners from './gardeners';
+import gardeners from './statsMocks/gardeners';
+import statsMock from './statsMocks/statsMock';
+import migratedMock from './statsMocks/migratedMock';
+import totalMigratedMock from './statsMocks/totalMigratedMock';
 
 const AuthDataMock = {
     id: '1',
@@ -73,13 +76,31 @@ const getUsernamesPerNameKart = async (username) =>{
     // }},{timeout : 10000}).catch(err => { throw (err.response) });
     // return res.data;
 }
-const getGardeners = async () =>{
+const getGardenersStatsApi = async () =>{
     if(config.isMock) { await wait(300); return gardeners}
-    const res = await request.get(`api/gardeners`).catch(err => { throw (err.response) });
+    const res = await request.get(`api/stats/gardeners`).catch(err => { throw (err.response) });
     return res.data;
-
 }
 
-export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGardeners }
+const getStatusesStatsApi = async () =>{
+    if(config.isMock) { await wait(300); return statsMock}
+    const res = await request.get(`api/stats/statuses`).catch(err => { throw (err.response) });
+    return res.data;
+}
+
+const getMigrationsStatsApi = async () =>{
+    if(config.isMock) { await wait(300); return migratedMock}
+    const res = await request.get(`api/stats/migrations`).catch(err => { throw (err.response) });
+    return res.data;
+}
+
+const getTotalMigrationsStatsApi = async () =>{
+    if(config.isMock) { await wait(300); return totalMigratedMock}
+    const res = await request.get(`api/stats/totalMigrations`).catch(err => { throw (err.response) });
+    return res.data;
+}
+
+export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise,
+    getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi  }
 
 
