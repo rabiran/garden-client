@@ -1,5 +1,5 @@
 
-export default [
+export default {main:[
     {
         name: "תשע",
         y: 1,
@@ -16,4 +16,8 @@ export default [
         name: "לא עברו",
         y: 120,
     },
-]
+]}
+
+
+
+  

@@ -1,5 +1,5 @@
 
-export default [
+export default {main: [
     {
         name: "שירותים",
         y: 8,
@@ -12,4 +12,4 @@ export default [
         name: "תשע",
         y: 1,
     },
-]
+]}

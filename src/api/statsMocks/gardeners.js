@@ -1,5 +1,5 @@
 
-export default [
+export default {main: [
     {
         "name": "תומי אפק",
         "id": "8517714",
@@ -19,4 +19,4 @@ export default [
         "y": 4,
     },
 
-]
+]}

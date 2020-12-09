@@ -1,9 +1,12 @@
 import React from 'react'
 import './style.css'
 // import { getGardeners } from '../../api/api'
+// import Highcharts from "highcharts/highstock";
 import Highcharts from 'highcharts'
+import drilldow from "highcharts/modules/drilldown.js";
 import HighchartsReact from 'highcharts-react-official'
 import { CommentSharp } from '@material-ui/icons'
+
 
 export default ({data, isDark, title}) => {
 
@@ -14,8 +17,20 @@ export default ({data, isDark, title}) => {
 
     }
 
+    if(data.drilldown)
+        drilldow(Highcharts);
+
+    React.useEffect(() => {
+        // chart.series[0].drillToNode(0);
+    }, [isDark])
+
     const color = isDark ? 'white' : 'black';
 
+    console.log(data);
+
+    // const getChart = (chart) => {
+    //     chart = chart;
+    // }
     const options = {
         credits: {
             enabled: false,
@@ -23,7 +38,7 @@ export default ({data, isDark, title}) => {
 
 
         },
-
+        lang: { drillUpText: "<< הרזח", useHTML: true },
 
         chart: {
             // plotBackgroundColor: null,
@@ -55,6 +70,7 @@ export default ({data, isDark, title}) => {
             pie: {
                 allowPointSelect: true,
                 cursor: 'pointer',
+                showInLegend: true,
                 dataLabels: {
                     enabled: true,
                     format: '<b>{point.name}</b>: {point.percentage:.1f}% ',
@@ -69,15 +85,38 @@ export default ({data, isDark, title}) => {
 
             }
         },
+        legend: {
+            useHTML: true,
+            itemStyle: { color: color }
+        },
         series: [{
             name: 'כמות אחוזים',
             colorByPoint: true,
             type: 'pie',
-            data: data,
-
-
-
+            data: data.main,
         }],
+        drilldown:{
+            activeDataLabelStyle: {
+                textDecoration: 'none',
+                color: color
+            },
+            series: data?.drilldown?.series || [],
+        }
+        // series: [{
+        //     name: 'Inner',
+        //     data: data.inner,
+        //     size: '50%',
+        //     innerSize: '40%',
+        //     slicedOffset: 10
+        // }, {
+        //     name: 'Outer',
+        //     data: data.outer,
+        //     size: '70%',
+        //     innerSize: '57%',
+        //     slicedOffset: 20
+        // }]
+
+        // }],
 
 
 
@@ -101,12 +140,10 @@ export default ({data, isDark, title}) => {
         ]
       };
       
-
-
-      console.log(options.series)
     return (
         <div className="container">
             <HighchartsReact
+                // callback={getChart}
                 // containerProps={{ style: { width: "100%" } }}
                 highcharts={Highcharts}
                 options={options}
