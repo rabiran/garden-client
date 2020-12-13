@@ -6,7 +6,7 @@ import Highcharts from 'highcharts'
 import drilldow from "highcharts/modules/drilldown.js";
 import HighchartsReact from 'highcharts-react-official'
 import { CommentSharp } from '@material-ui/icons'
-
+import Paper from '@material-ui/core/Paper';
 
 export default ({data, isDark, title}) => {
 
@@ -20,17 +20,9 @@ export default ({data, isDark, title}) => {
     if(data.drilldown)
         drilldow(Highcharts);
 
-    React.useEffect(() => {
-        // chart.series[0].drillToNode(0);
-    }, [isDark])
 
     const color = isDark ? 'white' : 'black';
 
-    console.log(data);
-
-    // const getChart = (chart) => {
-    //     chart = chart;
-    // }
     const options = {
         credits: {
             enabled: false,
@@ -141,15 +133,16 @@ export default ({data, isDark, title}) => {
       };
       
     return (
-        <div className="container">
+        <Paper elevation={3} className="container">
             <HighchartsReact
                 // callback={getChart}
                 // containerProps={{ style: { width: "100%" } }}
+                immutable
                 highcharts={Highcharts}
                 options={options}
 
             />
-        </div>
+        </Paper>
 
     );
 }

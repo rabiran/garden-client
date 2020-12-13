@@ -1,22 +1,42 @@
 
-export default {main:[
+// export default {main:[
+//     {
+//         name: "תשע",
+//         y: 1,
+//     },
+//     {
+//         name: "גרביים",
+//         y: 2,
+//     },
+//     {
+//         name: "שירותים",
+//         y: 5,
+//     },
+//     {
+//         name: "לא עברו",
+//         y: 120,
+//     },
+// ]}
+
+export default [
     {
-        name: "תשע",
-        y: 1,
+        name: "9",
+        count: 1,
     },
     {
-        name: "גרביים",
-        y: 2,
+        name: "es",
+        count: 2,
     },
     {
-        name: "שירותים",
-        y: 5,
+        name: "ads",
+        count: 5,
     },
     {
-        name: "לא עברו",
-        y: 120,
+        name: null,
+        count: 120,
     },
-]}
+]
+
 
 
 

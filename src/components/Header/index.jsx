@@ -33,7 +33,7 @@ export default () => {
 
   return (
     <div className='header-root'>
-      <AppBar position="static">
+      <AppBar position="static" className='header-root'>
         <Toolbar>
           <IconButton edge="start" className='' color="inherit" aria-label="menu" onClick={() => themeProvider.themeSwitch()}>
             <Brightness2Icon />

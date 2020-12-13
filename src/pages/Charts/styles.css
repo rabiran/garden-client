@@ -1,10 +1,23 @@
+.totalChartContainer {
+    height: 93vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 .chartContainer {
     /* background-color: gainsboro; */
     /* width: 100%; */
+    /* padding-top: 50px; */
     margin: 0 auto;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    height: 800px;
-    /* overflow-y: auto; */
+    
+}
+
+.chartsTitle {
+    /* background-color: hotpink; */
+    text-align: center;
+    font-size: 2em;
+    height: 5vh;
+    /* padding: 5px; */
 }

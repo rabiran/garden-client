@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 
 export default (props) => {
   const [auth, setAuth] = React.useState(false);
-  const [domains, setDomains] = React.useState([]);
+  const [domains, setDomains] = React.useState(false);
 
   // const loadingProvider = useLoading();
   const { enqueueSnackbar } = useSnackbar();
