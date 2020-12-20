@@ -3,4 +3,19 @@
     /* width: 50%; */
     margin: 20px;
     min-width: 700px;
+    /* animation: bounce 1s alternate; */
 }
+
+/* @keyframes waw {
+    from {transform: translateY(50%);}
+    to {transform: translateY(0%);}
+  }
+
+  @keyframes bounce {
+    from {
+      margin-top: 0;
+    }
+    to {
+      margin-top: -15px;
+    }
+  } */

@@ -178,7 +178,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       >
         <DialogTitle id="form-dialog-title">יצירת משתמש
           <div style={{textAlign:"left",height: "100px", display: "flex",flexWrap: "nowrap",justifyContent:"flex-end",direction:"row",overflow: "auto"}}>
-            <Paper style={{position: "fixed"}}> {(domains) ? domains.map((el,index)=> <div style={{backgroundColor: colors[index]}} key={index}>{el}</div>) : null} </Paper>
+            <Paper style={{position: "fixed"}}> {(domains) ? Object.values(domains).map((el,index)=> <div style={{backgroundColor: colors[index]}} key={index}>{el}</div>) : null} </Paper>
           </div>
         </DialogTitle>
         <DialogContent dividers>
@@ -289,7 +289,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
               
             >
               <option label="בחירת דומיין מרכזי" value=""></option>
-              {domains.map((el,index)=> <option  key={index} value={el}>{el}</option>)}
+              {Object.values(domains).map((el,index)=> <option  key={index} value={el}>{el}</option>)}
               
             </Select>
             </div>
