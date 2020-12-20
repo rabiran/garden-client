@@ -11,9 +11,13 @@ import logo from 'images/migraine.svg';
 import RefreshIcon from '@material-ui/icons/Refresh';
 // import Menu from '@material-ui/core/Menu';
 // import MenuItem from '@material-ui/core/MenuItem';
+import Badge from '@material-ui/core/Badge';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 import useTheme from 'utils/ThemeProvider/UseTheme';
 import useStore from 'utils/StoreProvider/useStore';
+
+import Notifications from '../Notifications';
 
 export default () => {
   const themeProvider = useTheme();
@@ -27,10 +31,22 @@ export default () => {
   // const handleClose = () => {
   //   setAnchorEl(null);
   // };
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  
+  const openNotifications = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  console.log(store.getAuth());
+  // React.useEffect(() => {
+  //   console.log('notification update');
+  // }, [store.getTableData()])
+
+  console.log('its a header');
   const displayName = store.getAuth().fullName || '';
   const headerName = `שלום ${displayName}`;
+
+  const tableData = store.getTableData();
+  const notViewedData = tableData.filter(obj => !obj.viewed);
 
   return (
     <div className='header-root'>
@@ -42,6 +58,11 @@ export default () => {
           <IconButton edge="end" className='' color="inherit" aria-label="menu" onClick={() => store.fetchTableData()}>
             <RefreshIcon />
           </IconButton>
+          <IconButton edge="end" className='' color="inherit" aria-label="menu" onClick={openNotifications}>
+            <Badge badgeContent={notViewedData.length} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
           <img alt="Remy Sharp" src={logo} className='offset' width="50" height="50" />
           <Typography variant="h5" className='offset header-title'>
             מיגרנה
@@ -51,6 +72,7 @@ export default () => {
           </Typography>
         </Toolbar>
       </AppBar>
+      <Notifications anchor={anchorEl} setAnchor={setAnchorEl} data = {notViewedData} something={store.getTableData()}/>
       {/* <Menu
         id="simple-menu"
         anchorEl={anchorEl}

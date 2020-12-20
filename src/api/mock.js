@@ -43,7 +43,8 @@ export default [
         fullName: 'תפוח אדמה',
         identifier: 1234523,
         startDate: '12/02/1001',
-        endDate: '02/08/2020'
+        endDate: '02/08/2020',
+        viewed: true
     },
     {
         id: 125435435346,
@@ -58,7 +59,8 @@ export default [
         fullName: 'חציל אפוי',
         identifier: 1234521,
         startDate: '12/02/1428',
-        endDate: '02/08/0002'
+        endDate: '02/08/0002',
+        viewed: true
     },
     {
         id: 225435435349,
@@ -73,7 +75,8 @@ export default [
         fullName: 'ביצה קשה',
         identifier: 1234522,
         startDate: '12/05/1521',
-        endDate: '02/08/4810'
+        endDate: '02/08/4810',
+        viewed: true
     },
     {
         id: 3254354353452,
@@ -88,7 +91,8 @@ export default [
         fullName: 'תפוח אדמה',
         identifier: 1234523,
         startDate: '12/02/1021',
-        endDate: '02/08/2020'
+        endDate: '02/08/2020',
+        viewed: true
     },
 ]
 

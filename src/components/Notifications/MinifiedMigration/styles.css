@@ -1,0 +1,7 @@
+.notificationItem {
+    /* background-color: hotpink; */
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    /* padding: 5px; */
+}
