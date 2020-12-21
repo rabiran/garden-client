@@ -12,13 +12,13 @@ export default ({ migration, setViewed }) => {
     const subStep = migration?.status?.subStep || "לא קיים";
     const message = `${migration.fullName} עם תת שלב: ${subStep}`
     return (
-        <div className="notificationItem">
-            <span>
-                <IconButton className='' color="inherit" aria-label="menu" onClick={() => tickViewed()}>
-                    <CheckIcon />
-                </IconButton>
-            </span> {message}
-        </div>
+            <div className="notificationItem">
+                <span>
+                    <IconButton className='' color="inherit" aria-label="menu" onClick={() => tickViewed()}>
+                        <CheckIcon />
+                    </IconButton>
+                </span> {message}
+            </div>
     );
 
 }

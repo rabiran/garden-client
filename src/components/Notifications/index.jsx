@@ -1,10 +1,12 @@
 import React from 'react';
 import './styles.css';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import MinifiedMigration from './MinifiedMigration';
 import ClearAllIcon from '@material-ui/icons/ClearAll';
 import IconButton from '@material-ui/core/IconButton';
+import Divider from '@material-ui/core/Divider';
 
 import useStore from 'utils/StoreProvider/useStore';
 import { setViewedApi } from 'api/api';
@@ -18,17 +20,12 @@ export default ({ anchor, setAnchor, data, something }) => {
     };
 
     const clearAll = async () => {
-        const ids = data.map(obj => obj.id);
-        const promises = data.map(obj => async () => await setViewed(obj.id));
-        console.log(promises);
-        const haha = await Promise.all(promises);
+        for(const obj of data) {
+            setViewed(obj.id);
+        }
     }
 
-    // const tableData = something;
-    // const notViewedData = tableData.filter(obj => !obj.viewed);
-
     const setViewed = async (id) => {
-        console.log('hi');
         try {
             await setViewedApi(id);
             let tableData = store.getTableData();
@@ -43,7 +40,10 @@ export default ({ anchor, setAnchor, data, something }) => {
         }
     }
 
-    const minifiedMigrations = data.map(migr => <MinifiedMigration key={migr.id} migration={migr} setViewed={setViewed} />)
+    const minifiedMigrations = data.map(migr =>
+         <CSSTransition key={migr.id} timeout={500} classNames="notificationItem">
+            <MinifiedMigration migration={migr} setViewed={setViewed} />
+        </CSSTransition>)
     return (
         <Popover
             id={'haha'}
@@ -68,8 +68,11 @@ export default ({ anchor, setAnchor, data, something }) => {
                 <div className="NotificationsTitle">
                     <Typography >מה חדש?</Typography>
                 </div>
+                <Divider />
                 <div className="NotificationsContent">
-                    {minifiedMigrations}
+                    <TransitionGroup>
+                        {minifiedMigrations}
+                    </TransitionGroup>
                 </div>
             </div>
         </Popover>

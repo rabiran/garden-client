@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function EnhancedTable({data = [], deleteFromTable, changePauseState}) {
+export default function EnhancedTable({data = [], deleteFromTable, changePauseState, setViewed}) {
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
@@ -193,6 +193,7 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
 
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
+                                .sort((a,b) => { return (a.viewed === b.viewed) ? 0 : a.viewed? 1: -1 })
                                 .filter(startFilter)
                                 .filter(endFilter)
                                 .filter(statusFilters)
@@ -202,7 +203,8 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
-                                        <CustomTableRow key={row.id} row={row} isItemSelected={isItemSelected} labelId={labelId} handleClick={handleClick} />
+                                        <CustomTableRow key={row.id} row={row} isItemSelected={isItemSelected}
+                                         labelId={labelId} handleClick={handleClick} setViewed={setViewed} />
                                     );
                                 })}
                             {emptyRows > 0 && (

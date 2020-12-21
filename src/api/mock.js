@@ -12,7 +12,8 @@ export default [
         fullName: 'חציל אפוי',
         identifier: 1234521,
         startDate: '02/12/1421, 00:00:00',
-        endDate: '02/08/1529, 00:00:00'
+        endDate: '02/08/1529, 00:00:00',
+        viewed: true,
     },
     {
         id: 225435435345,
@@ -60,7 +61,7 @@ export default [
         identifier: 1234521,
         startDate: '12/02/1428',
         endDate: '02/08/0002',
-        viewed: true
+        viewed: false
     },
     {
         id: 225435435349,

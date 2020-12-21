@@ -96,7 +96,7 @@ const getUsernamesPerNameKart = async (username) =>{
 }
 
 const setViewedApi = async (id) => {
-    if(config.isMock) { await wait(500); return true }
+    if(config.isMock) { await wait(200); return true }
     const state = {viewed: true}
     const res = await request.put(`api/immigrant/${id}`, state).catch(err => { throw (err.response) });
     console.log(res);

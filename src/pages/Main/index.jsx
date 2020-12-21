@@ -5,7 +5,7 @@ import BetterTable from './BetterTable';
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import Dialog from '..//../components/Dialog'
-import { getImmigrantsApi, deleteImmigrantApi, pauseStateApi } from 'api/api';
+import { getImmigrantsApi, deleteImmigrantApi, pauseStateApi, setViewedApi } from 'api/api';
 import { useSnackbar } from 'notistack';
 import useLoading from 'utils/LoadingProvider/useLoading';
 import settledParser from 'utils/settledParser';
@@ -80,13 +80,28 @@ export default () => {
         // const newTableData = tableData.filter((item) => !succesfulIds.includes(item.id));
         // setTableData(newTableData);
     }
+
+    const setViewed = async (id) => {
+        try {
+            await setViewedApi(id);
+            let tableData = store.getTableData();
+            let updateIndex = tableData.findIndex((item) => item.id === id);
+            tableData[updateIndex].viewed = true;
+            const updated = [ ...tableData ]
+            store.updateTableData(updated);
+        }
+        catch(err) {
+            console.log(err);
+            return;
+        }
+    }
     // GridContainer
     return (
         <> 
             {/* <div className='tableFlex'> */}
                 <div className='tableContainer'>
                     {/* <Table data={tableData} deleteFromTable={deleteFromTable} /> */}
-                    <BetterTable data={store.getTableData() || []} deleteFromTable={deleteFromTable} changePauseState={changePauseState}/>
+                    <BetterTable data={store.getTableData() || []} deleteFromTable={deleteFromTable} changePauseState={changePauseState} setViewed={setViewed}/>
                 </div>
                 <div className='dialogContainer'>
                     <Fab color="primary" aria-label="add" onClick={handleClickOpen} >

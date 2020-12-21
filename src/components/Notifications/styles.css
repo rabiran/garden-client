@@ -12,6 +12,7 @@
 
 .NotificationsContent {
     overflow-y: auto;
+    overflow-x: hidden;
     height: 250px;
     /* height: 100%; */
     /* background-color: red; */
@@ -22,3 +23,21 @@
     bottom: 0;
     left: 0;
 }
+
+
+.notificationItem-enter {
+    opacity: 0;
+  }
+  .notificationItem-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+  }
+  .notificationItem-exit {
+    opacity: 1;
+  }
+  .notificationItem-exit-active {
+    opacity: 0;
+    transform: translateX(60%);
+    transition: 300ms;
+  }
+  
