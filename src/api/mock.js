@@ -16,7 +16,7 @@ export default [
         viewed: true,
     },
     {
-        id: 225435435345,
+        id: 285435435345,
         status: {
             progress: 'inprogress',
             step: 'target',
@@ -93,7 +93,7 @@ export default [
         identifier: 1234523,
         startDate: '12/02/1021',
         endDate: '02/08/2020',
-        viewed: true
+        viewed: false
     },
 ]
 

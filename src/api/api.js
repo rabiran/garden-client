@@ -32,6 +32,7 @@ const domainsApi = async () => {
     return res.data;
 }
 
+// .sort((a,b) => { return (a.viewed === b.viewed) ? 0 : a.viewed? 1: -1 })
 const getImmigrantsApi = async () => {
     if(config.isMock) { await wait(500); return mock } //mockSchedules  or []
     const res = await request.get(`api/immigrant`).catch(err => { throw (err.response) });

@@ -83,9 +83,10 @@ export default () => {
 
     const setViewed = async (id) => {
         try {
-            await setViewedApi(id);
             let tableData = store.getTableData();
             let updateIndex = tableData.findIndex((item) => item.id === id);
+            if(tableData[updateIndex].viewed) return;
+            await setViewedApi(id);
             tableData[updateIndex].viewed = true;
             const updated = [ ...tableData ]
             store.updateTableData(updated);

@@ -13,8 +13,12 @@ import Cell from './Cell';
 import Status from 'components/status';
 
 export default (props) => {
-    const { row, isItemSelected, labelId, handleClick, setViewed } = props;
-    const [open, setOpen] = React.useState(false);
+    const { row, isItemSelected, labelId, handleClick, setViewed, isOpen = false } = props;
+    const [open, setOpen] = React.useState(isOpen);
+
+    React.useEffect(() => {
+        setOpen(isOpen);
+    }, [isOpen])
 
     const openRow = () => {
         setOpen(!open);

@@ -79,6 +79,7 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
 
     React.useEffect(()=> {
         setRows(data);
+        setPage(1);
     },[data]);
 
     const handleRequestSort = (event, property) => {
@@ -193,7 +194,7 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
 
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
-                                .sort((a,b) => { return (a.viewed === b.viewed) ? 0 : a.viewed? 1: -1 })
+                                // .sort((a,b) => { return (a.viewed === b.viewed) ? 0 : a.viewed? 1: -1 })
                                 .filter(startFilter)
                                 .filter(endFilter)
                                 .filter(statusFilters)
@@ -201,10 +202,11 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
                                 .map((row, index) => {
                                     const isItemSelected = isSelected(row.id);
                                     const labelId = `enhanced-table-checkbox-${index}`;
-
+                                    
+                                    // console.log(row);
                                     return (
                                         <CustomTableRow key={row.id} row={row} isItemSelected={isItemSelected}
-                                         labelId={labelId} handleClick={handleClick} setViewed={setViewed} />
+                                         labelId={labelId} handleClick={handleClick} setViewed={setViewed} isOpen={row.clickedFromNotification}/>
                                     );
                                 })}
                             {emptyRows > 0 && (

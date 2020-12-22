@@ -31,8 +31,10 @@ export default ({ anchor, setAnchor, data, something }) => {
             let tableData = store.getTableData();
             let updateIndex = tableData.findIndex((item) => item.id === id);
             tableData[updateIndex].viewed = true;
+            // tableData[updateIndex].clickedFromNotification = true;
             const updated = [ ...tableData ]
             store.updateTableData(updated);
+            // handleClose();
         }
         catch(err) {
             console.log(err);
@@ -40,9 +42,26 @@ export default ({ anchor, setAnchor, data, something }) => {
         }
     }
 
+    const openNotification = async (id) => {
+        try {
+            await setViewedApi(id);
+            let tableData = store.getTableData();
+            let updateIndex = tableData.findIndex((item) => item.id === id);
+            tableData[updateIndex].viewed = true;
+            tableData[updateIndex].clickedFromNotification = true;
+            const updated = [ ...tableData ]
+            store.updateTableData(updated);
+            handleClose();
+        }
+        catch(err) {
+            console.log(err);
+            return;
+        }
+    }
+    // onClick={()=> { console.log('aa'); openNotification(migr.id) }}
     const minifiedMigrations = data.map(migr =>
          <CSSTransition key={migr.id} timeout={500} classNames="notificationItem">
-            <MinifiedMigration migration={migr} setViewed={setViewed} />
+            <MinifiedMigration migration={migr} setViewed={setViewed} openNotification={openNotification} />
         </CSSTransition>)
     return (
         <Popover
