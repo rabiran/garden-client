@@ -23,3 +23,24 @@ export function stableSort(array, comparator) {
     });
     return stabilizedThis.map((el) => el[0]);
 }
+
+export const searchFilter = (msg, data) => {
+    let matchedRows = [];
+    if (msg) {
+        matchedRows = data.filter((dataRow) => {
+            let values = Object.values(dataRow);
+            let found = false;
+            for (let value of values) {
+                let term = String(value);
+                term = term.toLowerCase();
+                let filterValue = msg.toLowerCase();
+                if (term.includes(filterValue)) found = true;
+            }
+            return found;
+        })
+    }
+    else {
+        matchedRows = data;
+    }
+    return matchedRows;
+}

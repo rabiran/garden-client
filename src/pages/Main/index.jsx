@@ -85,6 +85,13 @@ export default () => {
         try {
             let tableData = store.getTableData();
             let updateIndex = tableData.findIndex((item) => item.id === id);
+            if(tableData[updateIndex].clickedFromNotification) {
+                delete tableData[updateIndex].clickedFromNotification;
+                console.log(tableData[updateIndex]);
+                const updated = [ ...tableData ];
+                store.updateTableData(updated);
+                return;
+            };
             if(tableData[updateIndex].viewed) return;
             await setViewedApi(id);
             tableData[updateIndex].viewed = true;

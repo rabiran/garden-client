@@ -46,6 +46,7 @@ export default ({ anchor, setAnchor, data, something }) => {
         try {
             await setViewedApi(id);
             let tableData = store.getTableData();
+            tableData.forEach(o=> delete o.clickedFromNotification)
             let updateIndex = tableData.findIndex((item) => item.id === id);
             tableData[updateIndex].viewed = true;
             tableData[updateIndex].clickedFromNotification = true;

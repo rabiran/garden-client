@@ -9,6 +9,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from '@material-ui/core/Avatar';
 import logo from 'images/migraine.svg';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import HomeIcon from '@material-ui/icons/Home';
+import PieChartIcon from '@material-ui/icons/PieChart';
+import Divider from '@material-ui/core/Divider';
 // import Menu from '@material-ui/core/Menu';
 // import MenuItem from '@material-ui/core/MenuItem';
 import Badge from '@material-ui/core/Badge';
@@ -16,12 +19,14 @@ import Brightness2Icon from '@material-ui/icons/Brightness2';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import useTheme from 'utils/ThemeProvider/UseTheme';
 import useStore from 'utils/StoreProvider/useStore';
+import  { useHistory } from 'react-router-dom';
 
 import Notifications from '../Notifications';
 
 export default () => {
   const themeProvider = useTheme();
   const store = useStore();
+  const history = useHistory();
   // const [anchorEl, setAnchorEl] = React.useState(null);
 
   // const handleClick = (event) => {
@@ -37,11 +42,18 @@ export default () => {
     setAnchorEl(event.currentTarget);
   };
 
+  const homePageClick = () => {
+    history.push('/');
+  }
+
+  const chartPageClick = () => {
+    history.push('/chart');
+  }
   // React.useEffect(() => {
   //   console.log('notification update');
   // }, [store.getTableData()])
 
-  console.log('its a header');
+
   const displayName = store.getAuth().fullName || '';
   const headerName = `שלום ${displayName}`;
 
@@ -52,22 +64,30 @@ export default () => {
     <div className='header-root'>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className='' color="inherit" aria-label="menu" onClick={() => themeProvider.themeSwitch()}>
-            <Brightness2Icon />
-          </IconButton>
-          <IconButton edge="end" className='' color="inherit" aria-label="menu" onClick={() => store.fetchTableData()}>
-            <RefreshIcon />
-          </IconButton>
-          <IconButton edge="end" className='' color="inherit" aria-label="menu" onClick={openNotifications}>
-            <Badge badgeContent={notViewedData.length} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
           <img alt="Remy Sharp" src={logo} className='offset' width="50" height="50" />
-          <Typography variant="h5" className='offset header-title'>
+          <Typography variant="h5" className='offset '>
             מיגרנה
           </Typography>
-          <Typography variant="h6" >
+          <IconButton className='' color="inherit" aria-label="menu" onClick={() => themeProvider.themeSwitch()}>
+            <Brightness2Icon />
+          </IconButton>
+          <IconButton className='' color="inherit" aria-label="menu" onClick={() => store.fetchTableData()}>
+            <RefreshIcon />
+          </IconButton>
+          <IconButton  color="inherit" aria-label="menu" onClick={openNotifications}>
+            <Badge badgeContent={notViewedData.length} color="secondary" >
+              <NotificationsIcon/>
+            </Badge>
+          </IconButton>
+          <Divider orientation="vertical" flexItem />
+          <IconButton className='' color="inherit" aria-label="menu" onClick={homePageClick}>
+            <HomeIcon />
+          </IconButton>
+          <IconButton className='' color="inherit" aria-label="menu" onClick={chartPageClick}>
+            <PieChartIcon />
+          </IconButton>
+          <div className='header-grow'></div>
+          <Typography variant="h6">
             {headerName}
           </Typography>
         </Toolbar>
