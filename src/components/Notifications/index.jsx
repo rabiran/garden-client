@@ -9,11 +9,14 @@ import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 
 import useStore from 'utils/StoreProvider/useStore';
+import  { useHistory } from 'react-router-dom';
+
 import { setViewedApi } from 'api/api';
 
 export default ({ anchor, setAnchor, data, something }) => {
 
     const store = useStore();
+    const history = useHistory();
 
     const handleClose = () => {
         setAnchor(null);
@@ -52,6 +55,7 @@ export default ({ anchor, setAnchor, data, something }) => {
             tableData[updateIndex].clickedFromNotification = true;
             const updated = [ ...tableData ]
             store.updateTableData(updated);
+            if(history.location.pathname !== '/') history.push('/');
             handleClose();
         }
         catch(err) {
