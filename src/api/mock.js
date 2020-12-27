@@ -1,6 +1,7 @@
 export default [
     {
         id: 125435435345,
+        phone: '035932937',
         status: {
             progress: 'completed',
             step: 'target',
@@ -17,6 +18,7 @@ export default [
     },
     {
         id: 285435435345,
+        phone: '035932334',
         status: {
             progress: 'inprogress',
             step: 'target',
@@ -33,6 +35,7 @@ export default [
     },
     {
         id: 325435435345,
+        phone: '035932914',
         status: {
             progress: 'failed',
             step: 'es',
@@ -49,6 +52,7 @@ export default [
     },
     {
         id: 125435435346,
+        phone: '035932936',
         status: {
             progress: 'paused',
             step: 'target',
@@ -65,6 +69,7 @@ export default [
     },
     {
         id: 225435435349,
+        phone: '035932924',
         status: {
             progress: 'haha',
             step: 'target',
@@ -81,6 +86,7 @@ export default [
     },
     {
         id: 3254354353452,
+        phone: '035932932',
         status: {
             progress: 'failed',
             step: 'es',

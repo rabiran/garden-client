@@ -34,7 +34,7 @@ const useToolbarStyles = makeStyles((theme) => ({
             }
             : {
                 color: theme.palette.text.primary,
-                backgroundColor: theme.palette.secondary.dark,
+                backgroundColor: theme.palette.primary.main,
             },
     title: {
         flex: '1 1 25%',
@@ -96,7 +96,7 @@ export default (props) => {
     }
 
     const searchHandler = (e) => {
-        setFilters({ ...filters, ['searchTerm']: e.target.value });
+        setFilters({ ...filters, ['searchTerm']: {term: e.target.value} });
         // let msg = e.target.value;
         // let matchedRows = [];
         // if (msg) {
@@ -126,11 +126,11 @@ export default (props) => {
                 })}
             >
                 {numSelected > 0 && <>
-                    <Tooltip title="מחק">
+                    {/* <Tooltip title="מחק">
                         <IconButton aria-label="delete" onClick={handleOpenDelete}>
                             <DeleteIcon />
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                     <Tooltip title="השעיה">
                         <IconButton aria-label="delete" onClick={() => handlePause(true)}>
                             <PauseIcon />

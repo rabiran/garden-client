@@ -60,7 +60,7 @@ export default function EnhancedTable({ data = [], deleteFromTable, changePauseS
         others: true,
         startDate: { from: null, to: null },
         endDate: { from: null, to: null },
-        searchTerm: null
+        searchTerm: {term: ''}
     });
     const [openDelete, setOpenDelete] = React.useState(false);
 
@@ -167,7 +167,7 @@ export default function EnhancedTable({ data = [], deleteFromTable, changePauseS
     }
 
     const searchFilter = (obj) => {
-        const a = filters['searchTerm'] || '';
+        const a = filters['searchTerm'].term || '';
         let values = Object.values(obj);
         let found = false;
         for (let value of values) {
