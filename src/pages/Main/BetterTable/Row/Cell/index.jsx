@@ -4,6 +4,7 @@ import Field from 'components/displayField';
 import Users from 'components/displayUsers';
 import DomainIcon from '@material-ui/icons/Domain';
 import HomeIcon from '@material-ui/icons/Home';
+import PhoneIcon from '@material-ui/icons/Phone';
 import useStore from 'utils/StoreProvider/useStore';
 import Button from '@material-ui/core/Button';
 import PauseIcon from '@material-ui/icons/Pause';
@@ -24,6 +25,10 @@ export default ({ rowData }) => {
                         <div className="field">
                             <HomeIcon />
                             <Field valueKey={'היררכיה'} value={rowData?.hierarchy} />
+                        </div>
+                        <div className="field">
+                            <PhoneIcon />
+                            <Field valueKey={'טלפון'} value={rowData?.phone} />
                         </div>
                     </div>
                     <div className="fieldArea">

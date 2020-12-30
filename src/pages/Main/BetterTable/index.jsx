@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function EnhancedTable({data = [], deleteFromTable, changePauseState}) {
+export default function EnhancedTable({ data = [], deleteFromTable, changePauseState, setViewed }) {
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
@@ -54,12 +54,13 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
     // const [startDateFilter, setStartDateFilter] 
     const [filters, setFilters] = React.useState({
         completed: true,
-        inprogress: true, 
+        inprogress: true,
         failed: true,
         paused: true,
         others: true,
-        startDate: {from: null, to: null},
-        endDate: {from: null, to: null},
+        startDate: { from: null, to: null },
+        endDate: { from: null, to: null },
+        searchTerm: {term: ''}
     });
     const [openDelete, setOpenDelete] = React.useState(false);
 
@@ -77,9 +78,14 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
         changePauseState(pause, selected);
     }
 
-    React.useEffect(()=> {
+    React.useEffect(() => {
         setRows(data);
-    },[data]);
+        const index = data.findIndex(obj => obj.clickedFromNotification);
+        if (index === -1) return;
+        const page = index / rowsPerPage;
+        console.log(page);
+        setPage(Math.floor(page));
+    }, [data]);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -126,7 +132,7 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
     };
 
     const isSelected = (id) => selected.indexOf(id) !== -1;
-    
+
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
     const startFilter = (obj) => {
@@ -134,9 +140,9 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
         const to = filters.startDate.to;
         const startDate = new Date(obj.startDate);
 
-        if(!from && !to) return true;
-        else if(from && !to) return startDate >= from;
-        else if(!from && to) return startDate <= to;
+        if (!from && !to) return true;
+        else if (from && !to) return startDate >= from;
+        else if (!from && to) return startDate <= to;
         else return startDate >= from && startDate <= to
     }
 
@@ -145,19 +151,32 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
         const to = filters.endDate.to;
         const endDate = new Date(obj.endDate);
 
-        if(!from && !to) return true;
-        else if(from && !to) return endDate >= from;
-        else if(!from && to) return endDate <= to;
+        if (!from && !to) return true;
+        else if (from && !to) return endDate >= from;
+        else if (!from && to) return endDate <= to;
         else return endDate >= from && endDate <= to
     }
-    
-    const statusFilters = (obj) =>  {
+
+    const statusFilters = (obj) => {
         const isExist = filters[obj.status.progress];
-        if(isExist) return true;
-        else if(filters.others && isExist === undefined) {
+        if (isExist) return true;
+        else if (filters.others && isExist === undefined) {
             return true;
         }
         return false;
+    }
+
+    const searchFilter = (obj) => {
+        const a = filters['searchTerm'].term || '';
+        let values = Object.values(obj);
+        let found = false;
+        for (let value of values) {
+            let term = String(value);
+            term = term.toLowerCase();
+            let filterValue = a.toLowerCase();
+            if (term.includes(filterValue)) found = true;
+        }
+        return found;
     }
     const paginationFilter = () => (rows.filter(startFilter).filter(endFilter).filter(statusFilters)).length
     const pageCount = paginationFilter();
@@ -165,15 +184,15 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <CustomToolBar 
-                    numSelected={selected.length} 
+                <CustomToolBar
+                    numSelected={selected.length}
                     setRows={setRows}
-                    data={data} 
-                    filters={filters} 
+                    data={data}
+                    filters={filters}
                     setFilters={setFilters}
                     handleOpenDelete={handleOpenDelete}
-                    handlePause = {handlePause} />
-                <TableContainer  style={{maxHeight: 600}}>
+                    handlePause={handlePause} />
+                <TableContainer style={{ maxHeight: 600 }}>
                     <Table
                         className={classes.table}
                         aria-labelledby="tableTitle"
@@ -193,16 +212,20 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
 
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
+                                // .sort((a,b) => { return (a.viewed === b.viewed) ? 0 : a.viewed? 1: -1 })
                                 .filter(startFilter)
                                 .filter(endFilter)
                                 .filter(statusFilters)
+                                .filter(searchFilter)
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
                                     const isItemSelected = isSelected(row.id);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
+                                    // console.log(row);
                                     return (
-                                        <CustomTableRow key={row.id} row={row} isItemSelected={isItemSelected} labelId={labelId} handleClick={handleClick} />
+                                        <CustomTableRow key={row.id} row={row} isItemSelected={isItemSelected}
+                                            labelId={labelId} handleClick={handleClick} setViewed={setViewed} isOpen={row.clickedFromNotification} />
                                     );
                                 })}
                             {emptyRows > 0 && (
@@ -221,7 +244,7 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
                     labelRowsPerPage='שורות בעמוד:'
                     nextIconButtonText='עמוד הבא'
                     backIconButtonText='עמוד הקודם'
-                    labelDisplayedRows={({from, to, count}) => 
+                    labelDisplayedRows={({ from, to, count }) =>
                         `${from}-${to} מתוך ${count}`
                     }
                     page={page}
@@ -229,7 +252,7 @@ export default function EnhancedTable({data = [], deleteFromTable, changePauseSt
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
             </Paper>
-            <DeleteDialog open={openDelete ? true : false} setOpen={setOpenDelete} item={openDelete} onConfirm={handleConfirmDelete}/>
+            <DeleteDialog open={openDelete ? true : false} setOpen={setOpenDelete} item={openDelete} onConfirm={handleConfirmDelete} />
         </div>
     );
 }

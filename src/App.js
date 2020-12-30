@@ -10,8 +10,8 @@ import LoadingProvider from 'utils/LoadingProvider/LoadingProvider';
 import StoreProvider from 'utils/StoreProvider/storeProvider'
 import LoadingBar from 'utils/LoadingBar';
 import history from 'utils/history';
-import { Router } from 'react-router';
-import { Route, Switch } from 'react-router-dom';
+// import { Router } from 'react-router';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 
 function App() {
@@ -22,9 +22,9 @@ function App() {
           <SnackbarProvider maxSnack={3} style={{ width: '50%' }}>
             <LoadingProvider>
               <StoreProvider >
-                <Header />
-                <LoadingBar />
-                <Router history={history}>
+                <Router>
+                  <Header />
+                  <LoadingBar />
                   <Switch>
                     <Route exact path="/" component={MainPage} />
                     <Route exact path="/admin" component={AdminPage} />

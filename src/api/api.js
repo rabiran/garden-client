@@ -32,6 +32,7 @@ const domainsApi = async () => {
     return res.data;
 }
 
+// .sort((a,b) => { return (a.viewed === b.viewed) ? 0 : a.viewed? 1: -1 })
 const getImmigrantsApi = async () => {
     if(config.isMock) { await wait(500); return mock } //mockSchedules  or []
     const res = await request.get(`api/immigrant`).catch(err => { throw (err.response) });
@@ -95,6 +96,13 @@ const getUsernamesPerNameKart = async (username) =>{
     // return res.data;
 }
 
-export { getImmigrantsApi, addImmigrantsApi, deleteImmigrantApi, pauseStateApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise }
+const setViewedApi = async (id) => {
+    if(config.isMock) { await wait(200); return true }
+    const state = {viewed: true}
+    const res = await request.put(`api/immigrant/${id}`, state).catch(err => { throw (err.response) });
+    console.log(res);
+    return res.data;
+}
+export { getImmigrantsApi, addImmigrantsApi, deleteImmigrantApi, pauseStateApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, setViewedApi }
 
 

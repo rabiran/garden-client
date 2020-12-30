@@ -4,4 +4,30 @@
     /* filter: opacity(30%);
     z-index: 100; */
     /* filter: drop-shadow(8px 8px 10px gray) */
+    font-weight: 900;
+    color: red;
+}
+
+.row > td {
+    font-weight: 900;
+    font-style: italic;
+    color: gray;
+    /* color: red; */
+    /* color: red; */
+}
+
+.rowCorner {
+    /* background-color: hotpink; */
+    position: absolute;
+    /* right: -100px; */
+    /* margin-top: 5px; */
+    left: 20%;
+    /* top: 50%; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    z-index: 1943924;
+    height: 100%;
+    width: 5px;
 }

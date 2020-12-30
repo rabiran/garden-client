@@ -34,7 +34,7 @@ const useToolbarStyles = makeStyles((theme) => ({
             }
             : {
                 color: theme.palette.text.primary,
-                backgroundColor: theme.palette.secondary.dark,
+                backgroundColor: theme.palette.primary.main,
             },
     title: {
         flex: '1 1 25%',
@@ -96,25 +96,26 @@ export default (props) => {
     }
 
     const searchHandler = (e) => {
-        let msg = e.target.value;
-        let matchedRows = [];
-        if (msg) {
-            matchedRows = data.filter((dataRow) => {
-                let values = Object.values(dataRow);
-                let found = false;
-                for (let value of values) {
-                    let term = String(value);
-                    term = term.toLowerCase();
-                    let filterValue = msg.toLowerCase();
-                    if (term.includes(filterValue)) found = true;
-                }
-                return found;
-            })
-        }
-        else {
-            matchedRows = data;
-        }
-        setRows(matchedRows);
+        setFilters({ ...filters, ['searchTerm']: {term: e.target.value} });
+        // let msg = e.target.value;
+        // let matchedRows = [];
+        // if (msg) {
+        //     matchedRows = data.filter((dataRow) => {
+        //         let values = Object.values(dataRow);
+        //         let found = false;
+        //         for (let value of values) {
+        //             let term = String(value);
+        //             term = term.toLowerCase();
+        //             let filterValue = msg.toLowerCase();
+        //             if (term.includes(filterValue)) found = true;
+        //         }
+        //         return found;
+        //     })
+        // }
+        // else {
+        //     matchedRows = data;
+        // }
+        // setRows(matchedRows);
     }
 
     return (
@@ -125,11 +126,11 @@ export default (props) => {
                 })}
             >
                 {numSelected > 0 && <>
-                    <Tooltip title="מחק">
+                    {/* <Tooltip title="מחק">
                         <IconButton aria-label="delete" onClick={handleOpenDelete}>
                             <DeleteIcon />
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                     <Tooltip title="השעיה">
                         <IconButton aria-label="delete" onClick={() => handlePause(true)}>
                             <PauseIcon />
