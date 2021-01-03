@@ -11,7 +11,7 @@ import Select from "@material-ui/core/Select";
 import CircularProgress from "@material-ui/core/CircularProgress"
 import AutoComplete from "@material-ui/lab/Autocomplete"
 import './style.css'
-import { getUsernamesPerNameKart,addImmigrantsApiPromise} from "../../api/api"
+import { getUsernamesPerNameKart,addImmigrantsApiPromise, getGroupsPerNameKart} from "../../api/api"
 import { Chip } from "@material-ui/core";
 import {Paper} from "@material-ui/core"
 import AddIcon from '@material-ui/icons/Add'
@@ -21,8 +21,9 @@ import { ContactSupportOutlined } from "@material-ui/icons";
 import logo from 'images/migraine.svg';
 import DialogsTable from '../DialogsTable'
 import domainsMap from '../../api/domainsMap'
-
-
+import { Checkbox, FormControl, InputLabel, Radio, RadioGroup , FormControlLabel, FormLabel ,CheckBoxGroup } from '@material-ui/core';
+import { red } from "@material-ui/core/colors";
+import { color } from "highcharts";
 
 export default ({openWindow,setOpenWindow}) => {
  
@@ -41,16 +42,44 @@ export default ({openWindow,setOpenWindow}) => {
   const [userValidation,setUserValidation] = React.useState(false)
   const [uniqueIdValidation,setUniqueIdValidation] = React.useState(false)
   const [lastUserSelectedUniqueIdIndex,setLastUserSelectedUniqueId] = React.useState(-1)
+  
   const [lastUserSelected, setLastUserSelected] = React.useState(null)
-  const errorMessageFieldEmpty ='שדה ריק נא בחר משתמש!';
-  const errorMessageUserExists = 'משתמש כבר קיים בטבלה!';
-  const errorMessageUserHasOne= 'משתמש כבר קיים בוואן!';
+  const errorMessageFieldEmptyP ='שדה ריק נא בחר משתמש!';
+  const errorMessageUserExistsP = 'משתמש כבר קיים בטבלה!';
+  const errorMessageUserHasOneP= 'משתמש כבר קיים בוואן!'; 
+  const errorMessageFieldEmptyG = 'שדה ריק נא בחר קבוצה!'
+  const errorMessageGroupExists = 'קבוצה כבר קיימת בטבלה!'
+  const errorMessageGroupHasOne = 'קבוצה כבר קיימת בוואן!'
+  const  [errorMessageFieldEmpty, setErrorMessageFieldEmpty] = React.useState(errorMessageFieldEmptyP);
+  const  [errorMessageUserExists, setErrorMessageUserExists] = React.useState(errorMessageUserExistsP);
+  const  [errorMessageUserHasOne, setErrorMessageUserHasOne]= React.useState(errorMessageUserHasOneP);
   const [errorMessageField,setErrorMessageField] = React.useState(errorMessageFieldEmpty)
 
+  const [isPersonSearch ,setIsPersonSearch] = React.useState(true);
+  const [checkedUser,setCheckedUser] = React.useState(false);
 
 
+React.useEffect(()=>{
+  setUserValidation(false);
+  setUniqueIdValidation(false);
+  setLastUserSelected(null);
+  setUsers([])
+  if(isPersonSearch){
+    setErrorMessageFieldEmpty(errorMessageFieldEmptyP);
+    setErrorMessageUserExists(errorMessageUserExistsP);
+    setErrorMessageUserHasOne(errorMessageUserHasOneP);
+  }else{
+    setErrorMessageFieldEmpty(errorMessageFieldEmptyG);
+    setErrorMessageUserExists(errorMessageGroupExists);
+    setErrorMessageUserHasOne(errorMessageGroupHasOne);
 
+  }
 
+}, [isPersonSearch])
+const handlePersonSearch= (event) =>{
+  
+  setIsPersonSearch(String(event.target.value) == "true");
+}
 
   const typingTimeout = 700;
   let renderTimeout;
@@ -60,14 +89,6 @@ export default ({openWindow,setOpenWindow}) => {
     setUniqueIdValidation(false)
 
   };
-
-  const existenceUniqueId = async(uniqueId)=>{
-    let splited = uniqueId.split('@',1)
-    let found = domainsMap.find((dm) => splited == dm[0] )
-    if (found !=undefined){
-      ////WORKWORKWORK
-    }
-  }
 
   const handleClose = () => { 
     setOpenWindow(false)
@@ -94,10 +115,11 @@ export default ({openWindow,setOpenWindow}) => {
 
     if(lastUserSelectedUniqueIdIndex != -1){     
       
-      async function fetchData(){
+      function fetchData(){
         if(lastUserSelected!=null){
           let foundOne =  lastUserSelected.domainUsers.find((ds)=> ds.dataSource == "One")
           if(foundOne != undefined){
+            
             setErrorMessageField(errorMessageUserHasOne);
             setUserValidation(true);
             setUniqueIdValidation(true);
@@ -110,7 +132,7 @@ export default ({openWindow,setOpenWindow}) => {
           let foundUser = usersSelected.find(user => user.id === lastUserSelected.id)
         
           if(foundUser == undefined){
-            let obj = Object.assign(lastUserSelected , {primaryUniqueIdIndex: lastUserSelectedUniqueIdIndex})
+            let obj = Object.assign(lastUserSelected , {primaryUniqueIdIndex: lastUserSelectedUniqueIdIndex , newUser: checkedUser})
             setUsersSelected(usersSelected.concat(obj))
           }else{
             setErrorMessageField(errorMessageUserExists);
@@ -128,16 +150,14 @@ export default ({openWindow,setOpenWindow}) => {
     }
 
   }
-  const findFirstDataSIndex = async(domainUsersArr) =>{
 
-      const result = domainUsersArr.find((element) => element.dataSource == "1" || element.dataSource == "2")
-      return result;
-
+  const handleChangedCheckedUser =(e) =>{
+    setCheckedUser(!checkedUser)
   }
   
   
   
-  const handleSelectedUser = async(e,value) =>{   
+  const handleSelectedUser = (e,value) =>{   
 
       if(value == null || value ==""){
         setLastUserSelected(null)
@@ -147,7 +167,7 @@ export default ({openWindow,setOpenWindow}) => {
         return;
       }
       setLastUserSelected(value)
-      async function fetchData(){
+      function fetchData(){
         const index = value.domainUsers.findIndex((element) =>{
 
           if(value.mail == undefined){
@@ -158,7 +178,10 @@ export default ({openWindow,setOpenWindow}) => {
           }
 
           if( element.uniqueId.toLowerCase() == value.mail.toLowerCase()){
+
             if(element.dataSource == "1" || element.dataSource == "2"){
+
+              console.log("heythere")
               return true;
             }
             return false;
@@ -168,7 +191,10 @@ export default ({openWindow,setOpenWindow}) => {
         if(index == -1){
           //const res= findFirstDataSIndex(value.domainUsers)
           //setLastUserSelectedUniqueId(res)
-          setLastUserSelectedUniqueId(0)
+          const indexNotOneAman = value.domainUsers.findIndex((element) =>{
+            return element.dataSource =="1" || element.dataSource =="2"
+          })
+          setLastUserSelectedUniqueId(indexNotOneAman)
           return;
         }
         setLastUserSelectedUniqueId(index)
@@ -188,9 +214,21 @@ export default ({openWindow,setOpenWindow}) => {
       
       renderTimeout = setTimeout(async () => {
           setLoadingInput(true)
-          let newUsers = await getUsernamesPerNameKart(userName)
-          let us =   newUsers.filter(usnow =>  (usnow.name).includes(userName))
-          setUsers(us)
+          if(isPersonSearch){
+            let newUsers = await getUsernamesPerNameKart(userName)
+            let us =   newUsers.filter(usnow =>  (usnow.name).includes(userName) &&  //Remove includes
+                        usnow.domainUsers.find((ds) => ds.dataSource == "One") == undefined &&
+                        (usnow.domainUsers.find((ds) => ds.dataSource == "1") != undefined ||
+                        usnow.domainUsers.find((ds) => ds.dataSource =="2") != undefined)) 
+  
+            setUsers(us)
+
+          }else{
+            let us = await getGroupsPerNameKart(userName);
+            let newGroups = us.filter(usnow => usnow.name.includes(userName)) //Remove includes 
+            setUsers(newGroups)
+          }
+
           setLoadingInput(false)
             
         }
@@ -219,8 +257,11 @@ export default ({openWindow,setOpenWindow}) => {
         setUniqueIdValidation(true)
         setUserValidation(true)
         return;
-      }    
+      }
+      
       statusResults = await addImmigrantsApiPromise(usersSelected); //NEED TO CHANGE !!!! method api too\!!
+  
+     
       
       setSuccess(true);
       setLoading(false);
@@ -240,7 +281,7 @@ export default ({openWindow,setOpenWindow}) => {
       if(foundReject){ // one or more of them failed
         setOpenWindow(true);
       }else{
-        setOpenWindow(false);
+        handleClose();
       }
       
       
@@ -276,14 +317,34 @@ export default ({openWindow,setOpenWindow}) => {
         <DialogTitle id="form-dialog-title">יצירת משתמש
         </DialogTitle>
         <DialogContent dividers>
+          
+            
+          
           <div className="dialogContentContainer"
           >
             <DialogContentText>
-              נא למלא את הטופס בשביל יצירת משתמש ב.
+              
+            <span> נא למלא את הטופס בשביל יצירת משתמש ב.</span>
+
+
             </DialogContentText>
             
+            <div className="searchingContainer">
+              <div>
+              <FormControl component="fieldset">
+      <FormLabel component="legend"><div style={{color: "#00796b"}}>בחר סוג חיפוש</div></FormLabel>
+      <RadioGroup
+      
+        value={isPersonSearch.toString()}
+        onChange={handlePersonSearch}
+      >
+        <FormControlLabel value="true" control={<Radio />} label="בן אדם" />
+        <FormControlLabel value="false" control={<Radio />} label="קבוצה" />
+      </RadioGroup>
+    </FormControl>
+              </div>
             <div className="fillingFieldsContainer"> 
-              
+            <div className="detailsContainer"> 
             <div >
 
               <AutoComplete
@@ -302,41 +363,28 @@ export default ({openWindow,setOpenWindow}) => {
                 limitTags={2}
                 id="multiple-limit-tags"
                 options={users}
-                
-                
+                          
                 onChange={handleSelectedUser}
-                getOptionLabel={(option)=> option.name + option.hierarchy}
+                getOptionLabel={(isPersonSearch) ?(option)=> option.name + option.hierarchy : (option)=> option.name}
                 renderInput={(params) => (
                   
 
                   <TextField
-                    {...params}
-                    // display: "flex", flexWrap: "nowrap" , flexDirection: "column"
-
-                    
+                    {...params}                  
                     variant="standard"
-                    label="חפש משתמש"
-                    placeholder="משתמש"
-                    
-                    InputProps={{
-                      
+                    label={(isPersonSearch) ?"חפש משתמש" : "חפש קבוצה"}
+                    placeholder={(isPersonSearch)? "משתמש" :"קבוצה"}
+                   
+                    InputProps={{                      
                       ...params.InputProps,
-                      startAdornment: (
-
-                    <div></div>
-                      ),
                       endAdornment: (
                         <React.Fragment>
                           {loadingInput ? (
                             <CircularProgress color="inherit" size={20} />
-                          ) : null}
-                          
-                          {params.InputProps.endAdornment}
-                          
+                          ) : null}                          
+                          {params.InputProps.endAdornment}                          
                         </React.Fragment>
-                      )
-                      
-
+                      )                      
                     }}
                     
                     error = {(userValidation)}
@@ -352,39 +400,49 @@ export default ({openWindow,setOpenWindow}) => {
               </AutoComplete>   
        
             </div>
-            
             <div> 
-            <Select
-              native
-              style={{width:"200px",}}
-              value={lastUserSelectedUniqueIdIndex}
-              onChange={handleChangedDomain}
-              
-              error = {(uniqueIdValidation)}      
-            >
+              <FormControl>
+                <InputLabel >בחר דומיין</InputLabel>
+                <Select
+                  native
+                  style={{width:"200px",}}
+                  value={lastUserSelectedUniqueIdIndex}
+                  onChange={handleChangedDomain}
+                  
+                  error = {(uniqueIdValidation)}      
+                >
 
+                  
+                  {(lastUserSelected != null) ? lastUserSelected.domainUsers.map((el,index)=> <option  
+                
+                  key={index} value={index} hidden={!(el.dataSource == "1" || el.dataSource =="2")}>{el.uniqueId} 
               
-              {(lastUserSelected != null) ? lastUserSelected.domainUsers.map((el,index)=> <option  
-              data-imsg-src={logo}
-              key={index} value={index}>{el.uniqueId}
-              
-              </option>
-              
-              ) : null}
+                  </option>
+                  
+                  ) : null}
 
-            </Select>
+                </Select>
+            </FormControl>
             </div>
             <div >
-            <Fab color="primary" variant="extended" onClick={handleAddUser} style={{marginRight: "30px"}}>
+            <Checkbox checked={checkedUser} onChange={handleChangedCheckedUser}/> 
+              <span>משתמש חדש</span>
+            
+            </div>
+            </div>
+            <div>
+            <Fab color="primary" variant="extended" size='medium' onClick={handleAddUser} >
                 <AddIcon/>
                 הוסף
             </Fab>
+             
             </div>
 
             </div>
-          
+            </div>
           </div>
 
+          
           <DialogsTable usersSelected={usersSelected} setUsersSelected={setUsersSelected} setLastUserSelectedUniqueId={setLastUserSelectedUniqueId}/>
           
 

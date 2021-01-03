@@ -66,12 +66,22 @@ const addImmigrantsApiPromise = async (usersToCreate) =>{
     
     return results;
 }
+const getGroupsPerNameKart = async (groupname) =>{
+    if(config.isMock){
+        await wait(200);
+        return users;
+    }
+    const res = await request.get('api/groupsearch', {params:{
+        groupname: groupname
+    }},{timeout : 10000}).catch(err => { throw (err.response) });
+    return res.data;
+}
 const getUsernamesPerNameKart = async (username) =>{
     await wait(200); 
     return users;
 
     // if(config.isMock){await wait(200); return users};
-    // const res = await request.get(`search`,{params:{
+    // const res = await request.get(`api/search`,{params:{
     //     username: username
     // }},{timeout : 10000}).catch(err => { throw (err.response) });
     // return res.data;
@@ -83,6 +93,6 @@ const getGardeners = async () =>{
 
 }
 
-export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGardeners }
+export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGardeners, getGroupsPerNameKart }
 
 

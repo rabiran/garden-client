@@ -22,10 +22,10 @@ export default [
         "mail": "matan@gmail.com",
         "hierarchy": "עמף ממ'ד/צוות SDI/תוכניתן מס1",
         "domainUsers":[{
-            "dataSource": "1",
+            "dataSource": "3",
             "uniqueId": "matan@gmail.com"
         },{
-            "dataSource": "2",
+            "dataSource": "1",
             "uniqueId": "mat@wasssup.com"
         },],
     },
@@ -129,7 +129,7 @@ export default [
         "mail": "hamsa@kaka.com",
         "hierarchy": "עמף ממ'ד/צוות SDI/תוכניתן מס1",
         "domainUsers":[{
-            "dataSource": "2",
+            "dataSource": "1",
             "uniqueId": "lolllll@gmail.com",
         },{
             "dataSource": "3",

@@ -5,6 +5,7 @@ import MaterialTable from 'material-table'
 import hebrewLocalization from 'config/tableHebrew';
 import Select from "@material-ui/core/Select";
 import tableIcons from 'config/tableIcons';
+import Box from '@material-ui/core/Box'
 
 
 export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }) => {
@@ -25,9 +26,12 @@ export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }
     };
   return (
     <div>
+      <Box boxShadow={12} >
       <MaterialTable
-        style={{ marginTop: "50px" }}
+        
+        style={{ marginTop: "30px"  }}
         title="משתמשים שנוספו"
+        
         localization={hebrewLocalization}
         columns={[
           { title: "שם", field: "name" },
@@ -43,9 +47,10 @@ export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }
               >
                 {rowData != null
                   ? rowData.domainUsers.map((el, index) => (
-                      <option key={index} value={index}>
-                        {el.uniqueId}
-                      </option>
+              <option  
+             
+                  key={index} value={index} hidden={!(el.dataSource == "1" || el.dataSource =="2")}>{el.uniqueId} 
+             </option>
                     ))
                   : null}
               </Select>
@@ -97,6 +102,7 @@ export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }
             : []
         }
       />
+      </Box>
     </div>
   );
 };
