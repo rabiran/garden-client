@@ -76,27 +76,27 @@ const getUsernamesPerNameKart = async (username) =>{
     // }},{timeout : 10000}).catch(err => { throw (err.response) });
     // return res.data;
 }
-const getGardenersStatsApi = async () =>{
+const getGardenersStatsApi = async () => {
     if(config.isMock) { await wait(300); return gardeners}
     const res = await request.get(`api/stats/gardeners`).catch(err => { throw (err.response) });
     return res.data;
 }
 
-const getStatusesStatsApi = async () =>{
+const getStatusesStatsApi = async () => {
     if(config.isMock) { await wait(300); return statsMock}
     const res = await request.get(`api/stats/statuses`).catch(err => { throw (err.response) });
     return res.data;
 }
 
-const getMigrationsStatsApi = async () =>{
+const getMigrationsStatsApi = async () => {
     if(config.isMock) { await wait(300); return migratedMock}
-    const res = await request.get(`api/stats/migrations`).catch(err => { throw (err.response) });
+    const res = await request.get(`api/stats/completed`).catch(err => { throw (err.response) });
     return res.data;
 }
 
-const getTotalMigrationsStatsApi = async () =>{
+const getTotalMigrationsStatsApi = async () => {
     if(config.isMock) { await wait(300); return totalMigratedMock}
-    const res = await request.get(`api/stats/totalMigrations`).catch(err => { throw (err.response) });
+    const res = await request.get(`api/stats/total`).catch(err => { throw (err.response) });
     return res.data;
 }
 
