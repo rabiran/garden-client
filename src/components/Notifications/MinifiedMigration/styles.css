@@ -1,0 +1,15 @@
+.notificationItem {
+    /* background-color: hotpink; */
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    /* padding: 5px; */
+}
+
+.notificationItem:hover {
+    background-color: gray;
+    color: black;
+    /* font-size: 9em; */
+    /* height: 100%; */
+    /* background-color: red; */
+  }

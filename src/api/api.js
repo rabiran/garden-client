@@ -24,7 +24,7 @@ const request = axios.create({
 
 
 const authApi = async () => {
-    if(config.isMock) { await wait(200); return AuthDataMock } //mockSchedules  or []
+    if(config.isMock) { await wait(500); return AuthDataMock } //mockSchedules  or []
     const res = await request.get(`auth`).catch(err => { throw (err.response) });
     return res.data;
 }
@@ -36,19 +36,42 @@ const domainsApi = async () => {
     return res.data;
 }
 
+// .sort((a,b) => { return (a.viewed === b.viewed) ? 0 : a.viewed? 1: -1 })
 const getImmigrantsApi = async () => {
-    if(config.isMock) { await wait(200); return mock } //mockSchedules  or []
+    if(config.isMock) { await wait(500); return mock } //mockSchedules  or []
     const res = await request.get(`api/immigrant`).catch(err => { throw (err.response) });
     console.log(res);
     return res.data;
 }
 
+const deleteImmigrantApi = async (id) => {
+    console.log('delete');
+    // throw ({msg: 'adad', id});
+    if(config.isMock) { await wait(500); return id } //mockSchedules  or []
+    const res = await request.delete(`api/immigrant/${id}`).catch(err => { throw ({msg: err.response, id}) });
+    console.log(res);
+    return res.data;
+}
 
-const addImmigrantsApiPromise = async (usersToCreate) =>{
+const addImmigrantsApi = async (domain,user) => {
+    if(config.isMock){await wait(2000); return users};
+    user.forEach(element => {
+        
+    });
+    const res = await request.post(`api/immigrant`,{"Domain": domain,"Name": user}).catch(err => { throw (err.response) });
+    return res.data;
+}
 
-    // NEED TO CHANGE !!!
+const pauseStateApi = async (id, state) => {
+    console.log(state);
+    if(config.isMock) { await wait(500); return true } //mockSchedules  or []
+    const res = await request.put(`api/immigrant/${id}`, state).catch(err => { throw (err.response) });
+    console.log(res);
+    return res.data;
+}
 
-    //if(config.isMock) { await wait(2000); return mock } 
+const addImmigrantsApiPromise = async (domain,user) =>{
+    if(config.isMock) { await wait(2000); return mock } 
     let arrayPromise = [];
     console.log(usersToCreate)
     usersToCreate.forEach(element => {
@@ -93,6 +116,15 @@ const getGardeners = async () =>{
 
 }
 
-export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGardeners, getGroupsPerNameKart }
+const setViewedApi = async (id) => {
+    if(config.isMock) { await wait(200); return true }
+    const state = {viewed: true}
+    const res = await request.put(`api/immigrant/${id}`, state).catch(err => { throw (err.response) });
+    console.log(res);
+    return res.data;
+}
+
+export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGardeners, getGroupsPerNameKart ,
+  addImmigrantsApi, deleteImmigrantApi, pauseStateApi , setViewedApi }
 
 
