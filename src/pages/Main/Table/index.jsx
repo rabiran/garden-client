@@ -2,17 +2,18 @@ import React from 'react';
 import './styles.css';
 import Status from 'components/status';
 import MaterialTable from 'material-table'
-import Cell from './Cell';
+import Cell from '../BetterTable/Row/Cell';
 import hebrewLocalization from 'config/tableHebrew';
 import DeleteDialog from 'components/Confirm';
 import tableIcons from 'config/tableIcons';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-
+import Collapse from '@material-ui/core/Collapse';
 
 export default ({data, deleteFromTable}) => {
     const [openDelete, setOpenDelete] = React.useState(false);
-    
+    const [open, setOpen] = React.useState(false);
+
     const handleOpenDelete = (data) => {
         setOpenDelete(data);
     }
@@ -77,7 +78,7 @@ export default ({data, deleteFromTable}) => {
                         )
                     }
                 }]}
-                onRowClick={(event, rowData, togglePanel) => togglePanel()}
+                onRowClick={(event, rowData, togglePanel) => { setOpen(true); togglePanel()}}
                 actions={[
                     {
                         tooltip: 'Remove All Selected Users',
