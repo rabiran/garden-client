@@ -54,7 +54,7 @@ const addImmigrantsApiPromise = async (usersToCreate) =>{
     usersToCreate.forEach(element => {
         arrayPromise.push(new Promise((resolve,reject) =>{
             
-            request.post(`api/immigrant`,{"UniqueId": element.primaryUniqueIdIndex,"Name": element.id}).catch(err => {reject (element) })
+            request.post(`api/immigrant`,{"UniqueId": element.primaryUniqueIdIndex,"Name": element.id,"NewUser": element.newUser}).catch(err => {reject (element) })
             .then(function(response){resolve(element)});
             
             

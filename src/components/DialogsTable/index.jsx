@@ -6,6 +6,7 @@ import hebrewLocalization from 'config/tableHebrew';
 import Select from "@material-ui/core/Select";
 import tableIcons from 'config/tableIcons';
 import Box from '@material-ui/core/Box'
+import { Checkbox } from "@material-ui/core";
 
 
 export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }) => {
@@ -13,7 +14,7 @@ export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }
 
     const handleRowChangedDomain = (oldData,event) => {
 
-        setLastUserSelectedUniqueId(event.target.value)
+       
         setUsersSelected(usersSelected.map(user =>{
           if(user.id == oldData.id){
             user.primaryUniqueIdIndex = event.target.value;
@@ -24,6 +25,16 @@ export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }
     
     
     };
+    const handleCheckedUserRowData = (rowData,event) => {
+      
+      setUsersSelected(usersSelected.map(user =>{
+        if(user.id == rowData.id){
+          user.newUser = !user.newUser;
+        }
+        return user;
+      }))
+
+    }
   return (
     <div>
       <Box boxShadow={12} >
@@ -39,6 +50,7 @@ export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }
           { title: "היררכיה", field: "hierarchy" },
           {
             title: "שינוי יוז'ר ראשי",
+            
             render: (rowData) => (
               <Select
                 native
@@ -59,6 +71,7 @@ export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }
 
           {
             title: "דומיין",
+            
             render: (rowData) => (
               <p>
                 {" "}
@@ -72,6 +85,13 @@ export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }
               </p>
             ),
           },
+          {
+            title: "משתמש חדש",
+            render: (rowData) =>(                                 
+            <Checkbox checked={rowData.newUser} onClick={(e) => handleCheckedUserRowData(rowData,e)}/>                                                           
+            )
+          }
+        
         ]}
         options={{
           selection: true,
@@ -83,8 +103,8 @@ export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }
             tooltip: "מחק משתמשים",
             onClick: (event, rowData) => {
               let newArr = usersSelected;
-              async function DeleteUsers() {
-                await rowData.forEach((userToDel) => {
+               function DeleteUsers() {
+                 rowData.forEach((userToDel) => {
                   newArr = newArr.filter((element) => {
                     return element.id != userToDel.id;
                   });

@@ -19,7 +19,7 @@ import Fab from '@material-ui/core/Fab'
 import Grid from '@material-ui/core/Grid'
 import { ContactSupportOutlined } from "@material-ui/icons";
 import logo from 'images/migraine.svg';
-import DialogsTable from '../DialogsTable'
+import DialogsTable from '../DialogsTable/index.jsx'
 import domainsMap from '../../api/domainsMap'
 import { Checkbox, FormControl, InputLabel, Radio, RadioGroup , FormControlLabel, FormLabel ,CheckBoxGroup } from '@material-ui/core';
 import { red } from "@material-ui/core/colors";
@@ -365,7 +365,7 @@ const handlePersonSearch= (event) =>{
                 options={users}
                           
                 onChange={handleSelectedUser}
-                getOptionLabel={(isPersonSearch) ?(option)=> option.name + option.hierarchy : (option)=> option.name}
+                getOptionLabel={(isPersonSearch) ?(option)=> option.name + option.hierarchy.join("/") : (option)=> option.name}
                 renderInput={(params) => (
                   
 
