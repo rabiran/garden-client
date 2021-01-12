@@ -70,7 +70,7 @@ const pauseStateApi = async (id, state) => {
     return res.data;
 }
 
-const addImmigrantsApiPromise = async (domain,user) =>{
+const addImmigrantsApiPromise = async (domain,usersToCreate) =>{
     if(config.isMock) { await wait(2000); return mock } 
     let arrayPromise = [];
     console.log(usersToCreate)
