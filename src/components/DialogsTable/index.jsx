@@ -9,7 +9,7 @@ import Box from '@material-ui/core/Box'
 import { Checkbox } from "@material-ui/core";
 
 
-export default ({ usersSelected, setUsersSelected, setLastUserSelectedUniqueId }) => {
+export default ({ usersSelected, setUsersSelected }) => {
 
 
     const handleRowChangedDomain = (oldData,event) => {

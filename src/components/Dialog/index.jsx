@@ -5,25 +5,19 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-//import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "@material-ui/core/Select";
 import CircularProgress from "@material-ui/core/CircularProgress"
 import AutoComplete from "@material-ui/lab/Autocomplete"
 import './style.css'
 import { getUsernamesPerNameKart,addImmigrantsApiPromise, getGroupsPerNameKart} from "../../api/api"
-import { Chip } from "@material-ui/core";
-import {Paper} from "@material-ui/core"
 import AddIcon from '@material-ui/icons/Add'
 import Fab from '@material-ui/core/Fab'
-import Grid from '@material-ui/core/Grid'
-import { ContactSupportOutlined } from "@material-ui/icons";
 import logo from 'images/migraine.svg';
 import DialogsTable from '../DialogsTable/index.jsx'
 import domainsMap from '../../api/domainsMap'
 import { Checkbox, FormControl, InputLabel, Radio, RadioGroup , FormControlLabel, FormLabel ,CheckBoxGroup } from '@material-ui/core';
-import { red } from "@material-ui/core/colors";
-import { color } from "highcharts";
+
 
 export default ({openWindow,setOpenWindow}) => {
  
@@ -81,7 +75,7 @@ const handlePersonSearch= (event) =>{
   setIsPersonSearch(String(event.target.value) == "true");
 }
 
-  const typingTimeout = 700;
+  const typingTimeout = 1000;
   let renderTimeout;
 
   const handleChangedDomain = (event) => {
@@ -91,6 +85,16 @@ const handlePersonSearch= (event) =>{
   };
 
   const handleClose = () => { 
+    setUsers([])
+    setUserValidation(false)
+    setPostStatuses([])
+    setUserName("")
+    setCheckedUser(false)
+    setUniqueIdValidation(false)
+    setLastUserSelected(null)
+    setUsersSelected([]);
+    setLastUserSelectedUniqueId(-1)
+    setIsPersonSearch(true)
     setOpenWindow(false)
   };
   const handleTextFieldChange = (e) => {
@@ -181,7 +185,6 @@ const handlePersonSearch= (event) =>{
 
             if(element.dataSource == "1" || element.dataSource == "2"){
 
-              console.log("heythere")
               return true;
             }
             return false;
@@ -189,8 +192,6 @@ const handlePersonSearch= (event) =>{
           return false;
         } )
         if(index == -1){
-          //const res= findFirstDataSIndex(value.domainUsers)
-          //setLastUserSelectedUniqueId(res)
           const indexNotOneAman = value.domainUsers.findIndex((element) =>{
             return element.dataSource =="1" || element.dataSource =="2"
           })
@@ -214,16 +215,18 @@ const handlePersonSearch= (event) =>{
       
       renderTimeout = setTimeout(async () => {
           setLoadingInput(true)
+          if(userName != undefined && userName.length > 2){
           if(isPersonSearch){
             let newUsers = await getUsernamesPerNameKart(userName)
+            console.log(userName)
             let us =   newUsers.filter(usnow =>  (usnow.name).includes(userName) &&  //Remove includes
-                        usnow.domainUsers.find((ds) => ds.dataSource == "One") == undefined &&
-                        (usnow.domainUsers.find((ds) => ds.dataSource == "1") != undefined ||
-                        usnow.domainUsers.find((ds) => ds.dataSource =="2") != undefined)) 
+                        
+                        usnow.domainUsers.find((ds) => ds.dataSource == "1") != undefined ||
+                        usnow.domainUsers.find((ds) => ds.dataSource =="2") != undefined) 
   
             setUsers(us)
 
-          }else{
+          }}else{
             let us = await getGroupsPerNameKart(userName);
             let newGroups = us.filter(usnow => usnow.name.includes(userName)) //Remove includes 
             setUsers(newGroups)
@@ -235,6 +238,7 @@ const handlePersonSearch= (event) =>{
         
       , typingTimeout);
     }
+    setUsers([])
      setTimeoutVar(renderTimeout)
     
 
