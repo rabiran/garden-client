@@ -17,14 +17,41 @@
     top: 20%;
     left: 40%;
 }
-
-.fillingFieldsContainer {
+.searchingContainer{
     display: flex;
+    flex-direction: column;
+}
+
+.detailsContainer{
+    display: inline-flex ;
+    
+   
     flex-direction: row;
     flex-wrap:  wrap;
+    justify-items: center;
     justify-content: flex-start;
-    gap: 15px;
+    
+    gap: 30px;
+
 }
+
+.fillingFieldsContainer {
+    display: inline-flex ;
+    
+   
+    flex-direction: row;
+    flex-wrap:  wrap;
+    justify-items: center;
+    justify-content: start;
+    column-gap: 100px;
+    row-gap: 20px;
+    
+}   
+/* .fillingFieldsContainer div{
+    
+    margin-top: auto; 
+} */
+
 
 .dialogContentContainer {
     display: flex;

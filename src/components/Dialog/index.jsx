@@ -5,22 +5,26 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-//import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "@material-ui/core/Select";
 import CircularProgress from "@material-ui/core/CircularProgress"
 import AutoComplete from "@material-ui/lab/Autocomplete"
 import './style.css'
-import { getUsernamesPerNameKart,addImmigrantsApiPromise} from "../../api/api"
-import { Chip } from "@material-ui/core";
-import {Paper} from "@material-ui/core"
+import { getUsernamesPerNameKart,addImmigrantsApiPromise, getGroupsPerNameKart} from "../../api/api"
+import AddIcon from '@material-ui/icons/Add'
+import Fab from '@material-ui/core/Fab'
+import logo from 'images/migraine.svg';
+import DialogsTable from '../DialogsTable/index.jsx'
+import domainsMap from '../../api/domainsMap';
 import useStore from 'utils/StoreProvider/useStore';
+import { Checkbox, FormControl, InputLabel, Radio, RadioGroup , FormControlLabel, FormLabel ,CheckBoxGroup } from '@material-ui/core';
 
 
-export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => {
+export default ({openWindow,setOpenWindow}) => {
  
 
-
+  const store = useStore();
+  const domains = store.getDomains();
   const [loading, setLoading] = React.useState(false);
   const [loadingInput, setLoadingInput] = React.useState(false);
   const [openInput, setOpenInput] = React.useState(false);
@@ -30,41 +34,177 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
   const [timeoutVar,setTimeoutVar] = React.useState(null);
   const [usersSelected,setUsersSelected] = React.useState([])
   const [postStatuses,setPostStatuses] = React.useState([])
-  const [domainsColor, setDomainsColor] = React.useState([])
+
   const [userValidation,setUserValidation] = React.useState(false)
-  const [domainValidation,setDomainValidation] = React.useState(false)
+  const [uniqueIdValidation,setUniqueIdValidation] = React.useState(false)
+  const [lastUserSelectedUniqueIdIndex,setLastUserSelectedUniqueId] = React.useState(-1)
+  
+  const [lastUserSelected, setLastUserSelected] = React.useState(null)
+  const errorMessageFieldEmptyP ='שדה ריק נא בחר משתמש!';
+  const errorMessageUserExistsP = 'משתמש כבר קיים בטבלה!';
+  const errorMessageUserHasOneP= 'משתמש כבר קיים בוואן!'; 
+  const errorMessageFieldEmptyG = 'שדה ריק נא בחר קבוצה!'
+  const errorMessageGroupExists = 'קבוצה כבר קיימת בטבלה!'
+  const errorMessageGroupHasOne = 'קבוצה כבר קיימת בוואן!'
+  const  [errorMessageFieldEmpty, setErrorMessageFieldEmpty] = React.useState(errorMessageFieldEmptyP);
+  const  [errorMessageUserExists, setErrorMessageUserExists] = React.useState(errorMessageUserExistsP);
+  const  [errorMessageUserHasOne, setErrorMessageUserHasOne]= React.useState(errorMessageUserHasOneP);
+  const [errorMessageField,setErrorMessageField] = React.useState(errorMessageFieldEmpty)
 
-  const colors = ["Khaki","Aquamarine","Coral","grey","LightBlue","Violet"]
-  const store = useStore();
-  const domains = store.getDomains();
-
-  const errorMessageField ='שדה ריק נא בחר משתמש!';
+  const [isPersonSearch ,setIsPersonSearch] = React.useState(true);
+  const [checkedUser,setCheckedUser] = React.useState(false);
 
 
-  const typingTimeout = 500;
+React.useEffect(()=>{
+  setUserValidation(false);
+  setUniqueIdValidation(false);
+  setLastUserSelected(null);
+  setUsers([])
+  if(isPersonSearch){
+    setErrorMessageFieldEmpty(errorMessageFieldEmptyP);
+    setErrorMessageUserExists(errorMessageUserExistsP);
+    setErrorMessageUserHasOne(errorMessageUserHasOneP);
+  }else{
+    setErrorMessageFieldEmpty(errorMessageFieldEmptyG);
+    setErrorMessageUserExists(errorMessageGroupExists);
+    setErrorMessageUserHasOne(errorMessageGroupHasOne);
+
+  }
+
+}, [isPersonSearch])
+const handlePersonSearch= (event) =>{
+  
+  setIsPersonSearch(String(event.target.value) == "true");
+}
+
+  const typingTimeout = 1000;
   let renderTimeout;
 
   const handleChangedDomain = (event) => {
-    setSelectedDomain(event.target.value)
-    setDomainValidation(false)
+    setLastUserSelectedUniqueId(event.target.value)
+    setUniqueIdValidation(false)
 
   };
+
   const handleClose = () => { 
+    setUsers([])
+    setUserValidation(false)
+    setPostStatuses([])
+    setUserName("")
+    setCheckedUser(false)
+    setUniqueIdValidation(false)
+    setLastUserSelected(null)
+    setUsersSelected([]);
+    setLastUserSelectedUniqueId(-1)
+    setIsPersonSearch(true)
     setOpenWindow(false)
   };
   const handleTextFieldChange = (e) => {
     
     if(userValidation){
       setUserValidation(false)
+      setUniqueIdValidation(false)
     }
     setUserName(e.target.value);
   }
+
+  const handleAddUser = (e)=>{
+    
+    if(lastUserSelected == null){
+      setUserValidation(true)
+      setUniqueIdValidation(true)
+      setErrorMessageField(errorMessageFieldEmpty)
+    }
+    if(lastUserSelectedUniqueIdIndex == -1){
+      setUniqueIdValidation(true)
+    }
+
+    if(lastUserSelectedUniqueIdIndex != -1){     
+      
+      function fetchData(){
+        if(lastUserSelected!=null){
+          let foundOne =  lastUserSelected.domainUsers.find((ds)=> ds.dataSource == domains.target)
+          if(foundOne != undefined){
+            
+            setErrorMessageField(errorMessageUserHasOne);
+            setUserValidation(true);
+            setUniqueIdValidation(true);
+            setLastUserSelected(null);
+            setLastUserSelectedUniqueId(-1);
+            return;
+
+          }
+
+          let foundUser = usersSelected.find(user => user.id === lastUserSelected.id)
+        
+          if(foundUser == undefined){
+            let obj = Object.assign(lastUserSelected , {primaryUniqueIdIndex: lastUserSelectedUniqueIdIndex , newUser: checkedUser})
+            setUsersSelected(usersSelected.concat(obj))
+          }else{
+            setErrorMessageField(errorMessageUserExists);
+            setUserValidation(true);
+            setUniqueIdValidation(true);
+          }
+        }
+      };
+      fetchData();
+      
+      setLastUserSelected(null);
+      setLastUserSelectedUniqueId(-1);
   
-  const handleSelectedUser = (e,values) =>{   
-      if(userValidation){
-        setUserValidation(false)
+      
+    }
+
+  }
+
+  const handleChangedCheckedUser =(e) =>{
+    setCheckedUser(!checkedUser)
+  }
+  
+  
+  
+  const handleSelectedUser = (e,value) =>{   
+
+      if(value == null || value ==""){
+        setLastUserSelected(null)
+        
+        setErrorMessageField(errorMessageFieldEmpty)
+        
+        return;
       }
-      setUsersSelected(values)
+      setLastUserSelected(value)
+      function fetchData(){
+        const index = value.domainUsers.findIndex((element) =>{
+
+          if(value.mail == undefined){
+            return false;
+          }
+          if(element.uniqueId == undefined){
+            return false;
+          }
+
+          if( element.uniqueId.toLowerCase() == value.mail.toLowerCase()){
+
+            if(element.dataSource == domains.ads || element.dataSource == domains.es){
+
+              return true;
+            }
+            return false;
+          }
+          return false;
+        } )
+        if(index == -1){
+          const indexNotOneAman = value.domainUsers.findIndex((element) =>{
+            return element.dataSource == domains.ads || element.dataSource == domains.es
+          })
+          setLastUserSelectedUniqueId(indexNotOneAman)
+          return;
+        }
+        setLastUserSelectedUniqueId(index)
+      };
+      fetchData();
+      
+      
       setUsers([])
       setPostStatuses([])
   }
@@ -77,51 +217,57 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       
       renderTimeout = setTimeout(async () => {
           setLoadingInput(true)
-          let newUsers = await getUsernamesPerNameKart(userName)
-          let us =  newUsers.filter(usnow =>  (usnow.name).includes(userName))
-          setUsers(us)
+          if(userName != undefined && userName.length > 2){
+          if(isPersonSearch){
+            let newUsers = await getUsernamesPerNameKart(userName)
+            console.log(userName)
+            let us =   newUsers.filter(usnow =>  (usnow.name).includes(userName) &&  //Remove includes
+                        
+                        usnow.domainUsers.find((ds) => ds.dataSource == domains.ads) != undefined ||
+                        usnow.domainUsers.find((ds) => ds.dataSource == domains.es) != undefined) 
+  
+            setUsers(us)
+
+          }}else{
+            let us = await getGroupsPerNameKart(userName);
+            let newGroups = us.filter(usnow => usnow.name.includes(userName)) //Remove includes 
+            setUsers(newGroups)
+          }
+
           setLoadingInput(false)
             
         }
         
       , typingTimeout);
     }
+    setUsers([])
      setTimeoutVar(renderTimeout)
     
 
 
   }, [userName])
   
-  const regexHandleRequestClick = () =>{
-    let ans = usersSelected.length !=0 && selectedDomain !="";
-    console.log("ans:"+ans)
-    if (ans){
-      return true;
-    }
-
-
-    return false;
-  }
 
   const handleRequestClick = async() =>{
     let statusResults;
-    if(usersSelected.length==0){
-      setUserValidation(true)
-    }
-    if(selectedDomain == ""){
-      setDomainValidation(true)
-    }
+    setPostStatuses([])
     try{
       if (!loading){
         setSuccess(false);
         setLoading(true);
       }
-      if(!regexHandleRequestClick()){
+      if(usersSelected.length ==0){
         setSuccess(false);
         setLoading(false);
+        setErrorMessageField(errorMessageFieldEmpty);
+        setUniqueIdValidation(true)
+        setUserValidation(true)
         return;
-      }    
-      statusResults = await addImmigrantsApiPromise(selectedDomain,usersSelected);
+      }
+      
+      statusResults = await addImmigrantsApiPromise(usersSelected); //NEED TO CHANGE !!!! method api too\!!
+  
+     
       
       setSuccess(true);
       setLoading(false);
@@ -129,18 +275,19 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
       
       let arrStatuses =[];
       let foundReject = false;
-      console.log(statusResults)
-      await statusResults.forEach(res =>{
-        arrStatuses.push(res.status)
+      statusResults.forEach(res =>{
+        let status = (res.status == "rejected" ? "נכשל" : "הצליח")
+        
         if(res.status =="rejected"){
           foundReject = true;
+          arrStatuses.push(status+": "+ res.reason.id+" "+ res.reason.name)
         }
       })
       setPostStatuses(arrStatuses)
-      if(foundReject){ 
+      if(foundReject){ // one or more of them failed
         setOpenWindow(true);
       }else{
-        setOpenWindow(true);
+        handleClose();
       }
       
       
@@ -152,19 +299,16 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
 
   }
   
-  console.log("===================");
-  console.log(usersSelected);
-  console.log("===================");
 
   return (
     <div >
       <Dialog
         PaperProps={{
           style: {
-            maxWidth: '50vw',
-            minWidth: '50vw',
-            maxHeight: '60vh',
-            minHeight: '60vh',
+            maxWidth: '70vw',
+            minWidth: '70vw',
+            maxHeight: '80vh',
+            minHeight: '80vh',
             
           },
         }}
@@ -177,34 +321,41 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
         dir="rtl"
       >
         <DialogTitle id="form-dialog-title">יצירת משתמש
-          <div style={{textAlign:"left",height: "100px", display: "flex",flexWrap: "nowrap",justifyContent:"flex-end",direction:"row",overflow: "auto"}}>
-            <Paper style={{position: "fixed"}}> {(domains) ? Object.values(domains).map((el,index)=> <div style={{backgroundColor: colors[index]}} key={index}>{el}</div>) : null} </Paper>
-          </div>
         </DialogTitle>
         <DialogContent dividers>
+          
+            
+          
           <div className="dialogContentContainer"
           >
             <DialogContentText>
-              נא למלא את הטופס בשביל יצירת משתמש ב.
-            </DialogContentText>
-            <div className="fillingFieldsContainer "> 
               
+            <span> נא למלא את הטופס בשביל יצירת משתמש ב.</span>
+
+
+            </DialogContentText>
+            
+            <div className="searchingContainer">
+              <div>
+              <FormControl component="fieldset">
+      <FormLabel component="legend"><div style={{color: "#00796b"}}>בחר סוג חיפוש</div></FormLabel>
+      <RadioGroup
+      
+        value={isPersonSearch.toString()}
+        onChange={handlePersonSearch}
+      >
+        <FormControlLabel value="true" control={<Radio />} label="בן אדם" />
+        <FormControlLabel value="false" control={<Radio />} label="קבוצה" />
+      </RadioGroup>
+    </FormControl>
+              </div>
+            <div className="fillingFieldsContainer"> 
+            <div className="detailsContainer"> 
             <div >
 
-                                        <div style={{maxHeight: '100px',gap:'5px',overflowY: 'auto', display: "flex", flexWrap: "nowrap" , flexDirection: "column", justifyContent: "flex-start"}}>
-                             {(usersSelected != undefined && usersSelected.length>0) ? (usersSelected?.map((el,index)=> <Chip style={{ backgroundColor: colors[domains.indexOf((el?.domainUsers[0]?.dataSource))], minHeight:"30px" }} key={index} label={(el.name)}/>)) : null}            
-
-                            
-                      </div>
               <AutoComplete
-                // onEmptied={()=>{
-                //   setUsersSelected([]);
-                //   console.log("heyy")
-                // }}
-                
-                tag={{color: "blue"}}
-                style = {{width:340,}}
-                multiple
+                               
+                style = {{width:340}}
                 noOptionsText={"לא נמצאו תוצאות"}
                 open={openInput}
                 onOpen={() => {
@@ -214,50 +365,32 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
                 onClose={() => {
                   setOpenInput(false);
                 }}
+        
                 limitTags={2}
                 id="multiple-limit-tags"
                 options={users}
-                
+                          
                 onChange={handleSelectedUser}
-                getOptionLabel={(option)=> option.name + option.hierarchy}
+                getOptionLabel={(isPersonSearch) ?(option)=> option.name + option.hierarchy.join("/") : (option)=> option.name}
                 renderInput={(params) => (
                   
 
                   <TextField
-                    {...params}
-                    // display: "flex", flexWrap: "nowrap" , flexDirection: "column"
-
-                    
+                    {...params}                  
                     variant="standard"
-                    label="חפש משתמש"
-                    placeholder="משתמש"
-                    
-                    InputProps={{
-                      
+                    label={(isPersonSearch) ?"חפש משתמש" : "חפש קבוצה"}
+                    placeholder={(isPersonSearch)? "משתמש" :"קבוצה"}
+                   
+                    InputProps={{                      
                       ...params.InputProps,
-                      startAdornment: (
-                      // <div style={{maxHeight: '70px',gap:'4px',overflowY: 'auto', display: "flex", flexWrap: "nowrap" , flexDirection: "column"}}>
-                      //        {(usersSelected != undefined && usersSelected?.length>0) ? (usersSelected?.map((el,index)=> <Chip style={{ backgroundColor: domains[parseInt(el?.domainUsers[0]?.dataSource)-1].color, }} key={index} label={(el.name)}/>)) : null}            
-                      //       {console.log(usersSelected)/* {params.InputProps.startAdornment} */}
-                      //       {console.log(domains)}
-                      //       {console.log(parseInt(usersSelected[0]?.domainUsers[0].dataSource))}
-                            
-
-                      // </div>
-                    <div></div>
-                      ),
                       endAdornment: (
                         <React.Fragment>
                           {loadingInput ? (
                             <CircularProgress color="inherit" size={20} />
-                          ) : null}
-                          
-                          {params.InputProps.endAdornment}
-                          
+                          ) : null}                          
+                          {params.InputProps.endAdornment}                          
                         </React.Fragment>
-                      )
-                      
-
+                      )                      
                     }}
                     
                     error = {(userValidation)}
@@ -270,31 +403,53 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
 
               >
 
-              </AutoComplete>
-
-            
-              
-            
+              </AutoComplete>   
        
             </div>
-            
-              <div>
-            <Select
-              native
-              value={selectedDomain}
-              onChange={handleChangedDomain}
-              variant="outlined"
-              error = {(domainValidation)}
-                    
+            <div> 
+              <FormControl>
+                <InputLabel >בחר דומיין</InputLabel>
+                <Select
+                  native
+                  style={{width:"200px",}}
+                  value={lastUserSelectedUniqueIdIndex}
+                  onChange={handleChangedDomain}
+                  
+                  error = {(uniqueIdValidation)}      
+                >
+
+                  
+                  {(lastUserSelected != null) ? lastUserSelected.domainUsers.map((el,index)=> <option  
+                
+                  key={index} value={index} hidden={!(el.dataSource == domains.ads || el.dataSource == domains.es)}>{el.uniqueId} 
               
-            >
-              <option label="בחירת דומיין מרכזי" value=""></option>
-              {Object.values(domains).map((el,index)=> <option  key={index} value={el}>{el}</option>)}
-              
-            </Select>
+                  </option>
+                  
+                  ) : null}
+
+                </Select>
+            </FormControl>
+            </div>
+            <div >
+            <Checkbox checked={checkedUser} onChange={handleChangedCheckedUser}/> 
+              <span>משתמש חדש</span>
+            </div>
+            </div>
+            <div>
+            <Fab color="primary" variant="extended" size='medium' onClick={handleAddUser} >
+                <AddIcon/>
+                הוסף
+            </Fab>
+             
+            </div>
             </div>
             </div>
           </div>
+
+          
+          <DialogsTable usersSelected={usersSelected} setUsersSelected={setUsersSelected} setLastUserSelectedUniqueId={setLastUserSelectedUniqueId}/>
+          
+
           <div >
             {postStatuses.map((el,index)=> <p className="regex" key={index}>{el}</p>)}
           </div>
@@ -318,7 +473,7 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
           disabled={loading}
           onClick={handleRequestClick}
         >
-          יצירת משתמש
+          יצירה
         </Button>
         {loading && (
           <CircularProgress size={24}  className="buttonProgress" />
@@ -334,6 +489,4 @@ export default ({openWindow,setOpenWindow,selectedDomain,setSelectedDomain}) => 
     </div>
   );
 }
-
-//startIcon={<CloudUploadIcon/>} create button
 

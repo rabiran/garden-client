@@ -12,3 +12,12 @@
     color: red;
     font-weight: bold;
 }
+
+.paused {
+    color: darkgoldenrod;
+    font-weight: bold;
+}
+
+.unknown {
+    font-weight: bold;
+}

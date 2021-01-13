@@ -9,9 +9,10 @@ import RTL from 'utils/RTL';
 import ThemeProvider from 'utils/ThemeProvider/ThemeProvider';
 import LoadingProvider from 'utils/LoadingProvider/LoadingProvider';
 import StoreProvider from 'utils/StoreProvider/storeProvider'
+import LoadingBar from 'utils/LoadingBar';
 import history from 'utils/history';
-import { Router } from 'react-router';
-import { Route, Switch } from 'react-router-dom';
+// import { Router } from 'react-router';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 
 function App() {
@@ -20,10 +21,11 @@ function App() {
       <RTL>
         <ThemeProvider>
           <SnackbarProvider maxSnack={3} style={{ width: '50%' }}>
-            <StoreProvider >
-              <Header />
-              <LoadingProvider>
-                <Router history={history}>
+            <LoadingProvider>
+              <StoreProvider >
+                <Router>
+                  <Header />
+                  <LoadingBar />
                   <Switch>
                     <Route exact path="/" component={MainPage} />
                     <Route exact path="/admin" component={AdminPage} />
@@ -32,8 +34,8 @@ function App() {
                     {/* <ProtectedRoute exact path="/" component={MainPage} /> */}
                   </Switch>
                 </Router>
-              </LoadingProvider>
-            </StoreProvider>
+              </StoreProvider>
+            </LoadingProvider>
           </SnackbarProvider>
         </ThemeProvider>
       </RTL>
