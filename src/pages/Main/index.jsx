@@ -17,7 +17,6 @@ export default () => {
 
     // const authProvider = useAuth();
     const [openWindow, setOpenWindow] = React.useState(false);
-    const [selectedDomain, setSelectedDomain] = React.useState("");
     const loadingProvider = useLoading();
     const { enqueueSnackbar } = useSnackbar();
     const [tableData, setTableData] = React.useState();
@@ -115,7 +114,8 @@ export default () => {
                     <Fab color="primary" aria-label="add" onClick={handleClickOpen} >
                         <AddIcon />
                     </Fab>
-                    <Dialog openWindow={openWindow} setOpenWindow={setOpenWindow} selectedDomain={selectedDomain} setSelectedDomain={setSelectedDomain} />
+                    <Dialog openWindow={openWindow} setOpenWindow={setOpenWindow} />
+
                 </div>
             {/* </div> */}
         </>

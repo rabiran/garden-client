@@ -4,6 +4,7 @@ import config from 'config';
 import mock from './mock';
 import users from './users';
 import wait from 'utils/wait';
+import gardeners from './gardeners';
 
 const AuthDataMock = {
     id: '1',
@@ -11,7 +12,9 @@ const AuthDataMock = {
     isAdmin: false
 }
 
-const domainsMock = ['ads', 'es', 'target'];
+const domainsMock = ['1', '2','3'];
+// const domainsMock = ['dsdsadsadsadsa', 'dsadsadsadsa','dsaaadsadasdsa',];
+
 
 const request = axios.create({
     baseURL: config.serverUrl,
@@ -27,7 +30,8 @@ const authApi = async () => {
 }
 
 const domainsApi = async () => {
-    if(config.isMock) { await wait(500); return domainsMock }
+    console.log(domainsMock)
+    if(config.isMock) { await wait(200); return domainsMock }
     const res = await request.get(`api/domains`).catch(err => { throw (err.response) });
     return res.data;
 }
@@ -66,34 +70,50 @@ const pauseStateApi = async (id, state) => {
     return res.data;
 }
 
-const addImmigrantsApiPromise = async (domain,user) =>{
+const addImmigrantsApiPromise = async (usersToCreate) =>{
     if(config.isMock) { await wait(2000); return mock } 
     let arrayPromise = [];
-    
-    user.forEach(element => {
+    console.log(usersToCreate)
+    usersToCreate.forEach(element => {
         arrayPromise.push(new Promise((resolve,reject) =>{
             
-            request.post(`api/immigrant`,{"Domain": domain,"Name": element.name}).catch(err => {reject (err.response) })
-            .then(function(response){resolve(response)});
+            request.post(`api/immigrant`,{"UniqueId": element.primaryUniqueIdIndex,"Name": element.id,"NewUser": element.newUser}).catch(err => {reject (element) })
+            .then(function(response){resolve(element)});
             
             
         }))
     });
     
-    const results =await Promise.all(arrayPromise)
-    
+    const results =await Promise.allSettled(arrayPromise)
     console.log(results)
+    
     return results;
+}
+const getGroupsPerNameKart = async (groupname) =>{
+    if(config.isMock){
+        await wait(200);
+        return users;
+    }
+    const res = await request.get('api/groupsearch', {params:{
+        groupname: groupname
+    }},{timeout : 10000}).catch(err => { throw (err.response) });
+    return res.data;
 }
 const getUsernamesPerNameKart = async (username) =>{
     await wait(200); 
     return users;
 
     // if(config.isMock){await wait(200); return users};
-    // const res = await request.get(`search`,{params:{
+    // const res = await request.get(`api/search`,{params:{
     //     username: username
     // }},{timeout : 10000}).catch(err => { throw (err.response) });
     // return res.data;
+}
+const getGardeners = async () =>{
+    if(config.isMock) { await wait(2000); return gardeners}
+    const res = await request.get(`api/gardeners`).catch(err => { throw (err.response) });
+    return res.data;
+
 }
 
 const setViewedApi = async (id) => {
@@ -103,6 +123,8 @@ const setViewedApi = async (id) => {
     console.log(res);
     return res.data;
 }
-export { getImmigrantsApi, addImmigrantsApi, deleteImmigrantApi, pauseStateApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, setViewedApi }
+
+export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGardeners, getGroupsPerNameKart ,
+  addImmigrantsApi, deleteImmigrantApi, pauseStateApi , setViewedApi }
 
 
