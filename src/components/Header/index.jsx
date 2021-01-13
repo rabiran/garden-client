@@ -47,7 +47,7 @@ export default () => {
   }
 
   const chartPageClick = () => {
-    history.push('/chart');
+    history.push('/charts');
   }
   // React.useEffect(() => {
   //   console.log('notification update');
