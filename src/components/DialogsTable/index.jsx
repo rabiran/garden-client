@@ -7,11 +7,12 @@ import Select from "@material-ui/core/Select";
 import tableIcons from 'config/tableIcons';
 import Box from '@material-ui/core/Box'
 import { Checkbox } from "@material-ui/core";
-
+import useStore from 'utils/StoreProvider/useStore';
 
 export default ({ usersSelected, setUsersSelected }) => {
 
-
+    const store = useStore();
+    const domains = store.getDomains();
     const handleRowChangedDomain = (oldData,event) => {
 
        
@@ -61,7 +62,7 @@ export default ({ usersSelected, setUsersSelected }) => {
                   ? rowData.domainUsers.map((el, index) => (
               <option  
              
-                  key={index} value={index} hidden={!(el.dataSource == "1" || el.dataSource =="2")}>{el.uniqueId} 
+                  key={index} value={index} hidden={!(el.dataSource == domains.ads || el.dataSource == domains.es)}>{el.uniqueId} 
              </option>
                     ))
                   : null}

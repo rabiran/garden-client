@@ -16,8 +16,7 @@ const useStyles = makeStyles({
 
 export default ({ users, domains, step, substep }) => {
     const classes = useStyles();
-
-    const steps = domains?.map(domain => {
+    const steps = Object.values(domains)?.map(domain => {
         let index = users.indexOf(domain);
         let iscompleted = index === -1 ? false : true;
         // let stepLabel = step === domain ? substep : false;

@@ -12,7 +12,9 @@ const AuthDataMock = {
     isAdmin: false
 }
 
-const domainsMock = ['1', '2','3'];
+// const domainsMock = ['1', '2','3'];
+const domainsMock = {ads: 'ads', es: 'es' , target: 'target' };
+
 // const domainsMock = ['dsdsadsadsadsa', 'dsadsadsadsa','dsaaadsadasdsa',];
 
 

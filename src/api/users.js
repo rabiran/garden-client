@@ -6,13 +6,13 @@ export default [
         "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
         
         "domainUsers":[{
-            "dataSource": "1",
+            "dataSource": "ads",
             "uniqueId": "tom@gmail.com",
         },{
-            "dataSource": "2",
+            "dataSource": "es",
             "uniqueId": "hey@lol.com",
         },{
-            "dataSource": "One",
+            "dataSource": "target",
             "uniqueId": "hey@oneyone.com",
         },],
     },
@@ -22,14 +22,14 @@ export default [
         "mail": "matan@gmail.com",
         "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
         "domainUsers":[{
-            "dataSource": "3",
+            "dataSource": "target",
             "uniqueId": "matan@gmail.com"
         },{
-            "dataSource": "1",
+            "dataSource": "ads",
             "uniqueId": "mat@wasssup.com"
         },
         {
-            "dataSource": "1",
+            "dataSource": "ads",
             "uniqueId": "matשמ@wasssup.com"
         }],
     },
@@ -39,7 +39,7 @@ export default [
         
         "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
         "domainUsers":[{
-            "dataSource": "2",
+            "dataSource": "es",
             "uniqueId": "maehpatleha@gmail.com",
         },],
     },
@@ -49,10 +49,10 @@ export default [
         "mail": "mai.vertush.com",
         "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
         "domainUsers":[{
-            "dataSource": "3",
+            "dataSource": "target",
             "uniqueId": "mai.vertush.com",
         },{
-            "dataSource": "2",
+            "dataSource": "es",
             "uniqueId": "hahlolecxdee@llllllllllllol.com",
 
         },],
@@ -63,7 +63,7 @@ export default [
         "mail": "mybrotheryakar@wowforever.com",
         "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
         "domainUsers":[{
-            "dataSource": "3",
+            "dataSource": "target",
             "uniqueId": "mybrotheryakar@wowforever.com",
         },],
     },
@@ -73,7 +73,7 @@ export default [
         "mail": "aviramyamelech@whytho.com",
         "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
         "domainUsers":[{
-            "dataSource": "2",
+            "dataSource": "es",
             "uniqueId": "aviramyamelech@whytho.com",
         },],
     },
@@ -83,10 +83,10 @@ export default [
         "mail": "whyamidoingdis@dunno.com",
         "hierarchy":["עמף ממ'ד","SDI","1 תוכניתן מס,"],
         "domainUsers":[{
-            "dataSource": "1",
+            "dataSource": "ads",
             "uniqueId": "againyoulol@lolll.com",
         },{
-            "dataSource": "2",
+            "dataSource": "es",
             "uniqueId": "whyamidoingdis@dunno.com",
         },],
     },
@@ -97,10 +97,10 @@ export default [
         "mail": "hamsa@kaka.com",
         "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
         "domainUsers":[{
-            "dataSource": "1",
+            "dataSource": "ads",
             "uniqueId": "lolllll@gmail.com",
         },{
-            "dataSource": "3",
+            "dataSource": "target",
             "uniqueId": "hamsa@kaka.com",
         },],
     },

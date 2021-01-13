@@ -15,14 +15,16 @@ import AddIcon from '@material-ui/icons/Add'
 import Fab from '@material-ui/core/Fab'
 import logo from 'images/migraine.svg';
 import DialogsTable from '../DialogsTable/index.jsx'
-import domainsMap from '../../api/domainsMap'
+import domainsMap from '../../api/domainsMap';
+import useStore from 'utils/StoreProvider/useStore';
 import { Checkbox, FormControl, InputLabel, Radio, RadioGroup , FormControlLabel, FormLabel ,CheckBoxGroup } from '@material-ui/core';
 
 
 export default ({openWindow,setOpenWindow}) => {
  
 
-  
+  const store = useStore();
+  const domains = store.getDomains();
   const [loading, setLoading] = React.useState(false);
   const [loadingInput, setLoadingInput] = React.useState(false);
   const [openInput, setOpenInput] = React.useState(false);
@@ -121,7 +123,7 @@ const handlePersonSearch= (event) =>{
       
       function fetchData(){
         if(lastUserSelected!=null){
-          let foundOne =  lastUserSelected.domainUsers.find((ds)=> ds.dataSource == "One")
+          let foundOne =  lastUserSelected.domainUsers.find((ds)=> ds.dataSource == domains.target)
           if(foundOne != undefined){
             
             setErrorMessageField(errorMessageUserHasOne);
@@ -183,7 +185,7 @@ const handlePersonSearch= (event) =>{
 
           if( element.uniqueId.toLowerCase() == value.mail.toLowerCase()){
 
-            if(element.dataSource == "1" || element.dataSource == "2"){
+            if(element.dataSource == domains.ads || element.dataSource == domains.es){
 
               return true;
             }
@@ -193,7 +195,7 @@ const handlePersonSearch= (event) =>{
         } )
         if(index == -1){
           const indexNotOneAman = value.domainUsers.findIndex((element) =>{
-            return element.dataSource =="1" || element.dataSource =="2"
+            return element.dataSource == domains.ads || element.dataSource == domains.es
           })
           setLastUserSelectedUniqueId(indexNotOneAman)
           return;
@@ -221,8 +223,8 @@ const handlePersonSearch= (event) =>{
             console.log(userName)
             let us =   newUsers.filter(usnow =>  (usnow.name).includes(userName) &&  //Remove includes
                         
-                        usnow.domainUsers.find((ds) => ds.dataSource == "1") != undefined ||
-                        usnow.domainUsers.find((ds) => ds.dataSource =="2") != undefined) 
+                        usnow.domainUsers.find((ds) => ds.dataSource == domains.ads) != undefined ||
+                        usnow.domainUsers.find((ds) => ds.dataSource == domains.es) != undefined) 
   
             setUsers(us)
 
@@ -419,7 +421,7 @@ const handlePersonSearch= (event) =>{
                   
                   {(lastUserSelected != null) ? lastUserSelected.domainUsers.map((el,index)=> <option  
                 
-                  key={index} value={index} hidden={!(el.dataSource == "1" || el.dataSource =="2")}>{el.uniqueId} 
+                  key={index} value={index} hidden={!(el.dataSource == domains.ads || el.dataSource == domains.es)}>{el.uniqueId} 
               
                   </option>
                   
