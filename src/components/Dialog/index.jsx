@@ -433,7 +433,6 @@ const handlePersonSearch= (event) =>{
             <div >
             <Checkbox checked={checkedUser} onChange={handleChangedCheckedUser}/> 
               <span>משתמש חדש</span>
-            
             </div>
             </div>
             <div>
@@ -443,7 +442,6 @@ const handlePersonSearch= (event) =>{
             </Fab>
              
             </div>
-
             </div>
             </div>
           </div>
