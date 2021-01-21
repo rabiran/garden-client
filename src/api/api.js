@@ -44,6 +44,7 @@ const getImmigrantsApi = async () => {
     return res.data;
 }
 
+
 const deleteImmigrantApi = async (id) => {
     console.log('delete');
     // throw ({msg: 'adad', id});
@@ -53,14 +54,6 @@ const deleteImmigrantApi = async (id) => {
     return res.data;
 }
 
-const addImmigrantsApi = async (domain,user) => {
-    if(config.isMock){await wait(2000); return users};
-    user.forEach(element => {
-        
-    });
-    const res = await request.post(`api/immigrant`,{"Domain": domain,"Name": user}).catch(err => { throw (err.response) });
-    return res.data;
-}
 
 const pauseStateApi = async (id, state) => {
     console.log(state);
@@ -77,7 +70,7 @@ const addImmigrantsApiPromise = async (usersToCreate) =>{
     usersToCreate.forEach(element => {
         arrayPromise.push(new Promise((resolve,reject) =>{
             
-            request.post(`api/immigrant`,{"UniqueId": element.primaryUniqueIdIndex,"Name": element.id,"NewUser": element.newUser}).catch(err => {reject (element) })
+            request.post(`api/immigrant`,{"uniqueId": element.primaryUniqueId,"id": element.id,"newUser": element.newUser}).catch(err => {reject (element) })
             .then(function(response){resolve(element)});
             
             
@@ -89,14 +82,25 @@ const addImmigrantsApiPromise = async (usersToCreate) =>{
     
     return results;
 }
+
 const getGroupsPerNameKart = async (groupname) =>{
     if(config.isMock){
         await wait(200);
         return users;
     }
     const res = await request.get('api/groupsearch', {params:{
-        groupname: groupname
+        groupname: groupname,
     }},{timeout : 10000}).catch(err => { throw (err.response) });
+    return res.data;
+}
+const getMembersOfGroupKart = async(groupid) =>{
+    if(config.isMock){
+        await wait(200)
+        return users;
+    }
+    const res = await request.get('api/getmembers', {params:{
+        groupid: groupid,
+    }},{timeout: 10000}.catch(err => {throw(err.response)}))
     return res.data;
 }
 const getUsernamesPerNameKart = async (username) =>{
@@ -125,6 +129,6 @@ const setViewedApi = async (id) => {
 }
 
 export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGardeners, getGroupsPerNameKart ,
-  addImmigrantsApi, deleteImmigrantApi, pauseStateApi , setViewedApi }
+   deleteImmigrantApi, pauseStateApi , setViewedApi, getMembersOfGroupKart }
 
 

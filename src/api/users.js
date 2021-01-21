@@ -4,17 +4,24 @@ export default [
         "name": "תומי אפק",
         "id": "8517714",
         "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
-        
+        "mail": "hey@2.com",
         "domainUsers":[{
             "dataSource": "1",
             "uniqueId": "tom@gmail.com",
         },{
             "dataSource": "2",
-            "uniqueId": "hey@lol.com",
+            "uniqueId": "hey@2.com",
         },{
             "dataSource": "One",
-            "uniqueId": "hey@oneyone.com",
+            "uniqueId": "hey@1.com",
         },],
+    },
+    {
+        "name": "תומי הרגיל",
+        "id": "8517714",
+        "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
+        
+        "domainUsers":[],
     },
     {
         "name": "מתן אינגבר",

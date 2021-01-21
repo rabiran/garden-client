@@ -11,6 +11,9 @@ import { Checkbox } from "@material-ui/core";
 
 export default ({ usersSelected, setUsersSelected }) => {
 
+  const AdK = "1"
+  const Kapaim ="2"
+  const ONE = "3"
 
     const handleRowChangedDomain = (oldData,event) => {
 
@@ -28,7 +31,7 @@ export default ({ usersSelected, setUsersSelected }) => {
     const handleCheckedUserRowData = (rowData,event) => {
       
       setUsersSelected(usersSelected.map(user =>{
-        if(user.id == rowData.id){
+        if(user.id === rowData.id){
           user.newUser = !user.newUser;
         }
         return user;
@@ -61,7 +64,7 @@ export default ({ usersSelected, setUsersSelected }) => {
                   ? rowData.domainUsers.map((el, index) => (
               <option  
              
-                  key={index} value={index} hidden={!(el.dataSource == "1" || el.dataSource =="2")}>{el.uniqueId} 
+                  key={index} value={el.uniqueId}>{el.uniqueId} 
              </option>
                     ))
                   : null}

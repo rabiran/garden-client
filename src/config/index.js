@@ -1,4 +1,30 @@
 export default {
     serverUrl: '',
-    isMock: true
+    isMock: true,
+    domainsMap: [
+        ['rabiran.com', 'rabiranuid'],
+        ['somedomain.com', 'somedomainuid'],
+        ['jello.com', 'jellouid'],
+        ['jello2.com', 'jellouid'],
+        ['yoda.sw', ''],
+        ['turtle.com', ''],
+        ['donatelo.turtle.com', ''],
+        ['rafael.turtle.com', ''],
+    ],
+    akaKapaim: [
+        'hey.com',
+        'kapaim.com',
+        'lol.com'
+    ],
+    akaAdkatz: [
+        'adka.com',
+        'haha.com'
+
+    ],
+    AdK: "1.com",
+    Kapaim: "2.com",
+    ONE: "3.com"
+
+    
+    
 }
