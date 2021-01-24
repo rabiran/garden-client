@@ -2,6 +2,7 @@
 import axios from 'axios';
 import config from 'config';
 import mock from './mock';
+import groups from './groups';
 import users from './users';
 import wait from 'utils/wait';
 import gardeners from './gardeners';
@@ -86,7 +87,7 @@ const addImmigrantsApiPromise = async (usersToCreate) =>{
 const getGroupsPerNameKart = async (groupname) =>{
     if(config.isMock){
         await wait(200);
-        return users;
+        return groups;
     }
     const res = await request.get('api/groupsearch', {params:{
         groupname: groupname,

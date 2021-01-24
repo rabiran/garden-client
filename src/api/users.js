@@ -1,117 +1,92 @@
 
 export default [
     {
-        "name": "תומי אפק",
-        "id": "8517714",
+        "id": "1",
+        "memberId": "1",
+        "name": "tommy afek",
+        "personalNumber": "8517714",
         "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
-        "mail": "hey@2.com",
+        "mail": "they@2.com",
+        "currentUnit": "סנפיר",
         "domainUsers":[{
             "dataSource": "1",
             "uniqueId": "tom@gmail.com",
         },{
             "dataSource": "2",
-            "uniqueId": "hey@2.com",
+            "uniqueId": "they@2.com",
         },{
             "dataSource": "One",
             "uniqueId": "hey@1.com",
         },],
     },
     {
-        "name": "תומי הרגיל",
-        "id": "8517714",
-        "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
-        
+        "id": "2",
+        "memberId": "1",
+        "name": "matan",
+        "personalNumber": "3243232",
+        "hierarchy": ["best","nigga"],
+        "mail":"",
+        "currentUnit": "כפיים",
         "domainUsers":[],
     },
     {
-        "name": "מתן אינגבר",
-        "id": "777777",
-        "mail": "matan@gmail.com",
-        "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
-        "domainUsers":[{
-            "dataSource": "3",
-            "uniqueId": "matan@gmail.com"
-        },{
-            "dataSource": "1",
-            "uniqueId": "mat@wasssup.com"
-        },
-        {
-            "dataSource": "1",
-            "uniqueId": "matשמ@wasssup.com"
-        }],
+        "id":"3",
+        "name": "grisha",
+        "memberId": "1",
+        "personalNumber": "31231",
+        "hierarchy": ["best"],
+        "mail": "",
+        "currentUnit":"סנפירים",
+        "domainUsers": [
+            {
+                "dataSource": "1",
+                "uniqueId": "ma@2.haha.com"
+            },
+            {
+                "dataSource": "hehe",
+                "uniqueId": "ge@1.com"
+            }
+        ]
     },
     {
-        "name": "גרישה פרוסקי",
-        "id": "66666ruskyparusky",
-        
-        "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
-        "domainUsers":[{
-            "dataSource": "2",
-            "uniqueId": "maehpatleha@gmail.com",
-        },],
-    },
-    {
-        "name": "מאי ויקינג",
-        "id": "6666666366",
-        "mail": "mai.vertush.com",
-        "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
-        "domainUsers":[{
-            "dataSource": "3",
-            "uniqueId": "mai.vertush.com",
-        },{
-            "dataSource": "2",
-            "uniqueId": "hahlolecxdee@llllllllllllol.com",
+        "id": "4",
+        "name": "hayman",
+        "memberId": "1",
+        "personalNumber": "421421",
+        "hierarchy": ["ned","maim"],
+        "mail": "ma@2.haha.com",
+        "currentUnit": "כף",
+        "domainUsers": [
+            {
+                "dataSource": "dsa",
+                "uniqueId": "hey@1.lol.com",
 
-        },],
+            },
+            {
+                "dataSource": "tas",
+                "uniqueId": "mak@2.haha.com",          
+            }
+        ]
     },
     {
-        "name": "אבי אח יקר",
-        "id": "6666666626",
-        "mail": "mybrotheryakar@wowforever.com",
-        "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
-        "domainUsers":[{
-            "dataSource": "3",
-            "uniqueId": "mybrotheryakar@wowforever.com",
-        },],
-    },
-    {
-        "name": "אבירם",
-        "id": "666666661326",
-        "mail": "aviramyamelech@whytho.com",
-        "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
-        "domainUsers":[{
-            "dataSource": "2",
-            "uniqueId": "aviramyamelech@whytho.com",
-        },],
-    },
-    {
-        "name": "אבירם יאח מאוד יקר",
-        "id": "666666421421666",
-        "mail": "whyamidoingdis@dunno.com",
-        "hierarchy":["עמף ממ'ד","SDI","1 תוכניתן מס,"],
-        "domainUsers":[{
-            "dataSource": "1",
-            "uniqueId": "againyoulol@lolll.com",
-        },{
-            "dataSource": "2",
-            "uniqueId": "whyamidoingdis@dunno.com",
-        },],
-    },
-    
-    {
-        "name": "פריך",
-        "id": "696969696969",
-        "mail": "hamsa@kaka.com",
-        "hierarchy": ["עמף ממ'ד","SDI","1 תוכניתן מס,"],
-        "domainUsers":[{
-            "dataSource": "1",
-            "uniqueId": "lolllll@gmail.com",
-        },{
-            "dataSource": "3",
-            "uniqueId": "hamsa@kaka.com",
-        },],
-    },
-    
+        "id": "5",
+        "name": "gargamel",
+        "memberId": "1",
+        "personalNumber": "3211",
+        "hierarchy": ["gever","al"],
+        "mail": "ma@2.com",
+        "currentUnit" : "מהכפתלך",
+        "domainUsers": [
+            {
+                "dataSource": "Hehe",
+                "uniqueId": "mat@2.lol.com"
+            },
+            {
+                "dataSource": "hehe2",
+                "uniqueId": "shma@geeda.com"
 
+            }
+        ]
+    }
     
 ]

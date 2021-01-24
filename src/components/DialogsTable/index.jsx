@@ -20,7 +20,7 @@ export default ({ usersSelected, setUsersSelected }) => {
        
         setUsersSelected(usersSelected.map(user =>{
           if(user.id == oldData.id){
-            user.primaryUniqueIdIndex = event.target.value;
+            user.primaryUniqueId = event.target.value;
           }
           return user;
         }))
@@ -49,7 +49,7 @@ export default ({ usersSelected, setUsersSelected }) => {
         localization={hebrewLocalization}
         columns={[
           { title: "שם", field: "name" },
-          { title: "מספר אישי", field: "id" },
+          { title: "מספר אישי", field: "personalNumber" },
           { title: "היררכיה", field: "hierarchy" },
           {
             title: "שינוי יוז'ר ראשי",
@@ -57,7 +57,7 @@ export default ({ usersSelected, setUsersSelected }) => {
             render: (rowData) => (
               <Select
                 native
-                value={rowData.primaryUniqueIdIndex}
+                value={rowData.primaryUniqueId}
                 onChange={(e) => handleRowChangedDomain(rowData, e)}
               >
                 {rowData != null
@@ -77,14 +77,13 @@ export default ({ usersSelected, setUsersSelected }) => {
             
             render: (rowData) => (
               <p>
-                {" "}
-                {JSON.parse(
-                  JSON.stringify(
-                    rowData.domainUsers[rowData.primaryUniqueIdIndex][
-                      "dataSource"
-                    ]
-                  )
-                )}
+              
+               {console.log(rowData)}
+                {
+                    rowData.domainUsers.find((el) => el.uniqueId === rowData.primaryUniqueId).dataSource
+                    
+                  
+                }
               </p>
             ),
           },

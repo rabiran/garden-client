@@ -12,13 +12,13 @@ export default {
         ['rafael.turtle.com', ''],
     ],
     akaKapaim: [
-        'hey.com',
-        'kapaim.com',
-        'lol.com'
+        'כפיים',
+        'אפסים',
+        'כף'
     ],
     akaAdkatz: [
-        'adka.com',
-        'haha.com'
+        'סנפיר',
+        'סנפירים'
 
     ],
     AdK: "1.com",

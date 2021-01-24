@@ -89,8 +89,12 @@ export default ({ openWindow, setOpenWindow }) => {
       setErrorMessageFieldEmpty(errorMessageFieldEmptyP);
       setErrorMessageUserExists(errorMessageUserExistsP);
       setErrorMessageUserHasOne(errorMessageUserHasOneP);
+      setLastUserSelected(null);
+      setLastUserSelectedUniqueId(null);
     } else {
       setSelectMessage(selectMessageGroup);
+      setLastUserSelectedUniqueId("")
+      setLastUserSelected(null)
       setErrorMessageFieldEmpty(errorMessageFieldEmptyG);
       setErrorMessageUserExists(errorMessageGroupExists);
       setErrorMessageUserHasOne(errorMessageGroupHasOne);
@@ -159,7 +163,7 @@ export default ({ openWindow, setOpenWindow }) => {
               (user) => user.id === lastUserSelected.id
             );
 
-            if (foundUser == undefined) {
+            if (foundUser === undefined) {
               let obj = Object.assign(lastUserSelected, {
                 primaryUniqueId: lastUserSelectedUniqueId,
                 newUser: checkedUser,
@@ -178,7 +182,7 @@ export default ({ openWindow, setOpenWindow }) => {
         setLastUserSelectedUniqueId(null);
       }
     } else {
-      if (lastUserSelected == null) {
+      if (lastUserSelected === null) {
         setUserValidation(true);
         setUniqueIdValidation(true);
         setErrorMessageField(errorMessageFieldEmpty);
@@ -186,22 +190,45 @@ export default ({ openWindow, setOpenWindow }) => {
       }
       async function fetchMembers() {
         let allMembers = await getMembersOfGroupKart(lastUserSelected.id);
+        
+        allMembers = allMembers.filter((user, index)=> user.domainUsers != undefined && user != undefined && user.domainUsers.length !=0)
         allMembers = allMembers.filter(
           (el, index) =>
             el.domainUsers.find((du, index) => du.dataSource === config.ONE) ===
             undefined
         );
-
-        allMembers = allMembers.map((user, index) => {});
-        setUsersSelected(allMembers);
+        allMembers = allMembers.filter(
+          (el,index)=>
+          el.domainUsers?.filter((el)=> akaUIdDomainsMap(el.uniqueId) != undefined).length != 0
+          
+        )
+        console.log(allMembers)
+        allMembers.forEach((user) => {
+          user.domainUsers = user.domainUsers?.filter(
+            (el) =>
+              akaUIdDomainsMap(el.uniqueId) != undefined
+          );
+          let primaryUniqueId = findPrimaryUniqueId(user, lastUserSelectedUniqueId)
+          console.log("hey")
+          console.log(primaryUniqueId)
+          if(primaryUniqueId != undefined){
+            let obj = Object.assign(user, {
+              primaryUniqueId: primaryUniqueId,
+              newUser: checkedUser,
+            });
+            setUsersSelected(usersSelected.concat(obj));
+          }
+        });
       }
       fetchMembers();
     }
   };
   const akaUIdDomainsMap = (uniqueId) => {
-    const found = domainsMap.find((el) => el[1].toLowerCase() === uniqueId);
+    
+    let lowerCaseUniqueId = uniqueId.split("@")[1].toLowerCase();
+    const found = domainsMap.find((el) => el[1].toLowerCase() === lowerCaseUniqueId);
     if (found === undefined) {
-      return null;
+      return undefined;
     }
     if (found[0] === config.AdK) {
       return config.AdK;
@@ -211,60 +238,77 @@ export default ({ openWindow, setOpenWindow }) => {
     }
   };
   //
-  const findakaOfUIdExcel = (uniqueId) => {
+  const findakaOfUIdExcel = (currentUnit) => {
+    if(currentUnit === undefined){
+      return undefined;
+    }
     const foundAdK = config.akaAdkatz.find(
-      (el) => el.toLowerCase() === uniqueId
+      (el) => el.toLowerCase() === currentUnit.toLowerCase()
     );
     if (foundAdK != undefined) {
       return config.AdK;
     }
     const foundKapaim = config.akaKapaim.find(
-      (el) => el.toLowerCase() === uniqueId
+      (el) => el.toLowerCase() === currentUnit.toLowerCase()
     );
     if (foundKapaim != undefined) {
       return config.Kapaim;
     }
-    return null;
+    return undefined;
   };
-  const findPrimaryUniqueId = (person) => {
-    if (person.mail === undefined) {
+
+  const findPrimaryUIdByMail = (person) =>{
+    if(person === undefined || person.mail === undefined || person.domainUsers === undefined || person.domainUsers.length===0){
+      return undefined;
+    }
+    let personMailLowCase = person.mail.toLowerCase();
+    let foundObj = person.domainUsers.find((el) => el.uniqueId.split("@")[0].toLowerCase() === personMailLowCase);
+    if(foundObj===undefined){
+      return undefined;
+    }
+    return foundObj.uniqueId;
+  }
+
+  const findPrimaryUIdByMainAka = (person,mainAka) =>{
+    if(person === undefined || person.domainUsers === undefined || person.domainUsers.length===0){
+      return undefined;
+    }
+    let primaryUIdByMail = findPrimaryUIdByMail(person);
+    if(primaryUIdByMail != undefined){
+      let akaDomainsMapMail = akaUIdDomainsMap(primaryUIdByMail)
+      if(akaDomainsMapMail === undefined || akaDomainsMapMail != mainAka){
+        let foundObj = person.domainUsers.find((el) => akaUIdDomainsMap(el.uniqueId) === mainAka);
+        if(foundObj != undefined){
+          return foundObj.uniqueId;
+        }
+      }
+      if(mainAka === akaDomainsMapMail){
+        return person.mail;
+      }    
+    }
+    let foundObjAka = person.domainUsers.find((el) => akaUIdDomainsMap(el.uniqueId) === mainAka);
+    if(foundObjAka === undefined){
       return person.domainUsers[0].uniqueId;
     }
-    const splitedMail = person.mail.toLowerCase().split("@");
-    let mailFoundObj = person.domainUsers.find((el) => {
-      if (el === undefined) {
-        return false;
-      }
-      if (el.uniqueId === undefined) {
-        return false;
-      }
-      let splitedUniqueId = el.uniqueId.toLowerCase().split("@");
-      if (splitedUniqueId[0] === splitedMail[0]) {
-        return true;
-      }
-    });
-    if (mailFoundObj != undefined) {
-      return mailFoundObj.uniqueId;
+    return foundObjAka.uniqueId;
+  }
+  const findPrimaryUniqueId = (person, dataSource) => {
+    if(person === undefined || person.domainUsers === undefined || person.domainUsers.length === 0){
+      return undefined;
     }
-    const akaOfMail = findakaOfUIdExcel(splitedMail[1]);
-    let firstAkaUniqueId = person.domainUsers.find((el) => {
-      if (el === undefined) {
-        return false;
-      }
-      if (el.uniqueId === undefined) {
-        return false;
-      }
+    if(dataSource != ""){
+      return findPrimaryUIdByMainAka(person,dataSource)
+    }
+    let primaryUIdByMail = findPrimaryUIdByMail(person);
+    if(primaryUIdByMail != undefined){
+      return primaryUIdByMail;
+    }
+    let akaFromExcel = findakaOfUIdExcel(person.currentUnit);
+    if(akaFromExcel === undefined){
+      return person.domainUsers[0].uniqueId;
 
-      if (
-        akaUIdDomainsMap(el.uniqueId.toLowerCase().split("@")[1]) === akaOfMail
-      ) {
-        return true;
-      }
-    });
-    if (firstAkaUniqueId != undefined) {
-      return firstAkaUniqueId.uniqueId;
     }
-    return person.domainUsers[0].uniqueId;
+    return findPrimaryUIdByMainAka(person, akaFromExcel);
   };
 
   const handleChangedCheckedUser = (e) => {
@@ -272,7 +316,13 @@ export default ({ openWindow, setOpenWindow }) => {
   };
 
   const handleSelectedUser = (e, value) => {
-    if (value == null) {
+    if(!isPersonSearch){
+      setLastUserSelected(value)
+      setUsers([]);
+      setPostStatuses([]);
+      return;
+    }
+    if (value === null) {
       setLastUserSelected(null);
 
       setErrorMessageField(errorMessageFieldEmpty);
@@ -281,20 +331,25 @@ export default ({ openWindow, setOpenWindow }) => {
     }
 
     function fetchData() {
+      
+      value.domainUsers = value.domainUsers?.filter(
+        (el) =>
+          akaUIdDomainsMap(el.uniqueId) != undefined
+      );
       if (value.domainUsers === undefined || value.domainUsers.length === 0) {
         setErrorMessageField(errorMessageFieldNoUsers);
         setUserValidation(true);
         return;
       }
 
-      value.domainUsers = value.domainUsers.filter(
-        (el) =>
-          akaUIdDomainsMap(el.uniqueId.toLowerCase().split("@")[1]) != null
-      );
+
+
+      console.log(value)
+      
       setLastUserSelected(value);
 
       let primaryUniqueId = findPrimaryUniqueId(value);
-      if (primaryUniqueId != null) {
+      if (primaryUniqueId != undefined) {
         setLastUserSelectedUniqueId(primaryUniqueId);
         return;
       }
@@ -325,11 +380,13 @@ export default ({ openWindow, setOpenWindow }) => {
 
               setUsers(us);
             }
-          } else {
+           else {
             let us = await getGroupsPerNameKart(userName);
-            let newGroups = us.filter((usnow) => usnow.name.includes(userName)); //Remove includes
-            setUsers(newGroups);
+            console.log(us);
+           // let newGroups = us.filter((usnow) => usnow.name.includes(userName)); //Remove includes
+            setUsers(us);
           }
+        }
 
           setLoadingInput(false);
         },
@@ -342,6 +399,7 @@ export default ({ openWindow, setOpenWindow }) => {
   }, [userName]);
 
   const handleRequestClick = async () => {
+    
     let statusResults;
     setPostStatuses([]);
     try {
@@ -489,7 +547,7 @@ export default ({ openWindow, setOpenWindow }) => {
                         native
                         style={{ width: "200px" }}
                         value={
-                          isPersonSearch ? lastUserSelectedUniqueId : config.AdK
+                          isPersonSearch ? ((lastUserSelectedUniqueId)? lastUserSelectedUniqueId : undefined) : (lastUserSelectedUniqueId)? lastUserSelectedUniqueId : ""
                         }
                         onChange={handleChangedDomain}
                         error={uniqueIdValidation}
@@ -497,17 +555,23 @@ export default ({ openWindow, setOpenWindow }) => {
                         {isPersonSearch
                           ? lastUserSelected != null
                             ? lastUserSelected.domainUsers.map((el, index) => (
-                                <option key={index} value={el}>
+                                <option key={index} value={el.uniqueId}>
                                   {el.uniqueId}
                                 </option>
                               ))
                             : null
                           : lastUserSelected != null
-                          ? allNets.map((el, index) => (
-                              <option key={index} value={el}>
+                          ?
+                          <>
+                          <option key={-1} value={""}></option> 
+                          {allNets.map((el, index) => (
+ 
+                              <option key={index+1} value={el}>
                                 {el}
                               </option>
-                            ))
+                              
+                            ))}
+                            </>
                           : null}
                       </Select>
                     </FormControl>
@@ -538,7 +602,6 @@ export default ({ openWindow, setOpenWindow }) => {
           <DialogsTable
             usersSelected={usersSelected}
             setUsersSelected={setUsersSelected}
-            setLastUserSelectedUniqueId={setLastUserSelectedUniqueId}
           />
 
           <div>
