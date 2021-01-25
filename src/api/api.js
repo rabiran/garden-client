@@ -31,7 +31,7 @@ const authApi = async () => {
 }
 
 const domainsApi = async () => {
-    console.log(domainsMock)
+    //console.log(domainsMock)
     if(config.isMock) { await wait(200); return domainsMock }
     const res = await request.get(`api/domains`).catch(err => { throw (err.response) });
     return res.data;
@@ -41,33 +41,33 @@ const domainsApi = async () => {
 const getImmigrantsApi = async () => {
     if(config.isMock) { await wait(500); return mock } //mockSchedules  or []
     const res = await request.get(`api/immigrant`).catch(err => { throw (err.response) });
-    console.log(res);
+    //console.log(res);
     return res.data;
 }
 
 
 const deleteImmigrantApi = async (id) => {
-    console.log('delete');
+    //console.log('delete');
     // throw ({msg: 'adad', id});
     if(config.isMock) { await wait(500); return id } //mockSchedules  or []
     const res = await request.delete(`api/immigrant/${id}`).catch(err => { throw ({msg: err.response, id}) });
-    console.log(res);
+    //console.log(res);
     return res.data;
 }
 
 
 const pauseStateApi = async (id, state) => {
-    console.log(state);
+    //console.log(state);
     if(config.isMock) { await wait(500); return true } //mockSchedules  or []
     const res = await request.put(`api/immigrant/${id}`, state).catch(err => { throw (err.response) });
-    console.log(res);
+   // console.log(res);
     return res.data;
 }
 
 const addImmigrantsApiPromise = async (usersToCreate) =>{
     if(config.isMock) { await wait(2000); return mock } 
     let arrayPromise = [];
-    console.log(usersToCreate)
+    //console.log(usersToCreate)
     usersToCreate.forEach(element => {
         arrayPromise.push(new Promise((resolve,reject) =>{
             
@@ -79,7 +79,7 @@ const addImmigrantsApiPromise = async (usersToCreate) =>{
     });
     
     const results =await Promise.allSettled(arrayPromise)
-    console.log(results)
+   // console.log(results)
     
     return results;
 }

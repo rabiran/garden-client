@@ -78,7 +78,7 @@ export default ({ usersSelected, setUsersSelected }) => {
             render: (rowData) => (
               <p>
               
-               {console.log(rowData)}
+             
                 {
                     rowData.domainUsers.find((el) => el.uniqueId === rowData.primaryUniqueId).dataSource
                     

@@ -15,6 +15,7 @@ import {
   addImmigrantsApiPromise,
   getGroupsPerNameKart,
   getMembersOfGroupKart,
+  getImmigrantsApi,
 } from "../../api/api";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
@@ -22,6 +23,7 @@ import logo from "images/migraine.svg";
 import DialogsTable from "../DialogsTable/index.jsx";
 import domainsMap from "../../api/domainsMap";
 import config from "../../config";
+import { useSnackbar } from "notistack";
 import {
   Checkbox,
   FormControl,
@@ -34,6 +36,7 @@ import {
 } from "@material-ui/core";
 
 export default ({ openWindow, setOpenWindow }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const allNets = [config.AdK, config.Kapaim];
   const [loading, setLoading] = React.useState(false);
   const [loadingInput, setLoadingInput] = React.useState(false);
@@ -93,8 +96,8 @@ export default ({ openWindow, setOpenWindow }) => {
       setLastUserSelectedUniqueId(null);
     } else {
       setSelectMessage(selectMessageGroup);
-      setLastUserSelectedUniqueId("")
-      setLastUserSelected(null)
+      setLastUserSelectedUniqueId("");
+      setLastUserSelected(null);
       setErrorMessageFieldEmpty(errorMessageFieldEmptyG);
       setErrorMessageUserExists(errorMessageGroupExists);
       setErrorMessageUserHasOne(errorMessageGroupHasOne);
@@ -189,44 +192,81 @@ export default ({ openWindow, setOpenWindow }) => {
         return;
       }
       async function fetchMembers() {
-        let allMembers = await getMembersOfGroupKart(lastUserSelected.id);
-        
-        allMembers = allMembers.filter((user, index)=> user.domainUsers != undefined && user != undefined && user.domainUsers.length !=0)
+        let allMembers = [];
+        let allExistingMigrations = [];
+        try {
+          allMembers = await getMembersOfGroupKart(lastUserSelected.id);
+          allExistingMigrations = await getImmigrantsApi();
+
+          //REMMEMBER TO STRING if to remove
+        } catch {
+          enqueueSnackbar("תקלה בשרת", {
+            variant: "error",
+            autoHideDuration: 2000,
+          });
+          return;
+        }
         allMembers = allMembers.filter(
-          (el, index) =>
-            el.domainUsers.find((du, index) => du.dataSource === config.ONE) ===
+          (member) =>
+            allExistingMigrations.find(
+              (el) => el.id.toString() === member.id
+            ) === undefined
+        );
+
+        allMembers = allMembers.filter(
+          (user) =>
+            user.domainUsers != undefined &&
+            user != undefined &&
+            user.domainUsers.length != 0
+        );
+        allMembers = allMembers.filter(
+          (el) =>
+            el.domainUsers.find((du) => du.dataSource === config.ONE) ===
             undefined
         );
         allMembers = allMembers.filter(
-          (el,index)=>
-          el.domainUsers?.filter((el)=> akaUIdDomainsMap(el.uniqueId) != undefined).length != 0
-          
-        )
-        console.log(allMembers)
+          (el) =>
+            usersSelected.find((userSelc) => userSelc.id === el.id) ===
+            undefined
+        );
+
+        let newArr = [];
         allMembers.forEach((user) => {
           user.domainUsers = user.domainUsers?.filter(
-            (el) =>
-              akaUIdDomainsMap(el.uniqueId) != undefined
+            (el) => akaUIdDomainsMap(el.uniqueId) != undefined
           );
-          let primaryUniqueId = findPrimaryUniqueId(user, lastUserSelectedUniqueId)
-          console.log("hey")
-          console.log(primaryUniqueId)
-          if(primaryUniqueId != undefined){
+          if (user.domainUsers.length === 0) {
+            return;
+          }
+
+          let primaryUniqueId = findPrimaryUniqueId(
+            user,
+            lastUserSelectedUniqueId
+          );
+
+          // console.log(primaryUniqueId)
+          if (primaryUniqueId != undefined) {
             let obj = Object.assign(user, {
               primaryUniqueId: primaryUniqueId,
               newUser: checkedUser,
             });
-            setUsersSelected(usersSelected.concat(obj));
+            console.log(obj);
+            newArr = newArr.concat(obj);
           }
         });
+        setUsersSelected(usersSelected.concat(newArr));
       }
+
       fetchMembers();
+      setLastUserSelected(null);
+      setLastUserSelectedUniqueId("");
     }
   };
   const akaUIdDomainsMap = (uniqueId) => {
-    
     let lowerCaseUniqueId = uniqueId.split("@")[1].toLowerCase();
-    const found = domainsMap.find((el) => el[1].toLowerCase() === lowerCaseUniqueId);
+    const found = domainsMap.find(
+      (el) => el[1].toLowerCase() === lowerCaseUniqueId
+    );
     if (found === undefined) {
       return undefined;
     }
@@ -239,7 +279,7 @@ export default ({ openWindow, setOpenWindow }) => {
   };
   //
   const findakaOfUIdExcel = (currentUnit) => {
-    if(currentUnit === undefined){
+    if (currentUnit === undefined) {
       return undefined;
     }
     const foundAdK = config.akaAdkatz.find(
@@ -257,56 +297,74 @@ export default ({ openWindow, setOpenWindow }) => {
     return undefined;
   };
 
-  const findPrimaryUIdByMail = (person) =>{
-    if(person === undefined || person.mail === undefined || person.domainUsers === undefined || person.domainUsers.length===0){
+  const findPrimaryUIdByMail = (person) => {
+    if (
+      person === undefined ||
+      person.mail === undefined ||
+      person.domainUsers === undefined ||
+      person.domainUsers.length === 0
+    ) {
       return undefined;
     }
     let personMailLowCase = person.mail.toLowerCase();
-    let foundObj = person.domainUsers.find((el) => el.uniqueId.split("@")[0].toLowerCase() === personMailLowCase);
-    if(foundObj===undefined){
+    let foundObj = person.domainUsers.find(
+      (el) => el.uniqueId.split("@")[0].toLowerCase() === personMailLowCase
+    );
+    if (foundObj === undefined) {
       return undefined;
     }
     return foundObj.uniqueId;
-  }
+  };
 
-  const findPrimaryUIdByMainAka = (person,mainAka) =>{
-    if(person === undefined || person.domainUsers === undefined || person.domainUsers.length===0){
+  const findPrimaryUIdByMainAka = (person, mainAka) => {
+    if (
+      person === undefined ||
+      person.domainUsers === undefined ||
+      person.domainUsers.length === 0
+    ) {
       return undefined;
     }
     let primaryUIdByMail = findPrimaryUIdByMail(person);
-    if(primaryUIdByMail != undefined){
-      let akaDomainsMapMail = akaUIdDomainsMap(primaryUIdByMail)
-      if(akaDomainsMapMail === undefined || akaDomainsMapMail != mainAka){
-        let foundObj = person.domainUsers.find((el) => akaUIdDomainsMap(el.uniqueId) === mainAka);
-        if(foundObj != undefined){
+    if (primaryUIdByMail != undefined) {
+      let akaDomainsMapMail = akaUIdDomainsMap(primaryUIdByMail);
+      if (akaDomainsMapMail === undefined || akaDomainsMapMail != mainAka) {
+        let foundObj = person.domainUsers.find(
+          (el) => akaUIdDomainsMap(el.uniqueId) === mainAka
+        );
+        if (foundObj != undefined) {
           return foundObj.uniqueId;
         }
       }
-      if(mainAka === akaDomainsMapMail){
+      if (mainAka === akaDomainsMapMail) {
         return person.mail;
-      }    
+      }
     }
-    let foundObjAka = person.domainUsers.find((el) => akaUIdDomainsMap(el.uniqueId) === mainAka);
-    if(foundObjAka === undefined){
+    let foundObjAka = person.domainUsers.find(
+      (el) => akaUIdDomainsMap(el.uniqueId) === mainAka
+    );
+    if (foundObjAka === undefined) {
       return person.domainUsers[0].uniqueId;
     }
     return foundObjAka.uniqueId;
-  }
+  };
   const findPrimaryUniqueId = (person, dataSource) => {
-    if(person === undefined || person.domainUsers === undefined || person.domainUsers.length === 0){
+    if (
+      person === undefined ||
+      person.domainUsers === undefined ||
+      person.domainUsers.length === 0
+    ) {
       return undefined;
     }
-    if(dataSource != ""){
-      return findPrimaryUIdByMainAka(person,dataSource)
+    if (dataSource != "") {
+      return findPrimaryUIdByMainAka(person, dataSource);
     }
     let primaryUIdByMail = findPrimaryUIdByMail(person);
-    if(primaryUIdByMail != undefined){
+    if (primaryUIdByMail != undefined) {
       return primaryUIdByMail;
     }
     let akaFromExcel = findakaOfUIdExcel(person.currentUnit);
-    if(akaFromExcel === undefined){
+    if (akaFromExcel === undefined) {
       return person.domainUsers[0].uniqueId;
-
     }
     return findPrimaryUIdByMainAka(person, akaFromExcel);
   };
@@ -316,8 +374,8 @@ export default ({ openWindow, setOpenWindow }) => {
   };
 
   const handleSelectedUser = (e, value) => {
-    if(!isPersonSearch){
-      setLastUserSelected(value)
+    if (!isPersonSearch) {
+      setLastUserSelected(value);
       setUsers([]);
       setPostStatuses([]);
       return;
@@ -331,10 +389,8 @@ export default ({ openWindow, setOpenWindow }) => {
     }
 
     function fetchData() {
-      
       value.domainUsers = value.domainUsers?.filter(
-        (el) =>
-          akaUIdDomainsMap(el.uniqueId) != undefined
+        (el) => akaUIdDomainsMap(el.uniqueId) != undefined
       );
       if (value.domainUsers === undefined || value.domainUsers.length === 0) {
         setErrorMessageField(errorMessageFieldNoUsers);
@@ -342,10 +398,6 @@ export default ({ openWindow, setOpenWindow }) => {
         return;
       }
 
-
-
-      console.log(value)
-      
       setLastUserSelected(value);
 
       let primaryUniqueId = findPrimaryUniqueId(value);
@@ -369,24 +421,43 @@ export default ({ openWindow, setOpenWindow }) => {
           setLoadingInput(true);
           if (userName != undefined && userName.length > 2) {
             if (isPersonSearch) {
-              let newUsers = await getUsernamesPerNameKart(userName);
-              console.log(userName);
-              let us = newUsers.filter((usnow) =>
+              let newUsers = [];
+              try {
+                newUsers = await getUsernamesPerNameKart(userName);
+              } catch {
+                enqueueSnackbar("תקלה בשרת", {
+                  variant: "error",
+                  autoHideDuration: 2000,
+                });
+                setUsers(newUsers);
+                return;
+              }
+
+              let usFiltered = newUsers.filter((usnow) =>
                 usnow.name.includes(userName)
               ); //&&  //Remove includes
 
               // usnow.domainUsers.find((ds) => ds.dataSource == config.AdK) != undefined ||
               // usnow.domainUsers.find((ds) => ds.dataSource ==config.Kapaim) != undefined)
 
-              setUsers(us);
+              setUsers(usFiltered);
+            } else {
+              let groupsPerName = [];
+              try {
+                groupsPerName = await getGroupsPerNameKart(userName);
+              } catch {
+                enqueueSnackbar("תקלה בשרת", {
+                  variant: "error",
+                  autoHideDuration: 2000,
+                });
+                setUsers(groupsPerName);
+                return;
+              }
+
+              // let newGroups = us.filter((usnow) => usnow.name.includes(userName)); //Remove includes
+              setUsers(groupsPerName);
             }
-           else {
-            let us = await getGroupsPerNameKart(userName);
-            console.log(us);
-           // let newGroups = us.filter((usnow) => usnow.name.includes(userName)); //Remove includes
-            setUsers(us);
           }
-        }
 
           setLoadingInput(false);
         },
@@ -399,49 +470,56 @@ export default ({ openWindow, setOpenWindow }) => {
   }, [userName]);
 
   const handleRequestClick = async () => {
-    
     let statusResults;
     setPostStatuses([]);
+
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+    }
+    if (usersSelected.length === 0) {
+      setSuccess(false);
+      setLoading(false);
+      setErrorMessageField(errorMessageFieldEmpty);
+      setUniqueIdValidation(true);
+      setUserValidation(true);
+      return;
+    }
     try {
-      if (!loading) {
-        setSuccess(false);
-        setLoading(true);
-      }
-      if (usersSelected.length === 0) {
-        setSuccess(false);
-        setLoading(false);
-        setErrorMessageField(errorMessageFieldEmpty);
-        setUniqueIdValidation(true);
-        setUserValidation(true);
-        return;
-      }
-
       statusResults = await addImmigrantsApiPromise(usersSelected); //NEED TO CHANGE !!!! method api too\!!
-
+    } catch {
+      enqueueSnackbar("תקלה בשרת", {
+        variant: "error",
+        autoHideDuration: 2000,
+      });
       setSuccess(true);
       setLoading(false);
+      return;
+    }
 
-      let arrStatuses = [];
-      let foundReject = false;
-      statusResults.forEach((res) => {
-        let status = res.status == "rejected" ? "נכשל" : "הצליח";
+    setSuccess(true);
+    setLoading(false);
 
-        if (res.status == "rejected") {
-          foundReject = true;
-          arrStatuses.push(
-            status + ": " + res.reason.id + " " + res.reason.name
-          );
-        }
-      });
-      setPostStatuses(arrStatuses);
-      if (foundReject) {
-        // one or more of them failed
-        setOpenWindow(true);
-      } else {
-        handleClose();
+    let arrStatuses = [];
+    let foundReject = false;
+    statusResults.forEach((res) => {
+      let status = res.status == "rejected" ? "נכשל" : "הצליח";
+
+      if (res.status == "rejected") {
+        foundReject = true;
+        arrStatuses.push(status + ": " + res.reason.id + " " + res.reason.name);
       }
-    } catch (e) {
-      //SHOW BAD ALERT
+    });
+    setPostStatuses(arrStatuses);
+    if (foundReject) {
+      // one or more of them failed
+      setOpenWindow(true);
+    } else {
+      enqueueSnackbar("נוצרה בקשה למיגרציה בהצלחה!", {
+        variant: "success",
+        autoHideDuration: 2000,
+      });
+      handleClose();
     }
   };
 
@@ -512,9 +590,12 @@ export default ({ openWindow, setOpenWindow }) => {
                       options={users}
                       onChange={handleSelectedUser}
                       getOptionLabel={
-                        isPersonSearch
-                          ? (option) => option.name + option.hierarchy.join("/")
-                          : (option) => option.name
+                        
+                        (option) =>  isPersonSearch  ?
+                                               
+                          option?.name + option?.hierarchy?.join("/") :option?.name
+                                
+                         
                       }
                       renderInput={(params) => (
                         <TextField
@@ -547,32 +628,37 @@ export default ({ openWindow, setOpenWindow }) => {
                         native
                         style={{ width: "200px" }}
                         value={
-                          isPersonSearch ? ((lastUserSelectedUniqueId)? lastUserSelectedUniqueId : undefined) : (lastUserSelectedUniqueId)? lastUserSelectedUniqueId : ""
+                          isPersonSearch
+                            ? lastUserSelectedUniqueId
+                              ? lastUserSelectedUniqueId
+                              : undefined
+                            : lastUserSelectedUniqueId
+                            ? lastUserSelectedUniqueId
+                            : ""
                         }
                         onChange={handleChangedDomain}
                         error={uniqueIdValidation}
                       >
-                        {isPersonSearch
-                          ? lastUserSelected != null
-                            ? lastUserSelected.domainUsers.map((el, index) => (
-                                <option key={index} value={el.uniqueId}>
-                                  {el.uniqueId}
-                                </option>
-                              ))
-                            : null
-                          : lastUserSelected != null
-                          ?
+                        {isPersonSearch ? (
+                          lastUserSelected != null ? (
+                            lastUserSelected.domainUsers.map((el, index) => (
+                              <option key={index} value={el.uniqueId}>
+                                {el.uniqueId}
+                              </option>
+                            ))
+                          ) : null
+                        ) : lastUserSelected != null ? (
                           <>
-                          <option key={-1} value={""}></option> 
-                          {allNets.map((el, index) => (
- 
-                              <option key={index+1} value={el}>
+                            <option key={-1} value={""}>
+                              {"ברירת מחדל"}
+                            </option>
+                            {allNets.map((el, index) => (
+                              <option key={index + 1} value={el}>
                                 {el}
                               </option>
-                              
                             ))}
-                            </>
-                          : null}
+                          </>
+                        ) : null}
                       </Select>
                     </FormControl>
                   </div>
