@@ -47,7 +47,8 @@ export default ({ rowData }) => {
                     </div>
                         </div>
                         <div className="rowUsers">
-                            <Users users={rowData?.shadowUsers} domains={store.getDomains()} step={rowData?.status?.step} substep={rowData?.status?.subStep} />
+                            {/* <Users users={rowData?.shadowUsers} domains={store.getDomains()} step={rowData?.status?.step} substep={rowData?.status?.subStep} /> */}
+                            <Users stepsData={rowData?.steps}/>
                         </div>
                     </div>
         </>
