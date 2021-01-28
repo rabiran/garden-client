@@ -33,7 +33,7 @@ export default ({ stepsData = [] }) => {
     const steps = stepsData.map((stepData, index) => {
         let stepLabel = [<div key={0}></div>];
         stepData.subSteps.forEach((subStepData, index)=> 
-            stepLabel.push(<SubStep key={index+1} subStep={subStepData} />)
+            stepLabel.push(<SubStep key={index+1} subStep={subStepData} step={stepData} />)
         );
 
         console.log(stepLabel);

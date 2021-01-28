@@ -174,7 +174,7 @@ export default [
         id: 225435435349,
         phone: '035932924',
         status: {
-            progress: 'haha',
+            progress: 'inprogress',
             step: 'target',
             subStep: 'מכין פיצה',
         },

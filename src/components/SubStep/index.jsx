@@ -9,12 +9,24 @@ import FeedbackIcon from '@material-ui/icons/Feedback';
 import ReplayIcon from '@material-ui/icons/Replay';
 import IconButton from '@material-ui/core/IconButton';
 
-export default ({subStep}) => {
+import { retryApi } from 'api/api';
+import { useSnackbar } from 'notistack';
+
+export default ({subStep, step}) => {
     
     let status;
+    const { enqueueSnackbar } = useSnackbar();
 
-    console.log('aaa');
-    console.log(subStep);
+    const retryStep = async () => {
+        console.log('retry');
+        try {
+            await retryApi(step, subStep);
+            enqueueSnackbar(`נשלח`, { variant: 'success', autoHideDuration: 4000 });
+        }
+        catch(err) {
+            enqueueSnackbar(`נכשל`, { variant: 'error', autoHideDuration: 4000 });
+        }
+    }
 
     switch(subStep.progress) {
         case 'completed': {
@@ -31,7 +43,7 @@ export default ({subStep}) => {
         }
         case 'failed': {
             status = <Grid container direction="row" alignItems="center" className="failed" wrap="nowrap">
-                        <IconButton className='' onClick={() => console.log('yes') }>
+                        <IconButton size='small' color='inherit' className='' onClick={retryStep}>
                             <ReplayIcon/> 
                         </IconButton> {subStep.name}  
                     </Grid>;
