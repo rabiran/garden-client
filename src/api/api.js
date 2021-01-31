@@ -154,6 +154,6 @@ const setViewedApi = async (id) => {
 
 export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGroupsPerNameKart ,
 addImmigrantsApi, deleteImmigrantApi, pauseStateApi , setViewedApi,
-getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi, retryApi}
+getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi, retryApi, getMembersOfGroupKart}
 
 
