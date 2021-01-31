@@ -58,7 +58,7 @@ export default ({ openWindow, setOpenWindow }) => {
   const [lastUserSelected, setLastUserSelected] = React.useState(null);
   const errorMessageFieldNoUsers = "למשתמש שנבחר אין משתמשים בעד וקפיים";
   const errorMessageFieldEmptyP = "שדה ריק נא בחר משתמש!";
-  const errorMessageUserExistsP = "משתמש כבר קיים בטבלה!";
+  const errorMessageUserExistsP = "למשתמש כבר קיימת בקשה!";
   const errorMessageUserHasOneP = "משתמש כבר קיים בוואן!";
   const errorMessageFieldEmptyG = "שדה ריק נא בחר קבוצה!";
   const errorMessageGroupExists = "קבוצה כבר קיימת בטבלה!";
@@ -107,8 +107,8 @@ export default ({ openWindow, setOpenWindow }) => {
     setIsPersonSearch(String(event.target.value) == "true");
   };
 
-  const typingTimeout = 1000;
-  let renderTimeout;
+  const typingTimeout = 2000;
+
 
   const handleChangedDomain = (event) => {
     setLastUserSelectedUniqueId(event.target.value);
@@ -148,7 +148,7 @@ export default ({ openWindow, setOpenWindow }) => {
       }
 
       if (lastUserSelectedUniqueId != null) {
-        function fetchData() {
+        async function fetchData() {
           if (lastUserSelected != null) {
             let foundOne = lastUserSelected.domainUsers.find(
               (ds) => ds.dataSource === config.ONE
@@ -157,10 +157,50 @@ export default ({ openWindow, setOpenWindow }) => {
               setErrorMessageField(errorMessageUserHasOne);
               setUserValidation(true);
               setUniqueIdValidation(true);
-              setLastUserSelected(null);
-              setLastUserSelectedUniqueId(null);
               return;
             }
+            try {
+              let allExistingMigrations = await getImmigrantsApi();
+              
+              if(allExistingMigrations.find((el) => el.id.toString() === lastUserSelected.id) != undefined){
+                setErrorMessageField(errorMessageUserExists);
+                setUserValidation(true);
+                setUniqueIdValidation(true);
+  
+                return;
+              }
+                          
+            }
+            catch{
+              enqueueSnackbar("תקלה בשרת", {
+                variant: "error",
+                autoHideDuration: 2000,
+              });
+              
+              return;
+              
+            }try {
+              let allExistingMigrations = await getImmigrantsApi();
+              
+              if(allExistingMigrations.find((el) => el.id.toString() === lastUserSelected.id) != undefined){
+                setErrorMessageField(errorMessageUserExists);
+                setUserValidation(true);
+                setUniqueIdValidation(true);
+  
+                return;
+              }
+                          
+            }
+            catch{
+              enqueueSnackbar("תקלה בשרת", {
+                variant: "error",
+                autoHideDuration: 2000,
+              });
+              
+              return;
+              
+            }
+            
 
             let foundUser = usersSelected.find(
               (user) => user.id === lastUserSelected.id
@@ -254,6 +294,7 @@ export default ({ openWindow, setOpenWindow }) => {
             newArr = newArr.concat(obj);
           }
         });
+        console.log(newArr)
         setUsersSelected(usersSelected.concat(newArr));
       }
 
@@ -413,13 +454,19 @@ export default ({ openWindow, setOpenWindow }) => {
   };
 
   React.useEffect(() => {
+    
+    
     clearTimeout(timeoutVar);
+    
+    let renderTimeout;
+
 
     if (userName != undefined && userName.length > 2) {
       renderTimeout = setTimeout(
         async () => {
           setLoadingInput(true);
           if (userName != undefined && userName.length > 2) {
+            
             if (isPersonSearch) {
               let newUsers = [];
               try {
@@ -429,33 +476,32 @@ export default ({ openWindow, setOpenWindow }) => {
                   variant: "error",
                   autoHideDuration: 2000,
                 });
-                setUsers(newUsers);
+                setUsers([]);
                 return;
               }
-
               let usFiltered = newUsers.filter((usnow) =>
                 usnow.name.includes(userName)
               ); //&&  //Remove includes
-
-              // usnow.domainUsers.find((ds) => ds.dataSource == config.AdK) != undefined ||
-              // usnow.domainUsers.find((ds) => ds.dataSource ==config.Kapaim) != undefined)
-
               setUsers(usFiltered);
+
             } else {
               let groupsPerName = [];
               try {
                 groupsPerName = await getGroupsPerNameKart(userName);
+                
               } catch {
                 enqueueSnackbar("תקלה בשרת", {
                   variant: "error",
                   autoHideDuration: 2000,
                 });
-                setUsers(groupsPerName);
-                return;
+                setUsers([])
+                
               }
-
-              // let newGroups = us.filter((usnow) => usnow.name.includes(userName)); //Remove includes
               setUsers(groupsPerName);
+              
+            
+              // let newGroups = us.filter((usnow) => usnow.name.includes(userName)); //Remove includes
+              
             }
           }
 
@@ -464,9 +510,18 @@ export default ({ openWindow, setOpenWindow }) => {
 
         typingTimeout
       );
+   
+      
+      
+      setTimeoutVar(renderTimeout);
+
+    }else{
+      if(userName===undefined || userName.length ===0){
+        setUsers([]);
+      }
+      
     }
-    setUsers([]);
-    setTimeoutVar(renderTimeout);
+
   }, [userName]);
 
   const handleRequestClick = async () => {
