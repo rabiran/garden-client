@@ -30,6 +30,10 @@ export default ({ rowData }) => {
                             <PhoneIcon />
                             <Field valueKey={'טלפון'} value={rowData?.phone} />
                         </div>
+                        <div className="field">
+                            <PhoneIcon />
+                            <Field valueKey={'סלולרי'} value={rowData?.mobilePhone} />
+                        </div>
                     </div>
                     <div className="fieldArea">
                         {/* <div className="buttonsArea">
@@ -47,7 +51,8 @@ export default ({ rowData }) => {
                     </div>
                         </div>
                         <div className="rowUsers">
-                            <Users users={rowData?.shadowUsers} domains={store.getDomains()} step={rowData?.status?.step} substep={rowData?.status?.subStep} />
+                            {/* <Users users={rowData?.shadowUsers} domains={store.getDomains()} step={rowData?.status?.step} substep={rowData?.status?.subStep} /> */}
+                            <Users stepsData={rowData?.steps}/>
                         </div>
                     </div>
         </>

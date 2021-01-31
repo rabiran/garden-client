@@ -66,7 +66,7 @@ export default () => {
         <Toolbar>
           <img alt="Remy Sharp" src={logo} className='offset' width="50" height="50" />
           <Typography variant="h5" className='offset '>
-            מיגרנה
+            מיגרציה
           </Typography>
           <IconButton className='' color="inherit" aria-label="menu" onClick={() => themeProvider.themeSwitch()}>
             <Brightness2Icon />

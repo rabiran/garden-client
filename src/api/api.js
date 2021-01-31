@@ -68,6 +68,13 @@ const pauseStateApi = async (id, state) => {
     return res.data;
 }
 
+const retryApi = async (id, step, subStep) => {
+    if(config.isMock) { await wait(500); return true } //mockSchedules  or []
+    const res = await request.post(`api/immigrant/retry/${id}`, {step, subStep}).catch(err => { throw (err.response) });
+    console.log(res);
+    return res.data;
+}
+
 const addImmigrantsApiPromise = async (usersToCreate) =>{
     if(config.isMock) { await wait(2000); return mock } 
     let arrayPromise = [];
@@ -150,8 +157,8 @@ const setViewedApi = async (id) => {
     return res.data;
 }
 
-
-export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGroupsPerNameKart , deleteImmigrantApi, pauseStateApi , setViewedApi,
-getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi,getMembersOfGroupKart}
+export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGroupsPerNameKart ,
+addImmigrantsApi, deleteImmigrantApi, pauseStateApi , setViewedApi,
+getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi, retryApi, getMembersOfGroupKart}
 
 

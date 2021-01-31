@@ -2,6 +2,7 @@ export default [
     {
         id: 1,
         phone: '035932937',
+        mobilePhone: '35345354',
         status: {
             progress: 'completed',
             step: 'target',
@@ -14,11 +15,64 @@ export default [
         identifier: 1234521,
         startDate: '02/12/1421, 00:00:00',
         endDate: '02/08/1529, 00:00:00',
+        steps: [
+            {
+                name: "יוצר תיבת מייל",
+                progress: "completed",
+                subSteps: [
+                    {
+                        name: "מדבר עם שרת",
+                        progress: "completed"
+                    },
+                    {
+                        name: "מעביר דברים",
+                        progress: "completed"
+                    },
+                    {
+                        name: "מסיים",
+                        progress: "completed"
+                    },
+                ]
+            },
+            {
+                name: "יוצר יוזר",
+                progress: "inprogress",
+                subSteps: [
+                    {
+                        name: "מדבר עם שרת",
+                        progress: "completed"
+                    },
+                    {
+                        name: "מחבר את תיבת המייל",
+                        progress: "failed"
+                    },
+                    {
+                        name: "מסיים",
+                        progress: "inprogress"
+                    },
+                ]
+            },
+            {
+                name: "סתם עושה משהו",
+                progress: "inprogress",
+                subSteps: [
+                    {
+                        name: "מדבר עם שרת",
+                        progress: "inprogress"
+                    },
+                    {
+                        name: "בודק שהכל טוב",
+                        progress: "inprogress"
+                    },
+                ]
+            }
+        ],
         viewed: true,
     },
     {
         id: 285435435345,
         phone: '035932334',
+        mobilePhone: '35345354',
         status: {
             progress: 'inprogress',
             step: 'target',
@@ -31,7 +85,58 @@ export default [
         fullName: 'ביצה קשה',
         identifier: 1234522,
         startDate: '12/05/1523',
-        endDate: '02/08/4810'
+        endDate: '02/08/4810',steps: [
+            {
+                name: "יוצר תיבת מייל",
+                progress: "completed",
+                subSteps: [
+                    {
+                        name: "מדבר עם שרת",
+                        progress: "completed"
+                    },
+                    {
+                        name: "מעביר דברים",
+                        progress: "completed"
+                    },
+                    {
+                        name: "מסיים",
+                        progress: "completed"
+                    },
+                ]
+            },
+            {
+                name: "יוצר יוזר",
+                progress: "inprogress",
+                subSteps: [
+                    {
+                        name: "מדבר עם שרת",
+                        progress: "completed"
+                    },
+                    {
+                        name: "מחבר את תיבת המייל",
+                        progress: "failed"
+                    },
+                    {
+                        name: "מסיים",
+                        progress: "inprogress"
+                    },
+                ]
+            },
+            {
+                name: "סתם עושה משהו",
+                progress: "inprogress",
+                subSteps: [
+                    {
+                        name: "מדבר עם שרת",
+                        progress: "inprogress"
+                    },
+                    {
+                        name: "בודק שהכל טוב",
+                        progress: "inprogress"
+                    },
+                ]
+            }
+        ],
     },
     {
         id: 325435435345,
@@ -71,7 +176,7 @@ export default [
         id: 225435435349,
         phone: '035932924',
         status: {
-            progress: 'haha',
+            progress: 'inprogress',
             step: 'target',
             subStep: 'מכין פיצה',
         },

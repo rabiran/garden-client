@@ -51,11 +51,11 @@ export default () => {
 
         for(let error of errors) {
             const id = error.reason.id;
-            enqueueSnackbar(`נכשל ${id}`, { variant: 'error', autoHideDuration: 4000 });
+            enqueueSnackbar(`נכשל`, { variant: 'error', autoHideDuration: 4000 });
         }
         for(let good of resolved) {
             const id = good.value;
-            enqueueSnackbar(`נמחק ${id}`, { variant: 'success', autoHideDuration: 4000 });
+            enqueueSnackbar(`נמחק`, { variant: 'success', autoHideDuration: 4000 });
             succesfulIds.push(id);
         }
         const newTableData = store.getTableData().filter((item) => !succesfulIds.includes(item.id));
@@ -69,11 +69,11 @@ export default () => {
 
         for(let error of errors) {
             const id = error.reason.id;
-            enqueueSnackbar(`נכשל ${id}`, { variant: 'error', autoHideDuration: 4000 });
+            enqueueSnackbar(`נכשל`, { variant: 'error', autoHideDuration: 4000 });
         }
         for(let good of resolved) {
             const id = good.value;
-            enqueueSnackbar(`התעדכן ${id}`, { variant: 'success', autoHideDuration: 4000 });
+            enqueueSnackbar(`התעדכן`, { variant: 'success', autoHideDuration: 4000 });
             succesfulIds.push(id);
         }
         // const newTableData = tableData.filter((item) => !succesfulIds.includes(item.id));
