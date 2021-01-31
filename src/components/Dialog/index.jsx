@@ -180,26 +180,6 @@ export default ({ openWindow, setOpenWindow }) => {
               
               return;
               
-            }try {
-              let allExistingMigrations = await getImmigrantsApi();
-              
-              if(allExistingMigrations.find((el) => el.id.toString() === lastUserSelected.id) != undefined){
-                setErrorMessageField(errorMessageUserExists);
-                setUserValidation(true);
-                setUniqueIdValidation(true);
-  
-                return;
-              }
-                          
-            }
-            catch{
-              enqueueSnackbar("תקלה בשרת", {
-                variant: "error",
-                autoHideDuration: 2000,
-              });
-              
-              return;
-              
             }
 
             
