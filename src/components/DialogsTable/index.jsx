@@ -11,14 +11,18 @@ import useStore from 'utils/StoreProvider/useStore';
 
 export default ({ usersSelected, setUsersSelected }) => {
 
-    const store = useStore();
-    const domains = store.getDomains();
+
+  const AdK = "1"
+  const Kapaim ="2"
+  const ONE = "3"
+
+
     const handleRowChangedDomain = (oldData,event) => {
 
        
         setUsersSelected(usersSelected.map(user =>{
           if(user.id == oldData.id){
-            user.primaryUniqueIdIndex = event.target.value;
+            user.primaryUniqueId = event.target.value;
           }
           return user;
         }))
@@ -29,7 +33,7 @@ export default ({ usersSelected, setUsersSelected }) => {
     const handleCheckedUserRowData = (rowData,event) => {
       
       setUsersSelected(usersSelected.map(user =>{
-        if(user.id == rowData.id){
+        if(user.id === rowData.id){
           user.newUser = !user.newUser;
         }
         return user;
@@ -47,7 +51,7 @@ export default ({ usersSelected, setUsersSelected }) => {
         localization={hebrewLocalization}
         columns={[
           { title: "שם", field: "name" },
-          { title: "מספר אישי", field: "id" },
+          { title: "מספר אישי", field: "personalNumber" },
           { title: "היררכיה", field: "hierarchy" },
           {
             title: "שינוי יוז'ר ראשי",
@@ -55,14 +59,16 @@ export default ({ usersSelected, setUsersSelected }) => {
             render: (rowData) => (
               <Select
                 native
-                value={rowData.primaryUniqueIdIndex}
+                value={rowData.primaryUniqueId}
                 onChange={(e) => handleRowChangedDomain(rowData, e)}
               >
                 {rowData != null
                   ? rowData.domainUsers.map((el, index) => (
               <option  
              
-                  key={index} value={index} hidden={!(el.dataSource == domains.ads || el.dataSource == domains.es)}>{el.uniqueId} 
+
+                  key={index} value={el.uniqueId}>{el.uniqueId} 
+
              </option>
                     ))
                   : null}
@@ -75,14 +81,13 @@ export default ({ usersSelected, setUsersSelected }) => {
             
             render: (rowData) => (
               <p>
-                {" "}
-                {JSON.parse(
-                  JSON.stringify(
-                    rowData.domainUsers[rowData.primaryUniqueIdIndex][
-                      "dataSource"
-                    ]
-                  )
-                )}
+              
+             
+                {
+                    rowData.domainUsers.find((el) => el.uniqueId === rowData.primaryUniqueId).dataSource
+                    
+                  
+                }
               </p>
             ),
           },
