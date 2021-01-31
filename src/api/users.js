@@ -9,7 +9,7 @@ export default [
         "mail": "they@2.com",
         "currentUnit": "סנפיר",
         "domainUsers":[{
-            "dataSource": "1",
+            "dataSource": "ads",
             "uniqueId": "tom@gmail.com",
         },{
             "dataSource": "2",
@@ -67,6 +67,7 @@ export default [
                 "uniqueId": "mak@2.haha.com",          
             }
         ]
+
     },
     {
         "id": "5",
@@ -84,6 +85,7 @@ export default [
             {
                 "dataSource": "hehe2",
                 "uniqueId": "shma@geeda.com"
+
 
             }
         ]

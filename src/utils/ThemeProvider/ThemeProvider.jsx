@@ -28,7 +28,8 @@ export default function ThemeProvider(props) {
     };
 
     const contextValue = {
-        themeSwitch: themeSwitch
+        themeSwitch: themeSwitch,
+        isDark: isDark
     }
 
     // swap theme expression to make default theme other one

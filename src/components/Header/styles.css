@@ -1,6 +1,11 @@
 .header-root {
-  min-height: 5vh;
-  flex-grow: 1;
+  /* min-height: 5vh; */
+  /* height: 100px; */
+  /* flex-grow: 1; */
+  /* height: 100px; */
+  height: 7vh;
+  /* position: fixed;
+  width: 100%; */
 }
 
 .header-grow {

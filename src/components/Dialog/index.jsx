@@ -38,6 +38,7 @@ import {
 export default ({ openWindow, setOpenWindow }) => {
   const { enqueueSnackbar } = useSnackbar();
   const allNets = [config.AdK, config.Kapaim];
+
   const [loading, setLoading] = React.useState(false);
   const [loadingInput, setLoadingInput] = React.useState(false);
   const [openInput, setOpenInput] = React.useState(false);
@@ -200,6 +201,7 @@ export default ({ openWindow, setOpenWindow }) => {
               return;
               
             }
+
             
 
             let foundUser = usersSelected.find(
@@ -512,8 +514,10 @@ export default ({ openWindow, setOpenWindow }) => {
       );
    
       
+
       
       setTimeoutVar(renderTimeout);
+
 
     }else{
       if(userName===undefined || userName.length ===0){
@@ -737,6 +741,7 @@ export default ({ openWindow, setOpenWindow }) => {
                   </Fab>
                 </div>
               </div>
+
             </div>
           </div>
 

@@ -47,7 +47,7 @@ export default () => {
   }
 
   const chartPageClick = () => {
-    history.push('/chart');
+    history.push('/charts');
   }
   // React.useEffect(() => {
   //   console.log('notification update');
@@ -62,7 +62,7 @@ export default () => {
 
   return (
     <div className='header-root'>
-      <AppBar position="static">
+      <AppBar position="static" className='header-root'>
         <Toolbar>
           <img alt="Remy Sharp" src={logo} className='offset' width="50" height="50" />
           <Typography variant="h5" className='offset '>
