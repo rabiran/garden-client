@@ -2,6 +2,7 @@ export default [
     {
         id: 125435435345,
         phone: '035932937',
+        mobilePhone: '35345354',
         status: {
             progress: 'completed',
             step: 'target',
@@ -71,6 +72,7 @@ export default [
     {
         id: 285435435345,
         phone: '035932334',
+        mobilePhone: '35345354',
         status: {
             progress: 'inprogress',
             step: 'target',

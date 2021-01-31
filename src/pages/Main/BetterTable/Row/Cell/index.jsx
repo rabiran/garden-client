@@ -30,6 +30,10 @@ export default ({ rowData }) => {
                             <PhoneIcon />
                             <Field valueKey={'טלפון'} value={rowData?.phone} />
                         </div>
+                        <div className="field">
+                            <PhoneIcon />
+                            <Field valueKey={'סלולרי'} value={rowData?.mobilePhone} />
+                        </div>
                     </div>
                     <div className="fieldArea">
                         {/* <div className="buttonsArea">
