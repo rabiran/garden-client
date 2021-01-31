@@ -19,6 +19,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import DateFilter from 'components/DateFilter';
+import GroupSearch from 'utils/GroupSearch';
 
 const useToolbarStyles = makeStyles((theme) => ({
     root: {
@@ -97,25 +98,10 @@ export default (props) => {
 
     const searchHandler = (e) => {
         setFilters({ ...filters, ['searchTerm']: {term: e.target.value} });
-        // let msg = e.target.value;
-        // let matchedRows = [];
-        // if (msg) {
-        //     matchedRows = data.filter((dataRow) => {
-        //         let values = Object.values(dataRow);
-        //         let found = false;
-        //         for (let value of values) {
-        //             let term = String(value);
-        //             term = term.toLowerCase();
-        //             let filterValue = msg.toLowerCase();
-        //             if (term.includes(filterValue)) found = true;
-        //         }
-        //         return found;
-        //     })
-        // }
-        // else {
-        //     matchedRows = data;
-        // }
-        // setRows(matchedRows);
+    }
+
+    const groupSearchHandler = (members) => {
+        setFilters({ ...filters, ['groupSearchTerm']: members });
     }
 
     return (
@@ -155,13 +141,14 @@ export default (props) => {
                     )}
 
                 <div className={classes.searchField}>
-                    <TextField id="outlined-basic" placeholder="חפש לפי קבוצה" onChange={searchHandler} InputProps={{
+                    {/* <TextField id="outlined-basic" placeholder="חפש לפי קבוצה" onChange={groupSearchHandler} InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
                                 <SearchIcon />
                             </InputAdornment>
                         ),
-                    }} />
+                    }} /> */}
+                    <GroupSearch onGettingMembers={groupSearchHandler} />
                 </div>
                 <div className={classes.filterArea} >
                     <IconButton aria-label="filter" onClick={handleOpenDateFilter}>
