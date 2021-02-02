@@ -1,32 +1,25 @@
-// *https://www.registers.service.gov.uk/registers/country/use-the-api*
-import fetch from 'cross-fetch';
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
 
 import { getGroupsPerNameKart, getMembersOfGroupKart } from 'api/api';
 
-function sleep(delay = 0) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, delay);
-    });
-}
-
 export default ({onGettingMembers}) => {
-    const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState([]);
+    const [open, setOpen] = React.useState(false);
     const loading = open && options.length === 0;
 
 
         const fetchGroups = async (e) => {
             let value = e.target.value;
             setOptions([]);
-            //   const response = await fetch('https://country.register.gov.uk/records.json?page-size=5000');
-            //   await sleep(400); // For demo purposes.
-            //   const countries = await response.json();
+
             if (value.length > 1) {
-                const groups = await getGroupsPerNameKart();
+                setOpen(true);
+                const groups = await getGroupsPerNameKart(value);
                 setOptions(groups);
             }
             else {
@@ -35,35 +28,43 @@ export default ({onGettingMembers}) => {
         }
 
         const fetchMembers = async (group) => {
+            if(!group) {
+                onGettingMembers([]);
+                return;
+            }
             const persons = await getMembersOfGroupKart(group.id);
             const personIds = persons.map(person => person.id);
+            console.log(personIds);
             onGettingMembers(personIds);
         }
 
     return (
         <Autocomplete
             id="asynchronous-demo"
-            // style={{ width: 300 }}
+            style={{ width: '100%' }}
             open={open}
-            // onOpen={() => {
-            //     setOpen(true);
-            // }}
+            onOpen={() => {
+                setOpen(true);
+            }}
             onClose={() => {
                 setOpen(false);
             }}
             onChange={(event,value) => fetchMembers(value)}
-            getOptionSelected={(option, value) => option.name === value.name}
-            getOptionLabel={(option) => option.fullName}
+            // getOptionSelected={(option, value) => option.id === value.id}
+            getOptionLabel={(option) => option.hierarchy}
+            filterOptions={x => x}
             options={options}
             loading={loading}
+            noOptionsText={'אין תוצאות'}
             renderInput={(params) => (
                 <TextField
                     {...params}
                     onChange={(e) => {
                         fetchGroups(e);
                     }}
-                    label="Asynchronous"
-                    variant="outlined"
+                    // label="חפש"
+                    placeholder="חפש לפי קבוצה"
+                    variant="standard"
                     InputProps={{
                         ...params.InputProps,
                         endAdornment: (
@@ -71,6 +72,11 @@ export default ({onGettingMembers}) => {
                                 {loading ? <CircularProgress color="inherit" size={20} /> : null}
                                 {params.InputProps.endAdornment}
                             </React.Fragment>
+                        ),
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
                         ),
                     }}
                 />

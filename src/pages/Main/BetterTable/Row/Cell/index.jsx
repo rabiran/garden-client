@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles.css';
 import Field from 'components/displayField';
-import Users from 'components/displayUsers';
+import Steps from 'components/displaySteps';
 import DomainIcon from '@material-ui/icons/Domain';
 import HomeIcon from '@material-ui/icons/Home';
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -52,7 +52,7 @@ export default ({ rowData }) => {
                         </div>
                         <div className="rowUsers">
                             {/* <Users users={rowData?.shadowUsers} domains={store.getDomains()} step={rowData?.status?.step} substep={rowData?.status?.subStep} /> */}
-                            <Users stepsData={rowData?.steps}/>
+                            <Steps stepsData={rowData?.steps}/>
                         </div>
                     </div>
         </>

@@ -56,6 +56,9 @@ const useToolbarStyles = makeStyles((theme) => ({
     },
     searchField: {
         minWidth: 100
+    },
+    groupSearchField: {
+        minWidth: 250
     }
 }));
 
@@ -140,7 +143,7 @@ export default (props) => {
                         </Typography>
                     )}
 
-                <div className={classes.searchField}>
+                <div className={classes.groupSearchField}>
                     {/* <TextField id="outlined-basic" placeholder="חפש לפי קבוצה" onChange={groupSearchHandler} InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
