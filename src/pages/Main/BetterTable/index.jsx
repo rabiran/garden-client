@@ -60,7 +60,8 @@ export default function EnhancedTable({ data = [], deleteFromTable, changePauseS
         others: true,
         startDate: { from: null, to: null },
         endDate: { from: null, to: null },
-        searchTerm: {term: ''}
+        searchTerm: {term: ''},
+        groupSearchTerm: []
     });
     const [openDelete, setOpenDelete] = React.useState(false);
 
@@ -178,6 +179,15 @@ export default function EnhancedTable({ data = [], deleteFromTable, changePauseS
         }
         return found;
     }
+
+    const groupSearchFilter = (obj) => {
+        const a = filters['groupSearchTerm'] || [];
+        const personId = obj.personId;
+        if(a.length === 0) return true;
+        if(a.includes(personId)) return true;
+        return false;
+    }
+
     const paginationFilter = () => (rows.filter(startFilter).filter(endFilter).filter(statusFilters)).length
     const pageCount = paginationFilter();
 
@@ -217,6 +227,7 @@ export default function EnhancedTable({ data = [], deleteFromTable, changePauseS
                                 .filter(endFilter)
                                 .filter(statusFilters)
                                 .filter(searchFilter)
+                                .filter(groupSearchFilter)
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
                                     const isItemSelected = isSelected(row.id);
