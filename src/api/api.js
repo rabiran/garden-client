@@ -17,7 +17,7 @@ const AuthDataMock = {
 }
 
 // const domainsMock = ['1', '2','3'];
-const domainsMock = {ads: 'ads', es: 'es' , target: 'target' };
+const domainsMock = {ads: '1.com', es: '2.com' , target: '3.com' };
 // const domainsMock = ['dsdsadsadsadsa', 'dsadsadsadsa','dsaaadsadasdsa',];
 
 

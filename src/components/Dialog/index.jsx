@@ -34,10 +34,13 @@ import {
   FormLabel,
   CheckBoxGroup,
 } from "@material-ui/core";
+import useStore from 'utils/StoreProvider/useStore';
 
 export default ({ openWindow, setOpenWindow }) => {
+  const storeProvider = useStore();
+  const domains = storeProvider.getDomains();
   const { enqueueSnackbar } = useSnackbar();
-  const allNets = [config.AdK, config.Kapaim];
+  const allNets = [domains.ads, domains.es];
 
   const [loading, setLoading] = React.useState(false);
   const [loadingInput, setLoadingInput] = React.useState(false);
@@ -82,6 +85,22 @@ export default ({ openWindow, setOpenWindow }) => {
 
   const [isPersonSearch, setIsPersonSearch] = React.useState(true);
   const [checkedUser, setCheckedUser] = React.useState(false);
+
+  React.useEffect( () => {
+    
+    if(openWindow === true){
+      async function fetchData() {
+        // You can await here
+        console.log("Ok");
+        await storeProvider.fetchTableData();
+        // ...
+      }
+      fetchData();
+    }
+
+
+
+  },[openWindow])
 
   React.useEffect(() => {
     setUserValidation(false);
@@ -152,7 +171,7 @@ export default ({ openWindow, setOpenWindow }) => {
         async function fetchData() {
           if (lastUserSelected != null) {
             let foundOne = lastUserSelected.domainUsers.find(
-              (ds) => ds.dataSource === config.ONE
+              (ds) => ds.dataSource === domains.target
             );
             if (foundOne != undefined) {
               setErrorMessageField(errorMessageUserHasOne);
@@ -161,7 +180,7 @@ export default ({ openWindow, setOpenWindow }) => {
               return;
             }
             try {
-              let allExistingMigrations = await getImmigrantsApi();
+              let allExistingMigrations = await storeProvider.getTableData();
               
               if(allExistingMigrations.find((el) => el.id.toString() === lastUserSelected.id) != undefined){
                 setErrorMessageField(errorMessageUserExists);
@@ -218,7 +237,7 @@ export default ({ openWindow, setOpenWindow }) => {
         let allExistingMigrations = [];
         try {
           allMembers = await getMembersOfGroupKart(lastUserSelected.id);
-          allExistingMigrations = await getImmigrantsApi();
+          allExistingMigrations = await storeProvider.getTableData();
 
           //REMMEMBER TO STRING if to remove
         } catch {
@@ -243,7 +262,7 @@ export default ({ openWindow, setOpenWindow }) => {
         );
         allMembers = allMembers.filter(
           (el) =>
-            el.domainUsers.find((du) => du.dataSource === config.ONE) ===
+            el.domainUsers.find((du) => du.dataSource === domains.target) ===
             undefined
         );
         allMembers = allMembers.filter(
@@ -293,11 +312,11 @@ export default ({ openWindow, setOpenWindow }) => {
     if (found === undefined) {
       return undefined;
     }
-    if (found[0] === config.AdK) {
-      return config.AdK;
+    if (found[0] === domains.ads) {
+      return domains.ads;
     }
-    if (found[0] === config.Kapaim) {
-      return config.Kapaim;
+    if (found[0] === domains.es) {
+      return domains.es;
     }
   };
   //
@@ -309,13 +328,13 @@ export default ({ openWindow, setOpenWindow }) => {
       (el) => el.toLowerCase() === currentUnit.toLowerCase()
     );
     if (foundAdK != undefined) {
-      return config.AdK;
+      return domains.ads;
     }
     const foundKapaim = config.akaKapaim.find(
       (el) => el.toLowerCase() === currentUnit.toLowerCase()
     );
     if (foundKapaim != undefined) {
-      return config.Kapaim;
+      return domains.es;
     }
     return undefined;
   };
