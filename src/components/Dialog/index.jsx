@@ -33,15 +33,24 @@ import {
   FormControlLabel,
   FormLabel,
   CheckBoxGroup,
+  InputAdornment,
+  Input,
+  MenuItem,
+  FormHelperText,
+  Chip,
+  IconButton
 } from "@material-ui/core";
-import useStore from 'utils/StoreProvider/useStore';
+import useStore from "utils/StoreProvider/useStore";
+import DatePicker from "react-datepicker";
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import "react-datepicker/dist/react-datepicker.css";
 
 export default ({ openWindow, setOpenWindow }) => {
   const storeProvider = useStore();
   const domains = storeProvider.getDomains();
   const { enqueueSnackbar } = useSnackbar();
-  const allNets = [domains.ads, domains.es];
-
+  const allNets = ["ברירת מחדל",domains.ads, domains.es];
+  const [startDate, setStartDate] = React.useState(new Date());
   const [loading, setLoading] = React.useState(false);
   const [loadingInput, setLoadingInput] = React.useState(false);
   const [openInput, setOpenInput] = React.useState(false);
@@ -85,22 +94,35 @@ export default ({ openWindow, setOpenWindow }) => {
 
   const [isPersonSearch, setIsPersonSearch] = React.useState(true);
   const [checkedUser, setCheckedUser] = React.useState(false);
-
-  React.useEffect( () => {
+  const ref = React.createRef();
+  const DateCustomInput = React.forwardRef(( {value, onClick}, ref)  => (
     
-    if(openWindow === true){
+    <>
+    <FormControl>
+    <InputLabel htmlFor="input-date-picker">בחר תאריך יצירה עתידי</InputLabel>
+    <Input  id="input-date-picker"  value= {value} onClick={onClick}  startAdornment={
+            <InputAdornment position="start">
+              <IconButton><CalendarTodayIcon color="primary"/></IconButton>
+               
+            </InputAdornment>
+          } aria-describedby="component-helper-text"/>
+    <FormHelperText id="component-helper-text">לחץ לבחירת תאריך</FormHelperText>
+    </FormControl>
+   
+    </>
+    
+  ));
+  React.useEffect(() => {
+    if (openWindow === true) {
       async function fetchData() {
         // You can await here
-        console.log("Ok");
+        //console.log("Ok");
         await storeProvider.fetchTableData();
         // ...
       }
       fetchData();
     }
-
-
-
-  },[openWindow])
+  }, [openWindow]);
 
   React.useEffect(() => {
     setUserValidation(false);
@@ -129,7 +151,6 @@ export default ({ openWindow, setOpenWindow }) => {
 
   const typingTimeout = 2000;
 
-
   const handleChangedDomain = (event) => {
     setLastUserSelectedUniqueId(event.target.value);
     setUniqueIdValidation(false);
@@ -137,6 +158,7 @@ export default ({ openWindow, setOpenWindow }) => {
 
   const handleClose = () => {
     setUsers([]);
+    setStartDate(new Date());
     setUserValidation(false);
     setPostStatuses([]);
     setUserName("");
@@ -181,27 +203,26 @@ export default ({ openWindow, setOpenWindow }) => {
             }
             try {
               let allExistingMigrations = await storeProvider.getTableData();
-              
-              if(allExistingMigrations.find((el) => el.id.toString() === lastUserSelected.id) != undefined){
+
+              if (
+                allExistingMigrations.find(
+                  (el) => el.id.toString() === lastUserSelected.id
+                ) != undefined
+              ) {
                 setErrorMessageField(errorMessageUserExists);
                 setUserValidation(true);
                 setUniqueIdValidation(true);
-  
+
                 return;
               }
-                          
-            }
-            catch{
+            } catch {
               enqueueSnackbar("תקלה בשרת", {
                 variant: "error",
                 autoHideDuration: 2000,
               });
-              
-              return;
-              
-            }
 
-            
+              return;
+            }
 
             let foundUser = usersSelected.find(
               (user) => user.id === lastUserSelected.id
@@ -211,6 +232,7 @@ export default ({ openWindow, setOpenWindow }) => {
               let obj = Object.assign(lastUserSelected, {
                 primaryUniqueId: lastUserSelectedUniqueId,
                 newUser: checkedUser,
+                startDate: startDate,
               });
               setUsersSelected(usersSelected.concat(obj));
             } else {
@@ -290,12 +312,13 @@ export default ({ openWindow, setOpenWindow }) => {
             let obj = Object.assign(user, {
               primaryUniqueId: primaryUniqueId,
               newUser: checkedUser,
+              startDate: startDate,
             });
-            console.log(obj);
+           
             newArr = newArr.concat(obj);
           }
         });
-        console.log(newArr)
+        
         setUsersSelected(usersSelected.concat(newArr));
       }
 
@@ -418,6 +441,7 @@ export default ({ openWindow, setOpenWindow }) => {
   const handleSelectedUser = (e, value) => {
     if (!isPersonSearch) {
       setLastUserSelected(value);
+      setLastUserSelectedUniqueId("ברירת מחדל")
       setUsers([]);
       setPostStatuses([]);
       return;
@@ -455,19 +479,15 @@ export default ({ openWindow, setOpenWindow }) => {
   };
 
   React.useEffect(() => {
-    
-    
     clearTimeout(timeoutVar);
-    
-    let renderTimeout;
 
+    let renderTimeout;
 
     if (userName != undefined && userName.length > 2) {
       renderTimeout = setTimeout(
         async () => {
           setLoadingInput(true);
           if (userName != undefined && userName.length > 2) {
-            
             if (isPersonSearch) {
               let newUsers = [];
               try {
@@ -484,25 +504,20 @@ export default ({ openWindow, setOpenWindow }) => {
                 usnow.name.includes(userName)
               ); //&&  //Remove includes
               setUsers(usFiltered);
-
             } else {
               let groupsPerName = [];
               try {
                 groupsPerName = await getGroupsPerNameKart(userName);
-                
               } catch {
                 enqueueSnackbar("תקלה בשרת", {
                   variant: "error",
                   autoHideDuration: 2000,
                 });
-                setUsers([])
-                
+                setUsers([]);
               }
               setUsers(groupsPerName);
-              
-            
+
               // let newGroups = us.filter((usnow) => usnow.name.includes(userName)); //Remove includes
-              
             }
           }
 
@@ -511,20 +526,13 @@ export default ({ openWindow, setOpenWindow }) => {
 
         typingTimeout
       );
-   
-      
 
-      
       setTimeoutVar(renderTimeout);
-
-
-    }else{
-      if(userName===undefined || userName.length ===0){
+    } else {
+      if (userName === undefined || userName.length === 0) {
         setUsers([]);
       }
-      
     }
-
   }, [userName]);
 
   const handleRequestClick = async () => {
@@ -586,8 +594,8 @@ export default ({ openWindow, setOpenWindow }) => {
       <Dialog
         PaperProps={{
           style: {
-            maxWidth: "70vw",
-            minWidth: "70vw",
+            maxWidth: "80vw",
+            minWidth: "80vw",
             maxHeight: "80vh",
             minHeight: "80vh",
           },
@@ -647,13 +655,10 @@ export default ({ openWindow, setOpenWindow }) => {
                       id="multiple-limit-tags"
                       options={users}
                       onChange={handleSelectedUser}
-                      getOptionLabel={
-                        
-                        (option) =>  isPersonSearch  ?
-                                               
-                          option?.name + option?.hierarchy?.join("/") :option?.name
-                                
-                         
+                      getOptionLabel={(option) =>
+                        isPersonSearch
+                          ? option?.name + option?.hierarchy?.join("/")
+                          : option?.name
                       }
                       renderInput={(params) => (
                         <TextField
@@ -683,13 +688,13 @@ export default ({ openWindow, setOpenWindow }) => {
                     <FormControl>
                       <InputLabel>{selectMessage}</InputLabel>
                       <Select
-                        native
+                       
                         style={{ width: "200px" }}
                         value={
                           isPersonSearch
                             ? lastUserSelectedUniqueId
                               ? lastUserSelectedUniqueId
-                              : undefined
+                              : ""
                             : lastUserSelectedUniqueId
                             ? lastUserSelectedUniqueId
                             : ""
@@ -700,23 +705,23 @@ export default ({ openWindow, setOpenWindow }) => {
                         {isPersonSearch ? (
                           lastUserSelected != null ? (
                             lastUserSelected.domainUsers.map((el, index) => (
-                              <option key={index} value={el.uniqueId}>
+                              
+                              <MenuItem key={index} value={el.uniqueId}>
                                 {el.uniqueId}
-                              </option>
+                              </MenuItem>
                             ))
                           ) : null
                         ) : lastUserSelected != null ? (
-                          <>
-                            <option key={-1} value={""}>
-                              {"ברירת מחדל"}
-                            </option>
-                            {allNets.map((el, index) => (
-                              <option key={index + 1} value={el}>
+                          
+                            
+                         
+                              allNets.map((el, index) => (
+                              <MenuItem key={index } value={el}>
                                 {el}
-                              </option>
-                            ))}
-                          </>
-                        ) : null}
+                              </MenuItem>
+                            )))
+                            
+                         : null}
                       </Select>
                     </FormControl>
                   </div>
@@ -739,8 +744,20 @@ export default ({ openWindow, setOpenWindow }) => {
                     הוסף
                   </Fab>
                 </div>
+                <div style={{overflow: "visible",zIndex: "1001"}}>
+                  <DatePicker {...startDate}
+                    customInput={   <DateCustomInput ref={ref}/>}
+                    
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    popperPlacement="top-end"
+                    dateFormat="dd/MM/yyyy"      
+                    minDate={new Date()}
+                    maxDate={(new Date).setMonth(new Date().getMonth()+5)}
+                    showDisabledMonthNavigation
+                  />
+                </div>
               </div>
-
             </div>
           </div>
 
