@@ -21,6 +21,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import logo from "images/migraine.svg";
 import DialogsTable from "../DialogsTable/index.jsx";
+import AutoSearch from "../AutoSearch/index.jsx";
 import domainsMap from "../../api/domainsMap";
 import config from "../../config";
 import { useSnackbar } from "notistack";
@@ -38,18 +39,18 @@ import {
   MenuItem,
   FormHelperText,
   Chip,
-  IconButton
+  IconButton,
 } from "@material-ui/core";
 import useStore from "utils/StoreProvider/useStore";
 import DatePicker from "react-datepicker";
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import "react-datepicker/dist/react-datepicker.css";
 
 export default ({ openWindow, setOpenWindow }) => {
   const storeProvider = useStore();
   const domains = storeProvider.getDomains();
   const { enqueueSnackbar } = useSnackbar();
-  const allNets = ["ברירת מחדל",domains.ads, domains.es];
+  const allNets = ["ברירת מחדל", domains.ads, domains.es];
   const [startDate, setStartDate] = React.useState(new Date());
   const [loading, setLoading] = React.useState(false);
   const [loadingInput, setLoadingInput] = React.useState(false);
@@ -95,22 +96,30 @@ export default ({ openWindow, setOpenWindow }) => {
   const [isPersonSearch, setIsPersonSearch] = React.useState(true);
   const [checkedUser, setCheckedUser] = React.useState(false);
   const ref = React.createRef();
-  const DateCustomInput = React.forwardRef(( {value, onClick}, ref)  => (
-    
+  const DateCustomInput = React.forwardRef(({ value, onClick }, ref) => (
     <>
-    <FormControl>
-    <InputLabel htmlFor="input-date-picker">בחר תאריך יצירה עתידי</InputLabel>
-    <Input  id="input-date-picker"  value= {value} onClick={onClick}  startAdornment={
+      <FormControl>
+        <InputLabel htmlFor="input-date-picker">
+          בחר תאריך יצירה עתידי
+        </InputLabel>
+        <Input
+          id="input-date-picker"
+          value={value}
+          onClick={onClick}
+          startAdornment={
             <InputAdornment position="start">
-              <IconButton><CalendarTodayIcon color="primary"/></IconButton>
-               
+              <IconButton>
+                <CalendarTodayIcon color="primary" />
+              </IconButton>
             </InputAdornment>
-          } aria-describedby="component-helper-text"/>
-    <FormHelperText id="component-helper-text">לחץ לבחירת תאריך</FormHelperText>
-    </FormControl>
-   
+          }
+          aria-describedby="component-helper-text"
+        />
+        <FormHelperText id="component-helper-text">
+          לחץ לבחירת תאריך
+        </FormHelperText>
+      </FormControl>
     </>
-    
   ));
   React.useEffect(() => {
     if (openWindow === true) {
@@ -314,11 +323,11 @@ export default ({ openWindow, setOpenWindow }) => {
               newUser: checkedUser,
               startDate: startDate,
             });
-           
+
             newArr = newArr.concat(obj);
           }
         });
-        
+
         setUsersSelected(usersSelected.concat(newArr));
       }
 
@@ -441,7 +450,7 @@ export default ({ openWindow, setOpenWindow }) => {
   const handleSelectedUser = (e, value) => {
     if (!isPersonSearch) {
       setLastUserSelected(value);
-      setLastUserSelectedUniqueId("ברירת מחדל")
+      setLastUserSelectedUniqueId("ברירת מחדל");
       setUsers([]);
       setPostStatuses([]);
       return;
@@ -609,6 +618,22 @@ export default ({ openWindow, setOpenWindow }) => {
       >
         <DialogTitle id="form-dialog-title">יצירת משתמש</DialogTitle>
         <DialogContent dividers>
+          <AutoSearch
+            isPersonSearch={isPersonSearch}
+            users={users}
+            setUsers={setUsers}
+            lastUserSelected= {lastUserSelected}
+            setUserValidation={setUserValidation}
+            setUniqueIdValidation={setUniqueIdValidation}
+            userValidation={userValidation}
+            setErrorMessageField={setErrorMessageField}
+            errorMessageField={errorMessageField}
+            setLastUserSelected={setLastUserSelected}
+            errorMessageFieldEmpty={errorMessageFieldEmpty}
+            errorMessageFieldNoUsers={errorMessageFieldNoUsers}
+            setPostStatuses={setPostStatuses}
+            setLastUserSelectedUniqueId={setLastUserSelectedUniqueId}
+          />
           <div className="dialogContentContainer">
             <DialogContentText>
               <span> נא למלא את הטופס בשביל יצירת משתמש ב.</span>
@@ -688,7 +713,6 @@ export default ({ openWindow, setOpenWindow }) => {
                     <FormControl>
                       <InputLabel>{selectMessage}</InputLabel>
                       <Select
-                       
                         style={{ width: "200px" }}
                         value={
                           isPersonSearch
@@ -702,26 +726,21 @@ export default ({ openWindow, setOpenWindow }) => {
                         onChange={handleChangedDomain}
                         error={uniqueIdValidation}
                       >
-                        {isPersonSearch ? (
-                          lastUserSelected != null ? (
-                            lastUserSelected.domainUsers.map((el, index) => (
-                              
-                              <MenuItem key={index} value={el.uniqueId}>
-                                {el.uniqueId}
-                              </MenuItem>
-                            ))
-                          ) : null
-                        ) : lastUserSelected != null ? (
-                          
-                            
-                         
-                              allNets.map((el, index) => (
-                              <MenuItem key={index } value={el}>
+                        {isPersonSearch
+                          ? lastUserSelected != null
+                            ? lastUserSelected.domainUsers.map((el, index) => (
+                                <MenuItem key={index} value={el.uniqueId}>
+                                  {el.uniqueId}
+                                </MenuItem>
+                              ))
+                            : null
+                          : lastUserSelected != null
+                          ? allNets.map((el, index) => (
+                              <MenuItem key={index} value={el}>
                                 {el}
                               </MenuItem>
-                            )))
-                            
-                         : null}
+                            ))
+                          : null}
                       </Select>
                     </FormControl>
                   </div>
@@ -744,16 +763,16 @@ export default ({ openWindow, setOpenWindow }) => {
                     הוסף
                   </Fab>
                 </div>
-                <div style={{overflow: "visible",zIndex: "1001"}}>
-                  <DatePicker {...startDate}
-                    customInput={   <DateCustomInput ref={ref}/>}
-                    
+                <div style={{ overflow: "visible", zIndex: "1001" }}>
+                  <DatePicker
+                    {...startDate}
+                    customInput={<DateCustomInput ref={ref} />}
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
                     popperPlacement="top-end"
-                    dateFormat="dd/MM/yyyy"      
+                    dateFormat="dd/MM/yyyy"
                     minDate={new Date()}
-                    maxDate={(new Date).setMonth(new Date().getMonth()+5)}
+                    maxDate={new Date().setMonth(new Date().getMonth() + 5)}
                     showDisabledMonthNavigation
                   />
                 </div>
