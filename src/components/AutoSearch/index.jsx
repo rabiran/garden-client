@@ -33,6 +33,8 @@ function App({
   const { enqueueSnackbar } = useSnackbar();
   const [loadingInput,setLoadingInput] = React.useState(false);
   const [inputText, setInputText] = React.useState("");
+  const [triggeredSearch , setTriggeredSearch] = React.useState(false);
+  
 
   async function searchFunction(inputText, isPersonSearch) {
     console.log(inputText);
@@ -96,10 +98,11 @@ function App({
       if (value.domainUsers === undefined || value.domainUsers.length === 0) {
         console.log("hey")
         setErrorMessageField(errorMessageFieldNoUsers);
+        setTriggeredSearch(true);
         setUserValidation(true);
         return;
       }
-
+      setTriggeredSearch(true);
       setLastUserSelected(value);
 
       let primaryUniqueId = findPrimaryUniqueId(value);
@@ -121,19 +124,22 @@ function App({
 
 
   React.useEffect(() => {
-    if (userValidation && lastUserSelected === null) {
-      setUserValidation(false);
-      setUniqueIdValidation(false);
-    }
+
     
-    if (inputText.length > 2 && lastUserSelected === null ) {
+    if (inputText.length > 2 && triggeredSearch === false) {
+      console.log(lastUserSelected)
       console.log("Heys")
       delayedQuery(inputText,isPersonSearch);
     }
+    setTriggeredSearch(false);
     return delayedQuery.cancel;
   }, [inputText]);
 
   const handleInput = (e, value) => {
+    if (userValidation) {
+      setUserValidation(false);
+      setUniqueIdValidation(false);
+    }
     setInputText(value);
   };
 
