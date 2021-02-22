@@ -7,6 +7,7 @@ import { useAsync } from "react-async-hook";
 import { useSnackbar } from "notistack";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { getUsernamesPerNameKart, getGroupsPerNameKart } from "../../api/api";
+import useStore from "utils/StoreProvider/useStore";
 import {
   akaUIdDomainsMap,
   findPrimaryUniqueId
@@ -30,6 +31,8 @@ function App({
   setLastUserSelectedUniqueId,
 
 }) {
+  const storeProvider = useStore();
+  const domains = storeProvider.getDomains();
   const { enqueueSnackbar } = useSnackbar();
   const [loadingInput,setLoadingInput] = React.useState(false);
   const [inputText, setInputText] = React.useState("");
@@ -93,7 +96,7 @@ function App({
 
     function fetchData() {
       value.domainUsers = value.domainUsers?.filter(
-        (el) => akaUIdDomainsMap(el.uniqueId) != undefined
+        (el) => akaUIdDomainsMap(el.uniqueId,domains) != undefined
       );
       if (value.domainUsers === undefined || value.domainUsers.length === 0) {
         console.log("hey")
@@ -105,7 +108,7 @@ function App({
       setTriggeredSearch(true);
       setLastUserSelected(value);
 
-      let primaryUniqueId = findPrimaryUniqueId(value);
+      let primaryUniqueId = findPrimaryUniqueId(value,"",domains);
       if (primaryUniqueId != undefined) {
         setLastUserSelectedUniqueId(primaryUniqueId);
         return;
