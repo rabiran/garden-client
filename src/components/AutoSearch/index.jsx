@@ -3,11 +3,12 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import debounce from "lodash.debounce";
-import { useAsync } from "react-async-hook";
 import { useSnackbar } from "notistack";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { getUsernamesPerNameKart, getGroupsPerNameKart } from "../../api/api";
 import useStore from "utils/StoreProvider/useStore";
+import config from "../../config"; 
+
 import {
   akaUIdDomainsMap,
   findPrimaryUniqueId
@@ -79,10 +80,13 @@ function App({
   }
 
   const handleSelectedUser = (e, value) => {
+    console.log("Heyd")
     if (!isPersonSearch) {
+      
       setLastUserSelected(value);
       setLastUserSelectedUniqueId("ברירת מחדל")
       setUsers([]);
+      setTriggeredSearch(true);
       setPostStatuses([]);
       return;
     }
@@ -96,7 +100,7 @@ function App({
 
     function fetchData() {
       value.domainUsers = value.domainUsers?.filter(
-        (el) => akaUIdDomainsMap(el.uniqueId,domains) != undefined
+        (el) => akaUIdDomainsMap(el.uniqueId,domains) !== undefined
       );
       if (value.domainUsers === undefined || value.domainUsers.length === 0) {
         console.log("hey")
@@ -109,7 +113,7 @@ function App({
       setLastUserSelected(value);
 
       let primaryUniqueId = findPrimaryUniqueId(value,"",domains);
-      if (primaryUniqueId != undefined) {
+      if (primaryUniqueId !== undefined) {
         setLastUserSelectedUniqueId(primaryUniqueId);
         return;
       }
@@ -139,6 +143,7 @@ function App({
   }, [inputText]);
 
   const handleInput = (e, value) => {
+
     if (userValidation) {
       setUserValidation(false);
       setUniqueIdValidation(false);

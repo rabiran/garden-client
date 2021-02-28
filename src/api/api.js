@@ -34,6 +34,14 @@ const authApi = async () => {
     return res.data;
 }
 
+const excelApi = async() =>{
+    if(config.isMock){
+        await wait(500); return ;
+    }
+    const res = await request.get(`api/excel`).catch(err => {throw (err.response) });
+    return res.data;
+}
+
 const domainsApi = async () => {
     //console.log(domainsMock)
     if(config.isMock) { await wait(200); return domainsMock }
@@ -158,7 +166,7 @@ const setViewedApi = async (id) => {
 }
 
 export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGroupsPerNameKart ,
-deleteImmigrantApi, pauseStateApi , setViewedApi,
+deleteImmigrantApi, pauseStateApi , setViewedApi, excelApi,
 getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi, retryApi, getMembersOfGroupKart}
 
 
