@@ -43,7 +43,8 @@ export default [
         "domainUsers": [
             {
                 "dataSource": "1",
-                "uniqueId": "ma@2.haha.com"
+                "uniqueId": "ma@2.haha.com",
+                
             },
             {
                 "dataSource": "hehe",

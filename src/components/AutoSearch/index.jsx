@@ -103,7 +103,6 @@ function App({
         (el) => akaUIdDomainsMap(el.uniqueId,domains) !== undefined
       );
       if (value.domainUsers === undefined || value.domainUsers.length === 0) {
-        console.log("hey")
         setErrorMessageField(errorMessageFieldNoUsers);
         setTriggeredSearch(true);
         setUserValidation(true);
@@ -134,8 +133,6 @@ function App({
 
     
     if (inputText.length > 2 && triggeredSearch === false) {
-      console.log(lastUserSelected)
-      console.log("Heys")
       delayedQuery(inputText,isPersonSearch);
     }
     setTriggeredSearch(false);
