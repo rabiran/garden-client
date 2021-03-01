@@ -21,9 +21,8 @@ export default {
         'סנפירים'
 
     ],
-    AdK: "1.com",
-    Kapaim: "2.com",
-    ONE: "3.com"
+    entityTypeG: "g"
+
 
     
     

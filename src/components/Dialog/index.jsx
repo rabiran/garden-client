@@ -1,6 +1,5 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -8,22 +7,20 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "@material-ui/core/Select";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import AutoComplete from "@material-ui/lab/Autocomplete";
 import "./style.css";
 import {
-  getUsernamesPerNameKart,
   addImmigrantsApiPromise,
-  getGroupsPerNameKart,
   getMembersOfGroupKart,
-  getImmigrantsApi,
 } from "../../api/api";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
-import logo from "images/migraine.svg";
 import DialogsTable from "../DialogsTable/index.jsx";
-import domainsMap from "../../api/domainsMap";
-import config from "../../config";
+import AutoSearch from "../AutoSearch/index.jsx";
 import { useSnackbar } from "notistack";
+import {
+  akaUIdDomainsMap,findPrimaryUniqueId
+
+} from "../../utils/Functions/func";
 import {
   Checkbox,
   FormControl,
@@ -32,26 +29,30 @@ import {
   RadioGroup,
   FormControlLabel,
   FormLabel,
-  CheckBoxGroup,
+  InputAdornment,
+  Input,
+  MenuItem,
+  FormHelperText,
+  IconButton,
+  
 } from "@material-ui/core";
-import useStore from 'utils/StoreProvider/useStore';
+import useStore from "utils/StoreProvider/useStore";
+import DatePicker from "react-datepicker";
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import "react-datepicker/dist/react-datepicker.css";
+import config from "../../config";
 
 export default ({ openWindow, setOpenWindow }) => {
   const storeProvider = useStore();
   const domains = storeProvider.getDomains();
   const { enqueueSnackbar } = useSnackbar();
-  const allNets = [domains.ads, domains.es];
-
+  const allNets = ["ברירת מחדל", domains.ads, domains.es];
+  const [startDate, setStartDate] = React.useState(new Date());
   const [loading, setLoading] = React.useState(false);
-  const [loadingInput, setLoadingInput] = React.useState(false);
-  const [openInput, setOpenInput] = React.useState(false);
-  const [userName, setUserName] = React.useState("");
   const [success, setSuccess] = React.useState(false);
   const [users, setUsers] = React.useState([]);
-  const [timeoutVar, setTimeoutVar] = React.useState(null);
   const [usersSelected, setUsersSelected] = React.useState([]);
   const [postStatuses, setPostStatuses] = React.useState([]);
-
   const [userValidation, setUserValidation] = React.useState(false);
   const [uniqueIdValidation, setUniqueIdValidation] = React.useState(false);
   const [
@@ -62,6 +63,7 @@ export default ({ openWindow, setOpenWindow }) => {
   const [lastUserSelected, setLastUserSelected] = React.useState(null);
   const errorMessageFieldNoUsers = "למשתמש שנבחר אין משתמשים בעד וקפיים";
   const errorMessageFieldEmptyP = "שדה ריק נא בחר משתמש!";
+  const errorMessageFieldIsG= "המשתמש שנבחר הוא תפקידן!"
   const errorMessageUserExistsP = "למשתמש כבר קיימת בקשה!";
   const errorMessageUserHasOneP = "משתמש כבר קיים בוואן!";
   const errorMessageFieldEmptyG = "שדה ריק נא בחר קבוצה!";
@@ -85,22 +87,43 @@ export default ({ openWindow, setOpenWindow }) => {
 
   const [isPersonSearch, setIsPersonSearch] = React.useState(true);
   const [checkedUser, setCheckedUser] = React.useState(false);
-
-  React.useEffect( () => {
-    
-    if(openWindow === true){
+  const ref = React.createRef();
+  const DateCustomInput = React.forwardRef(({ value, onClick }, ref) => (
+    <>
+      <FormControl>
+        <InputLabel htmlFor="input-date-picker">
+          בחר תאריך מיגרציה עתידי
+        </InputLabel>
+        <Input
+          id="input-date-picker"
+          value={value}
+          onClick={onClick}
+          startAdornment={
+            <InputAdornment position="start">
+              <IconButton>
+                <CalendarTodayIcon color="primary" />
+              </IconButton>
+            </InputAdornment>
+          }
+          aria-describedby="component-helper-text"
+        />
+        <FormHelperText id="component-helper-text">
+          לחץ לבחירת תאריך
+        </FormHelperText>
+      </FormControl>
+    </>
+  ));
+  React.useEffect(() => {
+    if (openWindow === true) {
       async function fetchData() {
         // You can await here
-        console.log("Ok");
+        //console.log("Ok");
         await storeProvider.fetchTableData();
         // ...
       }
       fetchData();
     }
-
-
-
-  },[openWindow])
+  }, [openWindow]);
 
   React.useEffect(() => {
     setUserValidation(false);
@@ -124,11 +147,8 @@ export default ({ openWindow, setOpenWindow }) => {
     }
   }, [isPersonSearch]);
   const handlePersonSearch = (event) => {
-    setIsPersonSearch(String(event.target.value) == "true");
+    setIsPersonSearch(String(event.target.value) === "true");
   };
-
-  const typingTimeout = 2000;
-
 
   const handleChangedDomain = (event) => {
     setLastUserSelectedUniqueId(event.target.value);
@@ -137,9 +157,9 @@ export default ({ openWindow, setOpenWindow }) => {
 
   const handleClose = () => {
     setUsers([]);
+    setStartDate(new Date());
     setUserValidation(false);
     setPostStatuses([]);
-    setUserName("");
     setCheckedUser(false);
     setUniqueIdValidation(false);
     setLastUserSelected(null);
@@ -147,13 +167,6 @@ export default ({ openWindow, setOpenWindow }) => {
     setLastUserSelectedUniqueId(null);
     setIsPersonSearch(true);
     setOpenWindow(false);
-  };
-  const handleTextFieldChange = (e) => {
-    if (userValidation) {
-      setUserValidation(false);
-      setUniqueIdValidation(false);
-    }
-    setUserName(e.target.value);
   };
 
   const handleAddUser = (e) => {
@@ -167,41 +180,48 @@ export default ({ openWindow, setOpenWindow }) => {
         setUniqueIdValidation(true);
       }
 
-      if (lastUserSelectedUniqueId != null) {
+      if (lastUserSelectedUniqueId !== null) {
         async function fetchData() {
           if (lastUserSelected != null) {
             let foundOne = lastUserSelected.domainUsers.find(
               (ds) => ds.dataSource === domains.target
             );
-            if (foundOne != undefined) {
+            if (foundOne !== undefined) {
               setErrorMessageField(errorMessageUserHasOne);
               setUserValidation(true);
               setUniqueIdValidation(true);
               return;
             }
+
+            if(lastUserSelected.entityType === config.entityTypeG){
+              setErrorMessageField(errorMessageFieldIsG);
+              setUserValidation(true);
+              setUniqueIdValidation(true);
+              return;
+
+            }
             try {
               let allExistingMigrations = await storeProvider.getTableData();
-              
-              if(allExistingMigrations.find((el) => el.id.toString() === lastUserSelected.id) != undefined){
+
+              if (
+                allExistingMigrations.find(
+                  (el) => el.id.toString() === lastUserSelected.id
+                ) !== undefined
+              ) {
                 setErrorMessageField(errorMessageUserExists);
                 setUserValidation(true);
                 setUniqueIdValidation(true);
-  
+
                 return;
               }
-                          
-            }
-            catch{
+            } catch {
               enqueueSnackbar("תקלה בשרת", {
                 variant: "error",
                 autoHideDuration: 2000,
               });
-              
-              return;
-              
-            }
 
-            
+              return;
+            }
 
             let foundUser = usersSelected.find(
               (user) => user.id === lastUserSelected.id
@@ -211,6 +231,7 @@ export default ({ openWindow, setOpenWindow }) => {
               let obj = Object.assign(lastUserSelected, {
                 primaryUniqueId: lastUserSelectedUniqueId,
                 newUser: checkedUser,
+                startDate: startDate,
               });
               setUsersSelected(usersSelected.concat(obj));
             } else {
@@ -253,12 +274,16 @@ export default ({ openWindow, setOpenWindow }) => {
               (el) => el.id.toString() === member.id
             ) === undefined
         );
+        allMembers = allMembers.filter(
+          (user) =>
+            user.entityType !== config.entityTypeG
+        );
 
         allMembers = allMembers.filter(
           (user) =>
-            user.domainUsers != undefined &&
-            user != undefined &&
-            user.domainUsers.length != 0
+            user.domainUsers !== undefined &&
+            user !== undefined &&
+            user.domainUsers.length !== 0
         );
         allMembers = allMembers.filter(
           (el) =>
@@ -274,28 +299,28 @@ export default ({ openWindow, setOpenWindow }) => {
         let newArr = [];
         allMembers.forEach((user) => {
           user.domainUsers = user.domainUsers?.filter(
-            (el) => akaUIdDomainsMap(el.uniqueId) != undefined
+            (el) => akaUIdDomainsMap(el.uniqueId,domains) !== undefined
           );
           if (user.domainUsers.length === 0) {
             return;
           }
-
+          console.log(lastUserSelectedUniqueId)
           let primaryUniqueId = findPrimaryUniqueId(
             user,
-            lastUserSelectedUniqueId
+            lastUserSelectedUniqueId,domains
           );
 
-          // console.log(primaryUniqueId)
-          if (primaryUniqueId != undefined) {
+          if (primaryUniqueId !== undefined) {
             let obj = Object.assign(user, {
               primaryUniqueId: primaryUniqueId,
               newUser: checkedUser,
+              startDate: startDate,
             });
-            console.log(obj);
+
             newArr = newArr.concat(obj);
           }
         });
-        console.log(newArr)
+
         setUsersSelected(usersSelected.concat(newArr));
       }
 
@@ -304,228 +329,10 @@ export default ({ openWindow, setOpenWindow }) => {
       setLastUserSelectedUniqueId("");
     }
   };
-  const akaUIdDomainsMap = (uniqueId) => {
-    let lowerCaseUniqueId = uniqueId.split("@")[1].toLowerCase();
-    const found = domainsMap.find(
-      (el) => el[1].toLowerCase() === lowerCaseUniqueId
-    );
-    if (found === undefined) {
-      return undefined;
-    }
-    if (found[0] === domains.ads) {
-      return domains.ads;
-    }
-    if (found[0] === domains.es) {
-      return domains.es;
-    }
-  };
-  //
-  const findakaOfUIdExcel = (currentUnit) => {
-    if (currentUnit === undefined) {
-      return undefined;
-    }
-    const foundAdK = config.akaAdkatz.find(
-      (el) => el.toLowerCase() === currentUnit.toLowerCase()
-    );
-    if (foundAdK != undefined) {
-      return domains.ads;
-    }
-    const foundKapaim = config.akaKapaim.find(
-      (el) => el.toLowerCase() === currentUnit.toLowerCase()
-    );
-    if (foundKapaim != undefined) {
-      return domains.es;
-    }
-    return undefined;
-  };
-
-  const findPrimaryUIdByMail = (person) => {
-    if (
-      person === undefined ||
-      person.mail === undefined ||
-      person.domainUsers === undefined ||
-      person.domainUsers.length === 0
-    ) {
-      return undefined;
-    }
-    let personMailLowCase = person.mail.toLowerCase();
-    let foundObj = person.domainUsers.find(
-      (el) => el.uniqueId.split("@")[0].toLowerCase() === personMailLowCase
-    );
-    if (foundObj === undefined) {
-      return undefined;
-    }
-    return foundObj.uniqueId;
-  };
-
-  const findPrimaryUIdByMainAka = (person, mainAka) => {
-    if (
-      person === undefined ||
-      person.domainUsers === undefined ||
-      person.domainUsers.length === 0
-    ) {
-      return undefined;
-    }
-    let primaryUIdByMail = findPrimaryUIdByMail(person);
-    if (primaryUIdByMail != undefined) {
-      let akaDomainsMapMail = akaUIdDomainsMap(primaryUIdByMail);
-      if (akaDomainsMapMail === undefined || akaDomainsMapMail != mainAka) {
-        let foundObj = person.domainUsers.find(
-          (el) => akaUIdDomainsMap(el.uniqueId) === mainAka
-        );
-        if (foundObj != undefined) {
-          return foundObj.uniqueId;
-        }
-      }
-      if (mainAka === akaDomainsMapMail) {
-        return person.mail;
-      }
-    }
-    let foundObjAka = person.domainUsers.find(
-      (el) => akaUIdDomainsMap(el.uniqueId) === mainAka
-    );
-    if (foundObjAka === undefined) {
-      return person.domainUsers[0].uniqueId;
-    }
-    return foundObjAka.uniqueId;
-  };
-  const findPrimaryUniqueId = (person, dataSource) => {
-    if (
-      person === undefined ||
-      person.domainUsers === undefined ||
-      person.domainUsers.length === 0
-    ) {
-      return undefined;
-    }
-    if (dataSource != "") {
-      return findPrimaryUIdByMainAka(person, dataSource);
-    }
-    let primaryUIdByMail = findPrimaryUIdByMail(person);
-    if (primaryUIdByMail != undefined) {
-      return primaryUIdByMail;
-    }
-    let akaFromExcel = findakaOfUIdExcel(person.currentUnit);
-    if (akaFromExcel === undefined) {
-      return person.domainUsers[0].uniqueId;
-    }
-    return findPrimaryUIdByMainAka(person, akaFromExcel);
-  };
 
   const handleChangedCheckedUser = (e) => {
     setCheckedUser(!checkedUser);
   };
-
-  const handleSelectedUser = (e, value) => {
-    if (!isPersonSearch) {
-      setLastUserSelected(value);
-      setUsers([]);
-      setPostStatuses([]);
-      return;
-    }
-    if (value === null) {
-      setLastUserSelected(null);
-
-      setErrorMessageField(errorMessageFieldEmpty);
-
-      return;
-    }
-
-    function fetchData() {
-      value.domainUsers = value.domainUsers?.filter(
-        (el) => akaUIdDomainsMap(el.uniqueId) != undefined
-      );
-      if (value.domainUsers === undefined || value.domainUsers.length === 0) {
-        setErrorMessageField(errorMessageFieldNoUsers);
-        setUserValidation(true);
-        return;
-      }
-
-      setLastUserSelected(value);
-
-      let primaryUniqueId = findPrimaryUniqueId(value);
-      if (primaryUniqueId != undefined) {
-        setLastUserSelectedUniqueId(primaryUniqueId);
-        return;
-      }
-      setLastUserSelectedUniqueId(null);
-    }
-    fetchData();
-    setUsers([]);
-    setPostStatuses([]);
-  };
-
-  React.useEffect(() => {
-    
-    
-    clearTimeout(timeoutVar);
-    
-    let renderTimeout;
-
-
-    if (userName != undefined && userName.length > 2) {
-      renderTimeout = setTimeout(
-        async () => {
-          setLoadingInput(true);
-          if (userName != undefined && userName.length > 2) {
-            
-            if (isPersonSearch) {
-              let newUsers = [];
-              try {
-                newUsers = await getUsernamesPerNameKart(userName);
-              } catch {
-                enqueueSnackbar("תקלה בשרת", {
-                  variant: "error",
-                  autoHideDuration: 2000,
-                });
-                setUsers([]);
-                return;
-              }
-              let usFiltered = newUsers.filter((usnow) =>
-                usnow.name.includes(userName)
-              ); //&&  //Remove includes
-              setUsers(usFiltered);
-
-            } else {
-              let groupsPerName = [];
-              try {
-                groupsPerName = await getGroupsPerNameKart(userName);
-                
-              } catch {
-                enqueueSnackbar("תקלה בשרת", {
-                  variant: "error",
-                  autoHideDuration: 2000,
-                });
-                setUsers([])
-                
-              }
-              setUsers(groupsPerName);
-              
-            
-              // let newGroups = us.filter((usnow) => usnow.name.includes(userName)); //Remove includes
-              
-            }
-          }
-
-          setLoadingInput(false);
-        },
-
-        typingTimeout
-      );
-   
-      
-
-      
-      setTimeoutVar(renderTimeout);
-
-
-    }else{
-      if(userName===undefined || userName.length ===0){
-        setUsers([]);
-      }
-      
-    }
-
-  }, [userName]);
 
   const handleRequestClick = async () => {
     let statusResults;
@@ -561,9 +368,9 @@ export default ({ openWindow, setOpenWindow }) => {
     let arrStatuses = [];
     let foundReject = false;
     statusResults.forEach((res) => {
-      let status = res.status == "rejected" ? "נכשל" : "הצליח";
+      let status = res.status === "rejected" ? "נכשל" : "הצליח";
 
-      if (res.status == "rejected") {
+      if (res.status === "rejected") {
         foundReject = true;
         arrStatuses.push(status + ": " + res.reason.id + " " + res.reason.name);
       }
@@ -586,8 +393,8 @@ export default ({ openWindow, setOpenWindow }) => {
       <Dialog
         PaperProps={{
           style: {
-            maxWidth: "70vw",
-            minWidth: "70vw",
+            maxWidth: "80vw",
+            minWidth: "80vw",
             maxHeight: "80vh",
             minHeight: "80vh",
           },
@@ -602,9 +409,9 @@ export default ({ openWindow, setOpenWindow }) => {
         <DialogTitle id="form-dialog-title">יצירת משתמש</DialogTitle>
         <DialogContent dividers>
           <div className="dialogContentContainer">
-            <DialogContentText>
-              <span> נא למלא את הטופס בשביל יצירת משתמש ב.</span>
-            </DialogContentText>
+            
+              <div> נא למלא את הטופס בשביל יצירת משתמש ב.</div>
+            
 
             <div className="searchingContainer">
               <div>
@@ -632,64 +439,33 @@ export default ({ openWindow, setOpenWindow }) => {
               <div className="fillingFieldsContainer">
                 <div className="detailsContainer">
                   <div>
-                    <AutoComplete
-                      style={{ width: 340 }}
-                      noOptionsText={"לא נמצאו תוצאות"}
-                      open={openInput}
-                      onOpen={() => {
-                        setOpenInput(true);
-                      }}
-                      autoSelect={true}
-                      onClose={() => {
-                        setOpenInput(false);
-                      }}
-                      limitTags={2}
-                      id="multiple-limit-tags"
-                      options={users}
-                      onChange={handleSelectedUser}
-                      getOptionLabel={
-                        
-                        (option) =>  isPersonSearch  ?
-                                               
-                          option?.name + option?.hierarchy?.join("/") :option?.name
-                                
-                         
-                      }
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="standard"
-                          label={isPersonSearch ? "חפש משתמש" : "חפש קבוצה"}
-                          placeholder={isPersonSearch ? "משתמש" : "קבוצה"}
-                          InputProps={{
-                            ...params.InputProps,
-                            endAdornment: (
-                              <React.Fragment>
-                                {loadingInput ? (
-                                  <CircularProgress color="inherit" size={20} />
-                                ) : null}
-                                {params.InputProps.endAdornment}
-                              </React.Fragment>
-                            ),
-                          }}
-                          error={userValidation}
-                          helperText={userValidation ? errorMessageField : ""}
-                        />
-                      )}
-                      onInputChange={handleTextFieldChange}
-                    ></AutoComplete>
+                    <AutoSearch
+                      isPersonSearch={isPersonSearch}
+                      users={users}
+                      setUsers={setUsers}
+                      lastUserSelected={lastUserSelected}
+                      setUserValidation={setUserValidation}
+                      setUniqueIdValidation={setUniqueIdValidation}
+                      userValidation={userValidation}
+                      setErrorMessageField={setErrorMessageField}
+                      errorMessageField={errorMessageField}
+                      setLastUserSelected={setLastUserSelected}
+                      errorMessageFieldEmpty={errorMessageFieldEmpty}
+                      errorMessageFieldNoUsers={errorMessageFieldNoUsers}
+                      setPostStatuses={setPostStatuses}
+                      setLastUserSelectedUniqueId={setLastUserSelectedUniqueId}
+                    />
                   </div>
                   <div>
                     <FormControl>
                       <InputLabel>{selectMessage}</InputLabel>
                       <Select
-                        native
                         style={{ width: "200px" }}
                         value={
                           isPersonSearch
                             ? lastUserSelectedUniqueId
                               ? lastUserSelectedUniqueId
-                              : undefined
+                              : ""
                             : lastUserSelectedUniqueId
                             ? lastUserSelectedUniqueId
                             : ""
@@ -697,26 +473,21 @@ export default ({ openWindow, setOpenWindow }) => {
                         onChange={handleChangedDomain}
                         error={uniqueIdValidation}
                       >
-                        {isPersonSearch ? (
-                          lastUserSelected != null ? (
-                            lastUserSelected.domainUsers.map((el, index) => (
-                              <option key={index} value={el.uniqueId}>
-                                {el.uniqueId}
-                              </option>
-                            ))
-                          ) : null
-                        ) : lastUserSelected != null ? (
-                          <>
-                            <option key={-1} value={""}>
-                              {"ברירת מחדל"}
-                            </option>
-                            {allNets.map((el, index) => (
-                              <option key={index + 1} value={el}>
+                        {isPersonSearch
+                          ? lastUserSelected != null
+                            ? lastUserSelected.domainUsers.map((el, index) => (
+                                <MenuItem key={index} value={el.uniqueId}>
+                                  {el.uniqueId}
+                                </MenuItem>
+                              ))
+                            : null
+                          : lastUserSelected != null
+                          ? allNets.map((el, index) => (
+                              <MenuItem key={index} value={el}>
                                 {el}
-                              </option>
-                            ))}
-                          </>
-                        ) : null}
+                              </MenuItem>
+                            ))
+                          : null}
                       </Select>
                     </FormControl>
                   </div>
@@ -739,8 +510,29 @@ export default ({ openWindow, setOpenWindow }) => {
                     הוסף
                   </Fab>
                 </div>
+                <div style={{ overflow: "visible" , width: "200px" }}>
+                  <DatePicker
+                    
+                    {...startDate}
+                    customInput={<DateCustomInput ref={ref} />}
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    popperPlacement="top-end"
+                    popperModifiers={{
+                      offset: { enabled: true, offset: '5px, -10px' },
+                      preventOverflow: {
+                        enabled: true,
+                        escapeWithReference: false,
+                        boundariesElement: 'viewport'
+                      }
+                    }}
+                    dateFormat="dd/MM/yyyy"
+                    minDate={new Date()}
+                    maxDate={new Date().setMonth(new Date().getMonth() + 5)}
+                    showDisabledMonthNavigation
+                  />
+                </div>
               </div>
-
             </div>
           </div>
 
@@ -774,8 +566,9 @@ export default ({ openWindow, setOpenWindow }) => {
               >
                 יצירה
               </Button>
+              
               {loading && (
-                <CircularProgress size={24} className="buttonProgress" />
+                <CircularProgress thickness={8} size={70} className="buttonProgress" />
               )}
             </div>
           </div>

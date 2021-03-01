@@ -5,18 +5,18 @@ import MaterialTable from 'material-table'
 import hebrewLocalization from 'config/tableHebrew';
 import Select from "@material-ui/core/Select";
 import tableIcons from 'config/tableIcons';
+import DatePicker from "react-datepicker";
 import Box from '@material-ui/core/Box'
 import { Checkbox } from "@material-ui/core";
 
 
 export default ({ usersSelected, setUsersSelected }) => {
 
-
     const handleRowChangedDomain = (oldData,event) => {
 
        
         setUsersSelected(usersSelected.map(user =>{
-          if(user.id == oldData.id){
+          if(user.id === oldData.id){
             user.primaryUniqueId = event.target.value;
           }
           return user;
@@ -42,23 +42,45 @@ export default ({ usersSelected, setUsersSelected }) => {
         
         style={{ marginTop: "30px"  }}
         title="משתמשים שנוספו"
-        
+        // editable={{onRowUpdate: (newData, oldData) =>
+        //   new Promise((resolve, reject) => {
+        //     setTimeout(() => {
+        //       let dataUpdate = [...usersSelected];
+        //       dataUpdate =dataUpdate.map((el) => {
+        //         if(el.id === newData.id){
+                  
+        //           return newData;
+        //         }
+        //         return el;
+        //       })
+              
+              
+        //       setUsersSelected(dataUpdate);
+
+        //       resolve();
+        //     }, 500)
+        //   }),}}
         localization={hebrewLocalization}
+        
         columns={[
-          { title: "שם", field: "name" },
-          { title: "מספר אישי", field: "personalNumber" },
-          { title: "היררכיה", field: "hierarchy" },
+          
+          { title: "שם", field: "name", editable: 'never'},
+          { title: "מספר אישי", field: "personalNumber" , editable: 'never'},
+        
+          { title: "היררכיה", field: "hierarchy", editable: 'never', render:(rowData)=>(
+            <p>{rowData?.hierarchy?.join("/")}</p>
+          ) },
           {
-            title: "שינוי יוז'ר ראשי",
-            
-            render: (rowData) => (
+            title: "שינוי יוז'ר ראשי",  render: (rowData) => (
               <Select
                 native
+              
                 value={rowData.primaryUniqueId}
                 onChange={(e) => handleRowChangedDomain(rowData, e)}
               >
                 {rowData != null
-                  ? rowData.domainUsers.map((el, index) => (
+               
+                  ? rowData?.domainUsers?.map((el, index) => (
               <option  
              
 
@@ -69,6 +91,8 @@ export default ({ usersSelected, setUsersSelected }) => {
                   : null}
               </Select>
             ),
+            
+            
           },
 
           {
@@ -91,7 +115,10 @@ export default ({ usersSelected, setUsersSelected }) => {
             render: (rowData) =>(                                 
             <Checkbox checked={rowData.newUser} onClick={(e) => handleCheckedUserRowData(rowData,e)}/>                                                           
             )
-          }
+          },
+          { title: "תאריך יעד למיגרציה", field: "startDate" , type: "date" , dateSetting: {format: "dd/MM/yyyy"}
+            
+          },
         
         ]}
         options={{
@@ -107,7 +134,7 @@ export default ({ usersSelected, setUsersSelected }) => {
                function DeleteUsers() {
                  rowData.forEach((userToDel) => {
                   newArr = newArr.filter((element) => {
-                    return element.id != userToDel.id;
+                    return element.id !== userToDel.id;
                   });
                 });
                 setUsersSelected(newArr);
@@ -118,7 +145,7 @@ export default ({ usersSelected, setUsersSelected }) => {
         ]}
         icons={tableIcons}
         data={
-          usersSelected != undefined && usersSelected.length > 0
+          usersSelected !== undefined && usersSelected.length > 0
             ? JSON.parse(JSON.stringify(usersSelected))
             : []
         }

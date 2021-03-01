@@ -12,10 +12,12 @@
 
 
 .buttonProgress {
-    color: green;
-    position: absolute;
-    top: 20%;
-    left: 40%;
+    
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+
 }
 .searchingContainer{
     display: flex;
@@ -34,7 +36,15 @@
     gap: 30px;
 
 }
+div.react-datepicker-popper {
+    z-index: 10003  !important;
+  }
+.react-datepicker-popper {
+    z-index: 10003 !important;
+    
+}
 
+#header { position: relative; z-index: 10003; }
 .fillingFieldsContainer {
     display: inline-flex ;
     

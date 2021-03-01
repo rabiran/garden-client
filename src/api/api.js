@@ -34,6 +34,14 @@ const authApi = async () => {
     return res.data;
 }
 
+const excelApi = async() =>{
+    if(config.isMock){
+        await wait(500); return ;
+    }
+    const res = await request.get(`api/excel`).catch(err => {throw (err.response) });
+    return res.data;
+}
+
 const domainsApi = async () => {
     //console.log(domainsMock)
     if(config.isMock) { await wait(200); return domainsMock }
@@ -82,7 +90,7 @@ const addImmigrantsApiPromise = async (usersToCreate) =>{
     usersToCreate.forEach(element => {
         arrayPromise.push(new Promise((resolve,reject) =>{
             
-            request.post(`api/immigrant`,{"uniqueId": element.primaryUniqueId,"id": element.id,"newUser": element.newUser}).catch(err => {reject (element) })
+            request.post(`api/immigrant`,{"primaryUniqueId": element.primaryUniqueId,"id": element.id,"isNewUser": element.newUser,"startDate": element.startDate}).catch(err => {reject (element) })
             .then(function(response){resolve(element)});
             
             
@@ -158,7 +166,7 @@ const setViewedApi = async (id) => {
 }
 
 export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGroupsPerNameKart ,
-deleteImmigrantApi, pauseStateApi , setViewedApi,
+deleteImmigrantApi, pauseStateApi , setViewedApi, excelApi,
 getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi, retryApi, getMembersOfGroupKart}
 
 

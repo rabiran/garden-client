@@ -2,6 +2,7 @@
 export default [
     {
         "id": "1",
+        "entityType": "s",
         "memberId": "1",
         "name": "tommy afek",
         "personalNumber": "8517714",
@@ -22,6 +23,7 @@ export default [
     {
         "id": "2",
         "memberId": "1",
+        "entityType": "c",
         "name": "matan",
         "personalNumber": "3243232",
         "hierarchy": ["best","nigga"],
@@ -33,6 +35,7 @@ export default [
         "id":"3",
         "name": "grisha",
         "memberId": "1",
+        "entityType": "g",
         "personalNumber": "31231",
         "hierarchy": ["best"],
         "mail": "",
@@ -40,7 +43,8 @@ export default [
         "domainUsers": [
             {
                 "dataSource": "1",
-                "uniqueId": "ma@2.haha.com"
+                "uniqueId": "ma@2.haha.com",
+                
             },
             {
                 "dataSource": "hehe",
@@ -52,6 +56,7 @@ export default [
         "id": "4",
         "name": "hayman",
         "memberId": "1",
+        "entityType": "s",
         "personalNumber": "421421",
         "hierarchy": ["ned","maim"],
         "mail": "ma@2.haha.com",
@@ -73,6 +78,7 @@ export default [
         "id": "5",
         "name": "gargamel",
         "memberId": "1",
+        "entityType": "s",
         "personalNumber": "3211",
         "hierarchy": ["gever","al"],
         "mail": "ma@2.com",
