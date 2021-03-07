@@ -123,8 +123,8 @@ const getGroupsPerNameKart = async (groupname) =>{
         await wait(200);
         return groups;
     }
-    const res = await request.get(`http://localhost:3005/api/searchOG/${groupname}`
-    ,{timeout : 2000, "Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => { throw (err.response) });
+    const res = await request.get(`api/searchOG/${groupname}`
+    ,{timeout : 2000}).catch(err => { throw (err.response) });
     return res.data;
 }
 const getMembersOfGroupKart = async(groupid) =>{
@@ -133,15 +133,15 @@ const getMembersOfGroupKart = async(groupid) =>{
         return users;
     }
     const res = await request.get(`api/getMembers/${groupid}`
-    ,{timeout: 10000}.catch(err => {throw(err.response)}))
+    ,{timeout: 2000}.catch(err => {throw(err.response)}))
     return res.data;
 }
 const getUsernamesPerNameKart = async (username) =>{
 
 
     if(config.isMock){await wait(200); return users};
-    const res = await request.get(`http://localhost:3005/api/search/${username}`
-    ,{timeout : 2000, "Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => { throw (err.response) });
+    const res = await request.get(`api/search/${username}`
+    ,{timeout : 2000}).catch(err => { throw (err.response) });
     return res.data;
 }
 const getGardenersStatsApi = async () => {
