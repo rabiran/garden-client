@@ -1,8 +1,8 @@
-import domainsMap from "../../api/domainsMap";
+import domainsMaps from "../../api/domainsMaps";
 import config from "../../config";
 
-const akaUIdDomainsMap = (uniqueId, domains) => {
-  let lowerCaseUniqueId = uniqueId.split("@")[1].toLowerCase();
+const akaUIdDomainsMap = (uniqueID, domains , domainsMap = domainsMaps) => {
+  let lowerCaseUniqueId = uniqueID.split("@")[1].toLowerCase();
   const found = domainsMap.find(
     (el) => el[1].toLowerCase() === lowerCaseUniqueId
   );
@@ -15,19 +15,21 @@ const akaUIdDomainsMap = (uniqueId, domains) => {
   if (found[0] === domains.es) {
     return domains.es;
   }
+  return undefined;
 };
 //
-const findakaOfUIdExcel = (currentUnit, domains) => {
+const findakaOfUIdExcel = (currentUnit, domains, akaAdkatz = config.akaAdkatz, akaKapaim = config.akaKapaim) => {
+
   if (currentUnit === undefined) {
     return undefined;
   }
-  const foundAdK = config.akaAdkatz.find(
+  const foundAdK = akaAdkatz.find(
     (el) => el.toLowerCase() === currentUnit.toLowerCase()
   );
   if (foundAdK !== undefined) {
     return domains.ads;
   }
-  const foundKapaim = config.akaKapaim.find(
+  const foundKapaim = akaKapaim.find(
     (el) => el.toLowerCase() === currentUnit.toLowerCase()
   );
   if (foundKapaim !== undefined) {
@@ -47,15 +49,15 @@ const findPrimaryUIdByMail = (person) => {
   }
   let personMailLowCase = person.mail.toLowerCase();
   let foundObj = person.domainUsers.find(
-    (el) => el.uniqueId.split("@")[0].toLowerCase() === personMailLowCase
+    (el) => el.uniqueID.split("@")[0].toLowerCase() === personMailLowCase
   );
   if (foundObj === undefined) {
     return undefined;
   }
-  return foundObj.uniqueId;
+  return foundObj.uniqueID;
 };
 
-const findPrimaryUIdByMainAka = (person, mainAka, domains) => {
+const findPrimaryUIdByMainAka = (person, mainAka, domains, domainsMap) => {
   if (
     person === undefined ||
     person.domainUsers === undefined ||
@@ -65,13 +67,13 @@ const findPrimaryUIdByMainAka = (person, mainAka, domains) => {
   }
   let primaryUIdByMail = findPrimaryUIdByMail(person);
   if (primaryUIdByMail !== undefined) {
-    let akaDomainsMapMail = akaUIdDomainsMap(primaryUIdByMail, domains);
+    let akaDomainsMapMail = akaUIdDomainsMap(primaryUIdByMail, domains , domainsMap);
     if (akaDomainsMapMail === undefined || akaDomainsMapMail !== mainAka) {
       let foundObj = person.domainUsers.find(
-        (el) => akaUIdDomainsMap(el.uniqueId, domains) === mainAka
+        (el) => akaUIdDomainsMap(el.uniqueID, domains, domainsMap) === mainAka
       );
       if (foundObj !== undefined) {
-        return foundObj.uniqueId;
+        return foundObj.uniqueID;
       }
     }
     if (mainAka === akaDomainsMapMail) {
@@ -79,14 +81,14 @@ const findPrimaryUIdByMainAka = (person, mainAka, domains) => {
     }
   }
   let foundObjAka = person.domainUsers.find(
-    (el) => akaUIdDomainsMap(el.uniqueId, domains) === mainAka
+    (el) => akaUIdDomainsMap(el.uniqueID, domains, domainsMap) === mainAka
   );
   if (foundObjAka === undefined) {
-    return person.domainUsers[0].uniqueId;
+    return person.domainUsers[0].uniqueID;
   }
-  return foundObjAka.uniqueId;
+  return foundObjAka.uniqueID;
 };
-const findPrimaryUniqueId = (person, dataSource, domains) => {
+const findPrimaryUniqueId = (person, dataSource, domains,excel,domainsMap ) => {
   if (
     person === undefined ||
     person.domainUsers === undefined ||
@@ -95,17 +97,17 @@ const findPrimaryUniqueId = (person, dataSource, domains) => {
     return undefined;
   }
   if (dataSource !== "ברירת מחדל" && dataSource !== "") {
-    return findPrimaryUIdByMainAka(person, dataSource, domains);
+    return findPrimaryUIdByMainAka(person, dataSource, domains , domainsMap);
   }
   let primaryUIdByMail = findPrimaryUIdByMail(person);
   if (primaryUIdByMail !== undefined) {
     return primaryUIdByMail;
   }
-  let akaFromExcel = findakaOfUIdExcel(person.currentUnit, domains);
+  let akaFromExcel = findakaOfUIdExcel(person.currentUnit, domains,excel.akaAdkatz, excel.akaKapaim);
   if (akaFromExcel === undefined) {
-    return person.domainUsers[0].uniqueId;
+    return person.domainUsers[0].uniqueID;
   }
-  return findPrimaryUIdByMainAka(person, akaFromExcel, domains);
+  return findPrimaryUIdByMainAka(person, akaFromExcel, domains, domainsMap);
 };
 
 export {

@@ -11,13 +11,13 @@ export default [
         "currentUnit": "סנפיר",
         "domainUsers":[{
             "dataSource": "ads",
-            "uniqueId": "tom@gmail.com",
+            "uniqueID": "tom@gmail.com",
         },{
             "dataSource": "2",
-            "uniqueId": "they@2.com",
+            "uniqueID": "they@2.com",
         },{
             "dataSource": "One",
-            "uniqueId": "hey@1.com",
+            "uniqueID": "hey@1.com",
         },],
     },
     {
@@ -43,12 +43,12 @@ export default [
         "domainUsers": [
             {
                 "dataSource": "1",
-                "uniqueId": "ma@2.haha.com",
+                "uniqueID": "ma@2.haha.com",
                 
             },
             {
                 "dataSource": "hehe",
-                "uniqueId": "ge@1.com"
+                "uniqueID": "ge@1.com"
             }
         ]
     },
@@ -64,12 +64,12 @@ export default [
         "domainUsers": [
             {
                 "dataSource": "dsa",
-                "uniqueId": "hey@1.lol.com",
+                "uniqueID": "hey@1.lol.com",
 
             },
             {
                 "dataSource": "tas",
-                "uniqueId": "mak@2.haha.com",          
+                "uniqueID": "mak@2.haha.com",          
             }
         ]
 
@@ -86,11 +86,11 @@ export default [
         "domainUsers": [
             {
                 "dataSource": "Hehe",
-                "uniqueId": "mat@2.lol.com"
+                "uniqueID": "mat@2.lol.com"
             },
             {
                 "dataSource": "hehe2",
-                "uniqueId": "shma@geeda.com"
+                "uniqueID": "shma@geeda.com"
 
 
             }

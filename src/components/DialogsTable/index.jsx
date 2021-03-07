@@ -84,7 +84,7 @@ export default ({ usersSelected, setUsersSelected }) => {
               <option  
              
 
-                  key={index} value={el.uniqueId}>{el.uniqueId} 
+                  key={index} value={el.uniqueID}>{el.uniqueID} 
 
              </option>
                     ))
@@ -103,7 +103,7 @@ export default ({ usersSelected, setUsersSelected }) => {
               
              
                 {
-                    rowData.domainUsers.find((el) => el.uniqueId === rowData.primaryUniqueId).dataSource
+                    rowData.domainUsers.find((el) => el.uniqueID === rowData.primaryUniqueId).dataSource
                     
                   
                 }

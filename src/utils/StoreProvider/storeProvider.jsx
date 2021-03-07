@@ -1,7 +1,7 @@
 import React from "react";
 // import './styles.css';
 import storeContext from "./storeContext";
-import { authApi, domainsApi, getImmigrantsApi, excelApi } from "api/api";
+import { authApi, domainsApi, getImmigrantsApi, excelApi,entityTypeApi ,domainsMapApi } from "api/api";
 import { useSnackbar } from "notistack";
 import useLoading from "utils/LoadingProvider/useLoading";
 
@@ -10,7 +10,8 @@ export default (props) => {
   const [domains, setDomains] = React.useState([]);
   const [tableData, setTableData] = React.useState([]);
   const [excelJs, setExcelJs] = React.useState(null);
-
+  const [entityType , setEntityType] = React.useState(null);
+  const [domainsMap, setDomainsMap] = React.useState(null)
   const loadingProvider = useLoading();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -19,6 +20,8 @@ export default (props) => {
     getDomaninsApi();
     getTableDataApi();
     getExcelDataApi();
+    getEntityTypeDataApi();
+    getDomainsMapDataApi();
 
     // eslint-disable-next-line
   }, []);
@@ -39,9 +42,29 @@ export default (props) => {
   };
   const getExcelDataApi = async () => {
     try {
-      const data = await excelApi();
-      setExcelJs(data);
+      const dataEx = await excelApi();
+      console.log("hey")
+      setExcelJs(dataEx);
     } catch {
+      console.log("hgh2")
+      enqueueSnackbar("נכשל", { variant: "error", autoHideDuration: 2000 });
+    }
+  };
+  const getDomainsMapDataApi = async () => {
+    try {
+      const domainsMapData = await domainsMapApi();
+      console.log("hey")
+      setDomainsMap(domainsMapData);
+    } catch {
+      console.log("hgh2")
+      enqueueSnackbar("נכשל", { variant: "error", autoHideDuration: 2000 });
+    }
+  };
+  const getEntityTypeDataApi = async () => {
+    try {
+      const entity = await entityTypeApi();
+      setEntityType(entity);
+    } catch { 
       enqueueSnackbar("נכשל", { variant: "error", autoHideDuration: 2000 });
     }
   };
@@ -64,9 +87,16 @@ export default (props) => {
     setDomains(data);
   };
 
+  const getEntityType = () => {
+    return entityType;
+  };
+
   const getTableData = () => {
     return tableData;
   };
+  const getDomainsMap = () =>{
+    return domainsMap;
+  }
   const getAuth = () => {
     return auth;
   };
@@ -89,6 +119,8 @@ export default (props) => {
     getTableData: getTableData,
     getExcel: getExcel,
     updateTableData: updateTableData,
+    getEntityType: getEntityType,
+    getDomainsMap: getDomainsMap
   };
 
   return (

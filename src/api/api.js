@@ -9,6 +9,7 @@ import gardeners from './statsMocks/gardeners';
 import statsMock from './statsMocks/statsMock';
 import migratedMock from './statsMocks/migratedMock';
 import totalMigratedMock from './statsMocks/totalMigratedMock';
+import domainsMaps from './domainsMaps'
 
 const AuthDataMock = {
     id: '1',
@@ -38,7 +39,21 @@ const excelApi = async() =>{
     if(config.isMock){
         await wait(500); return ;
     }
-    const res = await request.get(`api/excel`).catch(err => {throw (err.response) });
+    const res = await request.get(`api/excel`,{"Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => {throw (err.response) });
+    return res.data;
+}
+const entityTypeApi = async() =>{
+    if(config.isMock){
+        await wait(500); return config.entityTypeG ;
+    }
+    const res = await request.get(`api/entityType`,{"Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => {throw (err.response) });
+    return res.data;
+}
+const domainsMapApi = async() =>{
+    if(config.isMock){
+        await wait(500); return domainsMaps ;
+    }
+    const res = await request.get(`api/domainsMap`,{"Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => {throw (err.response) });
     return res.data;
 }
 
@@ -108,9 +123,8 @@ const getGroupsPerNameKart = async (groupname) =>{
         await wait(200);
         return groups;
     }
-    const res = await request.get('api/groupsearch', {params:{
-        groupname: groupname,
-    }},{timeout : 10000}).catch(err => { throw (err.response) });
+    const res = await request.get(`http://localhost:3005/api/searchOG/${groupname}`
+    ,{timeout : 2000, "Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => { throw (err.response) });
     return res.data;
 }
 const getMembersOfGroupKart = async(groupid) =>{
@@ -118,20 +132,17 @@ const getMembersOfGroupKart = async(groupid) =>{
         await wait(200)
         return users;
     }
-    const res = await request.get('api/getmembers', {params:{
-        groupid: groupid,
-    }},{timeout: 10000}.catch(err => {throw(err.response)}))
+    const res = await request.get(`api/getMembers/${groupid}`
+    ,{timeout: 10000}.catch(err => {throw(err.response)}))
     return res.data;
 }
 const getUsernamesPerNameKart = async (username) =>{
-    await wait(200); 
-    return users;
 
-    // if(config.isMock){await wait(200); return users};
-    // const res = await request.get(`api/search`,{params:{
-    //     username: username
-    // }},{timeout : 10000}).catch(err => { throw (err.response) });
-    // return res.data;
+
+    if(config.isMock){await wait(200); return users};
+    const res = await request.get(`http://localhost:3005/api/search/${username}`
+    ,{timeout : 2000, "Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => { throw (err.response) });
+    return res.data;
 }
 const getGardenersStatsApi = async () => {
     if(config.isMock) { await wait(300); return gardeners}
@@ -166,7 +177,7 @@ const setViewedApi = async (id) => {
 }
 
 export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGroupsPerNameKart ,
-deleteImmigrantApi, pauseStateApi , setViewedApi, excelApi,
+deleteImmigrantApi, pauseStateApi , setViewedApi, excelApi, entityTypeApi,domainsMapApi,
 getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi, retryApi, getMembersOfGroupKart}
 
 

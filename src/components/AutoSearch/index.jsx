@@ -14,6 +14,7 @@ import {
   findPrimaryUniqueId
 
 } from "../../utils/Functions/func";
+import domainsMaps from "api/domainsMaps";
 
 function App({
   isPersonSearch = false,
@@ -34,6 +35,8 @@ function App({
 }) {
   const storeProvider = useStore();
   const domains = storeProvider.getDomains();
+  const excel = storeProvider.getExcel();
+  const domainsMap = storeProvider.getDomainsMap();
   const { enqueueSnackbar } = useSnackbar();
   const [loadingInput,setLoadingInput] = React.useState(false);
   const [inputText, setInputText] = React.useState("");
@@ -41,56 +44,69 @@ function App({
   
 
   async function searchFunction(inputText, isPersonSearch) {
-    console.log(inputText);
-    console.log(isPersonSearch)
-    setLoadingInput(true);
-    if (isPersonSearch) {
-      let newUsers = [];
-      try {
-        newUsers = await getUsernamesPerNameKart(inputText);
-      } catch {
-        enqueueSnackbar("תקלה בשרת", {
-          variant: "error",
-          autoHideDuration: 2000,
-        });
-        setUsers([]);
-        return;
-      }
-      let usFiltered = newUsers.filter((usnow) =>
-        usnow.name.includes(inputText)
-      ); //&&  //Remove includes
-      setUsers(usFiltered);
-    } else {
-      let groupsPerName = [];
-      try {
-        groupsPerName = await getGroupsPerNameKart(inputText);
-      } catch {
-        enqueueSnackbar("תקלה בשרת", {
-          variant: "error",
-          autoHideDuration: 2000,
-        });
-        setUsers([]);
-      }
-      setUsers(groupsPerName);
 
-      // let newGroups = us.filter((usnow) => usnow.name.includes(userName)); //Remove includes
+    setLoadingInput(true);
+    async function searchData(){
+      if (isPersonSearch) {
+        
+        try {
+          
+            let newUsers = await getUsernamesPerNameKart(inputText);
+            setUsers(newUsers);
+            console.log(newUsers)
+            return;
+         
+
+        } catch {
+          enqueueSnackbar("תקלה בשרת", {
+            variant: "error",
+          
+          
+            autoHideDuration: 2000,
+          });
+          console.log("Hey")
+          setUsers([]);
+          return;
+        }
+        // let usFiltered = newUsers.filter((usnow) =>
+        //   usnow.name.includes(inputText)
+        // ); //&&  //Remove includes
+        // setUsers(usFiltered); // usfiletered
+  
+      } else {
+        let groupsPerName = [];
+        try {
+          groupsPerName = await getGroupsPerNameKart(inputText);
+        } catch {
+          enqueueSnackbar("תקלה בשרת", {
+            variant: "error",
+            autoHideDuration: 2000,
+          });
+          setUsers([]);
+        }
+        setUsers(groupsPerName);
+  
+        // let newGroups = us.filter((usnow) => usnow.name.includes(userName)); //Remove includes
+      }
     }
+    await searchData();
 
     setLoadingInput(false);
   }
 
   const handleSelectedUser = (e, value) => {
-    console.log("Heyd")
+
     if (!isPersonSearch) {
-      
+      setTriggeredSearch(true);
       setLastUserSelected(value);
       setLastUserSelectedUniqueId("ברירת מחדל")
       setUsers([]);
-      setTriggeredSearch(true);
+  
       setPostStatuses([]);
       return;
     }
     if (value === null) {
+      setTriggeredSearch(true);
       setLastUserSelected(null);
 
       setErrorMessageField(errorMessageFieldEmpty);
@@ -98,31 +114,32 @@ function App({
       return;
     }
 
-    function fetchData() {
+    function fetchData(value) {
       value.domainUsers = value.domainUsers?.filter(
-        (el) => akaUIdDomainsMap(el.uniqueId,domains) !== undefined
+        (el) => akaUIdDomainsMap(el.uniqueID,domains,domainsMap) !== undefined
       );
       if (value.domainUsers === undefined || value.domainUsers.length === 0) {
         setErrorMessageField(errorMessageFieldNoUsers);
-        setTriggeredSearch(true);
+
+        setTriggeredSearch(true)
         setUserValidation(true);
         return;
       }
-      setTriggeredSearch(true);
+      setTriggeredSearch(true)
       setLastUserSelected(value);
 
-      let primaryUniqueId = findPrimaryUniqueId(value,"",domains);
+      let primaryUniqueId = findPrimaryUniqueId(value,"",domains,excel,domainsMap);
       if (primaryUniqueId !== undefined) {
         setLastUserSelectedUniqueId(primaryUniqueId);
         return;
       }
       setLastUserSelectedUniqueId(null);
     }
-    fetchData();
+    fetchData(value);
     setUsers([]);
     setPostStatuses([]);
   };
-
+  
   const delayedQuery = React.useCallback(
     debounce((inputText,isPersonSearch) => searchFunction(inputText,isPersonSearch), 2000),
     []
@@ -133,9 +150,12 @@ function App({
 
     
     if (inputText.length > 2 && triggeredSearch === false) {
+      console.log("quering")
       delayedQuery(inputText,isPersonSearch);
     }
-    setTriggeredSearch(false);
+      setTriggeredSearch(false);
+    
+  
     return delayedQuery.cancel;
   }, [inputText]);
 
@@ -151,19 +171,25 @@ function App({
   return (
     <div className="App">
       <Autocomplete
-        id="combo-box-demo"
+      
+        // id="combo-box-demo"
         options={users}
+        limitTags={20}
         getOptionLabel={(option) =>
           isPersonSearch
-            ? option?.name + option?.hierarchy?.join("/")
+            ? option?.fullName +"/"+ option?.hierarchy?.join("/")
             : option?.name
         }
+        
+        noOptionsText={"אין תוצאות"}
+        filterOptions={(options, state) => options}
         style={{ width: 340 }}
         onInputChange={handleInput}
         onChange={handleSelectedUser}
         renderInput={(params) => (
           <TextField
             {...params}
+            
             variant="standard"
             label={isPersonSearch ? "חפש משתמש" : "חפש קבוצה"}
             placeholder={isPersonSearch ? "משתמש" : "קבוצה"}

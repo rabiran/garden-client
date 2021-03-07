@@ -40,11 +40,13 @@ import useStore from "utils/StoreProvider/useStore";
 import DatePicker from "react-datepicker";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import "react-datepicker/dist/react-datepicker.css";
-import config from "../../config";
 
 export default ({ openWindow, setOpenWindow }) => {
   const storeProvider = useStore();
   const domains = storeProvider.getDomains();
+  const excel = storeProvider.getExcel()
+  const domainsMap = storeProvider.getDomainsMap();
+  const entityType = storeProvider.getEntityType();
   const { enqueueSnackbar } = useSnackbar();
   const allNets = ["ברירת מחדל", domains.ads, domains.es];
   const [startDate, setStartDate] = React.useState(new Date());
@@ -55,6 +57,7 @@ export default ({ openWindow, setOpenWindow }) => {
   const [postStatuses, setPostStatuses] = React.useState([]);
   const [userValidation, setUserValidation] = React.useState(false);
   const [uniqueIdValidation, setUniqueIdValidation] = React.useState(false);
+  
   const [
     lastUserSelectedUniqueId,
     setLastUserSelectedUniqueId,
@@ -148,6 +151,7 @@ export default ({ openWindow, setOpenWindow }) => {
   }, [isPersonSearch]);
   const handlePersonSearch = (event) => {
     setIsPersonSearch(String(event.target.value) === "true");
+    
   };
 
   const handleChangedDomain = (event) => {
@@ -193,7 +197,7 @@ export default ({ openWindow, setOpenWindow }) => {
               return;
             }
 
-            if(lastUserSelected.entityType === config.entityTypeG){
+            if(lastUserSelected.entityType === entityType){
               setErrorMessageField(errorMessageFieldIsG);
               setUserValidation(true);
               setUniqueIdValidation(true);
@@ -276,7 +280,7 @@ export default ({ openWindow, setOpenWindow }) => {
         );
         allMembers = allMembers.filter(
           (user) =>
-            user.entityType !== config.entityTypeG
+            user.entityType !== entityType
         );
 
         allMembers = allMembers.filter(
@@ -299,7 +303,7 @@ export default ({ openWindow, setOpenWindow }) => {
         let newArr = [];
         allMembers.forEach((user) => {
           user.domainUsers = user.domainUsers?.filter(
-            (el) => akaUIdDomainsMap(el.uniqueId,domains) !== undefined
+            (el) => akaUIdDomainsMap(el.uniqueID,domains,domainsMap) !== undefined
           );
           if (user.domainUsers.length === 0) {
             return;
@@ -307,7 +311,7 @@ export default ({ openWindow, setOpenWindow }) => {
           console.log(lastUserSelectedUniqueId)
           let primaryUniqueId = findPrimaryUniqueId(
             user,
-            lastUserSelectedUniqueId,domains
+            lastUserSelectedUniqueId,domains,excel,domainsMap
           );
 
           if (primaryUniqueId !== undefined) {
@@ -476,8 +480,8 @@ export default ({ openWindow, setOpenWindow }) => {
                         {isPersonSearch
                           ? lastUserSelected != null
                             ? lastUserSelected.domainUsers.map((el, index) => (
-                                <MenuItem key={index} value={el.uniqueId}>
-                                  {el.uniqueId}
+                                <MenuItem key={index} value={el.uniqueID}>
+                                  {el.uniqueID}
                                 </MenuItem>
                               ))
                             : null
