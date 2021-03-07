@@ -2,6 +2,7 @@ import domainsMaps from "../../api/domainsMaps";
 import config from "../../config";
 
 const akaUIdDomainsMap = (uniqueID, domains , domainsMap = domainsMaps) => {
+  console.log(uniqueID)
   let lowerCaseUniqueId = uniqueID.split("@")[1].toLowerCase();
   const found = domainsMap.find(
     (el) => el[0].toLowerCase() === lowerCaseUniqueId
@@ -9,11 +10,11 @@ const akaUIdDomainsMap = (uniqueID, domains , domainsMap = domainsMaps) => {
   if (found === undefined) {
     return undefined;
   }
-  let adsRow = domainsMap.find((el)=> el[0].toLowerCase() === domains.ads.toLowerCase());
-  if(adsRow !== undefined){
-      adsRow = adsRow[1]
-  }
-  if (found[1] === adsRow) {
+  // let adsRow = domainsMap.find((el)=> el[0].toLowerCase() === domains.ads);
+  // if(adsRow !== undefined){
+  //     adsRow = adsRow[1]
+  // }
+  if (found[1] === domains.ads) { //adsrow
     return domains.ads;
   }
   if (found[1] === domains.es) {
@@ -93,6 +94,7 @@ const findPrimaryUIdByMainAka = (person, mainAka, domains, domainsMap) => {
   return foundObjAka.uniqueID;
 };
 const findPrimaryUniqueId = (person, dataSource, domains,excel,domainsMap ) => {
+  console.log(person);
   if (
     person === undefined ||
     person.domainUsers === undefined ||

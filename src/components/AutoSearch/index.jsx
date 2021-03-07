@@ -115,6 +115,7 @@ function App({
     }
 
     function fetchData(value) {
+      console.log(value)
       value.domainUsers = value.domainUsers?.filter(
         (el) => akaUIdDomainsMap(el.uniqueID,domains,domainsMap) !== undefined
       );
