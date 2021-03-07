@@ -4,15 +4,19 @@ import config from "../../config";
 const akaUIdDomainsMap = (uniqueID, domains , domainsMap = domainsMaps) => {
   let lowerCaseUniqueId = uniqueID.split("@")[1].toLowerCase();
   const found = domainsMap.find(
-    (el) => el[1].toLowerCase() === lowerCaseUniqueId
+    (el) => el[0].toLowerCase() === lowerCaseUniqueId
   );
   if (found === undefined) {
     return undefined;
   }
-  if (found[0] === domains.ads) {
+  let adsRow = domainsMap.find((el)=> el[0].toLowerCase() === domains.ads.toLowerCase());
+  if(adsRow !== undefined){
+      adsRow = adsRow[1]
+  }
+  if (found[1] === adsRow) {
     return domains.ads;
   }
-  if (found[0] === domains.es) {
+  if (found[1] === domains.es) {
     return domains.es;
   }
   return undefined;

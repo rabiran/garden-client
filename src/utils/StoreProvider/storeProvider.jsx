@@ -40,6 +40,7 @@ export default (props) => {
     }
     loadingProvider.showLoading(false);
   };
+
   const getExcelDataApi = async () => {
     try {
       const dataEx = await excelApi();
