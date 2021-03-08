@@ -24,6 +24,13 @@ export default (props) => {
         setOpen(!open);
         setViewed(row.id);
     }
+
+    let startDate = (new Date(row.startDate).toLocaleDateString('en-GB'));
+    startDate = startDate === 'Invalid Date' || !startDate ? '-' :  startDate;
+
+    let endDate = (new Date(row.endDate).toLocaleDateString('en-GB'));
+    endDate = endDate === 'Invalid Date' || !endDate ? '-' :  endDate;
+
     return (
         <React.Fragment>
             <TableRow className={!row.viewed ? 'row' : ''} hover
@@ -52,9 +59,17 @@ export default (props) => {
                 </TableCell>
                 <TableCell>{row.fullName}</TableCell>
                 <TableCell>{row.identifier}</TableCell>
-                <TableCell>{(new Date(row.startDate).toLocaleDateString('en-GB')) || '-'}</TableCell>
-                <TableCell >{(new Date(row.endDate).toLocaleDateString('en-GB')) || '-'}</TableCell>
-                <TableCell >{row?.status?.step}</TableCell>
+                <TableCell>{startDate}</TableCell>
+                <TableCell className="badgeWrapper">
+                    {endDate}
+                    {!row.viewed && <div className="" ><div className="rowCorner">
+                        <Badge badgeContent={'חדש'} color="primary" anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                        }} />
+                    </div></div>}
+                </TableCell>
+                {/* <TableCell >{row?.status?.step}</TableCell>
                 <TableCell style={{ position: 'relative' }}>
                     {row?.status?.subStep}
                     {!row.viewed && <div className="rowCorner">
@@ -63,7 +78,7 @@ export default (props) => {
                             horizontal: 'left',
                         }} />
                     </div>}
-                </TableCell>
+                </TableCell> */}
 
 
             </TableRow>

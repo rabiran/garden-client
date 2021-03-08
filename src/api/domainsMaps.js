@@ -8,4 +8,3 @@ export default  [
         ['donatelo.turtle.com', ''],
         ['rafael.turtle.com', ''],
     ]
-    

@@ -10,6 +10,7 @@ import statsMock from './statsMocks/statsMock';
 import migratedMock from './statsMocks/migratedMock';
 import totalMigratedMock from './statsMocks/totalMigratedMock';
 import domainsMaps from './domainsMaps'
+import excelConfig from './excelconfig';
 
 const AuthDataMock = {
     id: '1',
@@ -18,7 +19,11 @@ const AuthDataMock = {
 }
 
 // const domainsMock = ['1', '2','3'];
-const domainsMock = {ads: 'ads', es: 'es' , target: 'target' };
+const domainsMock = {
+    ads: "rabiranuid",
+    es: "somedomainuid",
+    target: "target"
+}
 // const domainsMock = ['dsdsadsadsadsa', 'dsadsadsadsa','dsaaadsadasdsa',];
 
 
@@ -36,89 +41,28 @@ const authApi = async () => {
 }
 
 const excelApi = async() =>{
-    // return {
-    //     akaAdkatz: [
-    //     "כפיים",
-    //     "אפסים",
-    //     "כף",
-    //     "es4",
-    //     "es5",
-    //     "es6"
-    //     ],
-    //     akaKapaim: [
-    //     "סנפיר",
-    //     "סנפירים",
-    //     "ads3",
-    //     "ads4",
-    //     "ads5",
-    //     "ads6"
-    //     ]
-    //     }
     if(config.isMock){
-        await wait(500); return ;
+        await wait(500); return excelConfig;
     }
     const res = await request.get(`api/excel`,{"Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => {throw (err.response) });
     return res.data;
 }
 const entityTypeApi = async() =>{
-    // return "tamar"
     if(config.isMock){
-        await wait(500); return config.entityTypeG ;
+        await wait(500); return config.entityTypeG;
     }
     const res = await request.get(`api/entityType`,{"Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => {throw (err.response) });
     return res.data;
 }
 const domainsMapApi = async() =>{
-    // return [
-    //     [
-    //     "rabiran.com",
-    //     "rabiranuid"
-    //     ],
-    //     [
-    //     "somedomain.com",
-    //     "somedomainuid"
-    //     ],
-    //     [
-    //     "jello.com",
-    //     "jellouid"
-    //     ],
-    //     [
-    //     "jello2.com",
-    //     "jellouid"
-    //     ],
-    //     [
-    //     "yoda.sw",
-    //     ""
-    //     ],
-    //     [
-    //     "turtle.com",
-    //     ""
-    //     ],
-    //     [
-    //     "donatelo.turtle.com",
-    //     ""
-    //     ],
-    //     [
-    //     "rafael.turtle.com",
-    //     ""
-    //     ]
-    //     ]
-    // return domainsMaps;
     if(config.isMock){
-        await wait(500); return domainsMaps ;
+        await wait(500); return domainsMaps;
     }
     const res = await request.get(`api/domainsMap`,{"Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => {throw (err.response) });
     return res.data;
 }
 
 const domainsApi = async () => {
-    // return {
-    //     ads: "rabiranuid",
-    //     es: "somedomainuid",
-    //     target: "target"
-    // }
-    // return domainsMock;
-    //console.log(domainsMock)
     if(config.isMock) { await wait(200); return domainsMock }
     const res = await request.get(`api/domains`, {"Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => { throw (err.response) });
     return res.data;
@@ -197,10 +141,8 @@ const getMembersOfGroupKart = async(groupid) =>{
     return res.data;
 }
 const getUsernamesPerNameKart = async (username) =>{
-
-
     if(config.isMock){await wait(200); return users};
-    const res = await request.get(`http://localhost:3005/api/search/${username}`
+    const res = await request.get(`api/search/${username}`
     ,{timeout : 2000, "Access-Control-Allow-Origin": "*",'Content-Type': 'text/plain'}).catch(err => { throw (err.response) });
     return res.data;
 }

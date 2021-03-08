@@ -21,7 +21,7 @@ export default {
         'סנפירים'
 
     ],
-    entityType: "g"
+    entityType: "tamar"
 
 
     

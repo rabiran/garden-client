@@ -13,7 +13,8 @@ export default [
         shadowUsers: ['es', 'target'], 
         fullName: 'חציל אפוי',
         identifier: 1234521,
-        startDate: '02/12/1421, 00:00:00',
+        // startDate: '02/12/1421, 00:00:00',
+        startDate: undefined,
         endDate: '02/08/1529, 00:00:00',
         steps: [
             {
