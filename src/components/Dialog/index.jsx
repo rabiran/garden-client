@@ -90,6 +90,7 @@ export default ({ openWindow, setOpenWindow }) => {
 
   const [isPersonSearch, setIsPersonSearch] = React.useState(true);
   const [checkedUser, setCheckedUser] = React.useState(false);
+  const [urgentUser , setUrgentUser ] = React.useState(false);
   const ref = React.createRef();
   const DateCustomInput = React.forwardRef(({ value, onClick }, ref) => (
     <>
@@ -236,6 +237,7 @@ export default ({ openWindow, setOpenWindow }) => {
                 primaryUniqueId: lastUserSelectedUniqueId,
                 newUser: checkedUser,
                 startDate: startDate,
+                urgentUser: urgentUser
               });
               setUsersSelected(usersSelected.concat(obj));
             } else {
@@ -319,6 +321,7 @@ export default ({ openWindow, setOpenWindow }) => {
               primaryUniqueId: primaryUniqueId,
               newUser: checkedUser,
               startDate: startDate,
+              urgentUser: urgentUser
             });
 
             newArr = newArr.concat(obj);
@@ -337,6 +340,9 @@ export default ({ openWindow, setOpenWindow }) => {
   const handleChangedCheckedUser = (e) => {
     setCheckedUser(!checkedUser);
   };
+  const handleChangedUrgentUser =(e) =>{
+    setUrgentUser(!urgentUser);
+  }
 
   const handleRequestClick = async () => {
     let statusResults;
@@ -501,6 +507,13 @@ export default ({ openWindow, setOpenWindow }) => {
                       onChange={handleChangedCheckedUser}
                     />
                     <span>משתמש חדש</span>
+                  </div>
+                  <div>
+                    <Checkbox
+                      checked={urgentUser}
+                      onChange={handleChangedUrgentUser}
+                    />
+                    <span>משתמש דחוף</span>
                   </div>
                 </div>
                 <div>

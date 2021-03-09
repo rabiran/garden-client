@@ -4,7 +4,7 @@ export default [
         phone: '035932937',
         mobilePhone: '35345354',
         status: {
-            progress: 'completed',
+            progress: 'waiting',
             step: 'target',
             subStep: 'הסתיים',
         },
