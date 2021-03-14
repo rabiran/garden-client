@@ -43,6 +43,9 @@ div.react-datepicker-popper {
     z-index: 10003 !important;
     
 }
+.fillingFieldsContainer div{
+    flex: 1 1 auto !important
+}
 
 #header { position: relative; z-index: 10003; }
 .fillingFieldsContainer {
@@ -53,14 +56,13 @@ div.react-datepicker-popper {
     flex-wrap:  wrap;
     justify-items: center;
     justify-content: start;
-    column-gap: 100px;
-    row-gap: 20px;
+
     
+}
+.fillingFieldsContainer div{
+    flex: 1 1 auto
 }   
-/* .fillingFieldsContainer div{
-    
-    margin-top: auto; 
-} */
+
 
 
 .dialogContentContainer {

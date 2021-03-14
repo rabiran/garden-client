@@ -31,11 +31,17 @@ function App({
   errorMessageFieldNoUsers,
   setPostStatuses,
   setLastUserSelectedUniqueId,
+  errorMessageFieldIsG,
+  errorMessageUserHasOne,
+  errorMessageUserExistsP,
+  usersSelected,
+  errorMessageUserAlreadyInTbl
 
 }) {
   const storeProvider = useStore();
   const domains = storeProvider.getDomains();
   const excel = storeProvider.getExcel();
+  const entityType = storeProvider.getEntityType();
   const domainsMap = storeProvider.getDomainsMap();
   const { enqueueSnackbar } = useSnackbar();
   const [loadingInput,setLoadingInput] = React.useState(false);
@@ -126,6 +132,45 @@ function App({
         setUserValidation(true);
         return;
       }
+      if(value.entityType === entityType){
+        setErrorMessageField(errorMessageFieldIsG);
+        setUserValidation(true);
+        setTriggeredSearch(true)
+        return;
+      }
+      let foundOne = value.domainUsers.find(
+        (ds) => ds.dataSource === domains.target
+      );
+      if (foundOne !== undefined) {
+        setErrorMessageField(errorMessageUserHasOne);
+        setUserValidation(true);
+        setTriggeredSearch(true);
+        
+        return;
+      }
+      let allExistingMigrations = storeProvider.getTableData();
+
+      if (
+        allExistingMigrations.find(
+          (el) => el.id.toString() === value.id
+        ) !== undefined
+      ) {
+        setErrorMessageField(errorMessageUserExistsP);
+        setUserValidation(true);
+        setTriggeredSearch(true);
+
+        return;
+      }
+      let foundUser = usersSelected.find(
+        (user) => user.id === lastUserSelected.id
+      );
+      if(foundUser !== undefined){
+        setErrorMessageField(errorMessageUserAlreadyInTbl);
+        setUserValidation(true);
+        setTriggeredSearch(true);
+
+        return;
+      }
       setTriggeredSearch(true)
       setLastUserSelected(value);
 
@@ -179,7 +224,7 @@ function App({
         getOptionLabel={(option) =>
           isPersonSearch
             ? option?.fullName +"/"+ option?.hierarchy?.join("/")
-            : option?.name
+            : option?.name +"/"+ option?.hierarchy?.join("/")
         }
         
         noOptionsText={"אין תוצאות"}

@@ -1,6 +1,13 @@
 import domainsMaps from "../../api/domainsMaps";
 import config from "../../config";
 
+/**
+ * This function searches domain of the uniqueID in domainsMaps array that belongs to one of the domains listed.
+ * @param {string} uniqueID 
+ * @param {object} domains 
+ * @param {[][]} domainsMap 
+ * @returns the special domain it belongs, else undefined.
+ */
 const akaUIdDomainsMap = (uniqueID, domains , domainsMap = domainsMaps) => {
   console.log(uniqueID)
   let lowerCaseUniqueId = uniqueID.split("@")[1].toLowerCase();
@@ -10,11 +17,11 @@ const akaUIdDomainsMap = (uniqueID, domains , domainsMap = domainsMaps) => {
   if (found === undefined) {
     return undefined;
   }
-  // let adsRow = domainsMap.find((el)=> el[0].toLowerCase() === domains.ads);
-  // if(adsRow !== undefined){
-  //     adsRow = adsRow[1]
-  // }
-  if (found[1] === domains.ads) { //adsrow
+  let adsRow = domainsMap.find((el)=> el[0] === domains.ads);
+  if(adsRow !== undefined){
+      adsRow = adsRow[1]
+  }
+  if (found[1] === adsRow) { //adsrow//doamins.ads
     return domains.ads;
   }
   if (found[1] === domains.es) {
@@ -22,7 +29,15 @@ const akaUIdDomainsMap = (uniqueID, domains , domainsMap = domainsMaps) => {
   }
   return undefined;
 };
-//
+
+/**
+ * This function finds the current unit in the two arrays of the domains.
+ * @param {string} currentUnit 
+ * @param {object} domains 
+ * @param {[]} akaAdkatz 
+ * @param {[]} akaKapaim 
+ * @returns the special domain the current unit belongs, else undefined.
+ */
 const findakaOfUIdExcel = (currentUnit, domains, akaAdkatz = config.akaAdkatz, akaKapaim = config.akaKapaim) => {
 
   if (currentUnit === undefined) {
@@ -43,6 +58,11 @@ const findakaOfUIdExcel = (currentUnit, domains, akaAdkatz = config.akaAdkatz, a
   return undefined;
 };
 
+/**
+ * This function checks if mail exists in one of the persons domain users.
+ * @param {object} person 
+ * @returns The unique id of the domain user found, else undefined.
+ */
 const findPrimaryUIdByMail = (person) => {
   if (
     person === undefined ||
@@ -62,6 +82,15 @@ const findPrimaryUIdByMail = (person) => {
   return foundObj.uniqueID;
 };
 
+/**
+ * This function searches  for the primary unqiue id by the chosen main aka unit(data source),
+ * by prioritizing the mail as PrimaryUID, then first unique id that matches, else first in array
+ * @param {object} person person object
+ * @param {string} mainAka main domain for primary unique id
+ * @param {object} domains the primary domains
+ * @param {[][]} domainsMap 2d domains map array
+ * @returns The preffered unique id by chosen main aka unit.
+ */ 
 const findPrimaryUIdByMainAka = (person, mainAka, domains, domainsMap) => {
   if (
     person === undefined ||
@@ -93,6 +122,18 @@ const findPrimaryUIdByMainAka = (person, mainAka, domains, domainsMap) => {
   }
   return foundObjAka.uniqueID;
 };
+
+/**
+ * This function searches for PrimaryUID of a person,
+ * searches the PUID by the main data source if the function triggered by group search adding,
+ * then by the primary mail of the person, then by the current unit, else returns first cell.
+ * @param {object} person 
+ * @param {string} dataSource 
+ * @param {object} domains 
+ * @param {object} excel 
+ * @param {[][]} domainsMap 
+ * @returns Primary unique id of the person.
+ */
 const findPrimaryUniqueId = (person, dataSource, domains,excel,domainsMap ) => {
   console.log(person);
   if (
