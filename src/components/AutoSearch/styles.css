@@ -3,3 +3,8 @@
     color: #00796b  !important;
     
 }
+.circular{
+    position: fixed;
+    text-align: left !important;
+    float: right;
+}

@@ -244,7 +244,7 @@ function App({
               endAdornment: (
                 <React.Fragment>
                   {loadingInput ? (
-                    <CircularProgress color="inherit" size={20} />
+                    <CircularProgress className="circular" color="inherit" size={20} />
                   ) : null}
                   {params.InputProps.endAdornment}
                 </React.Fragment>
