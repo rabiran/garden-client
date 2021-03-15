@@ -255,7 +255,7 @@ export default ({ openWindow, setOpenWindow }) => {
 
           //REMMEMBER TO STRING if to remove
         } catch {
-          enqueueSnackbar("תקלה בשרת", {
+          enqueueSnackbar("תקלה בקבלת משתמשים של קבוצה", {
             variant: "error",
             autoHideDuration: 2000,
           });

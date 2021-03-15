@@ -132,12 +132,14 @@ const getGroupsPerNameKart = async (groupname) =>{
     return res.data;
 }
 const getMembersOfGroupKart = async(groupid) =>{
+    console.log(groupid)
     if(config.isMock){
         await wait(200)
         return users;
     }
     const res = await request.get(`api/getMembers/${groupid}`
     ,{timeout: 2000}.catch(err => {throw(err.response)}))
+    console.log(res.data)
     return res.data;
 }
 const getUsernamesPerNameKart = async (username) =>{
