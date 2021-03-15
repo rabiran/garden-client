@@ -20,7 +20,7 @@ export default ({ rowData }) => {
                     <div className="fieldArea">
                         <div className="field">
                             <DomainIcon />
-                            <Field valueKey={'יוזר ראשי'} value={rowData?.primaryUniqueId} />
+                            <Field valueKey={'משתמש ראשי'} value={rowData?.primaryUniqueId} />
                         </div>
                         <div className="field">
                             <HomeIcon />
@@ -52,7 +52,10 @@ export default ({ rowData }) => {
                         </div>
                         <div className="rowUsers">
                             {/* <Users users={rowData?.shadowUsers} domains={store.getDomains()} step={rowData?.status?.step} substep={rowData?.status?.subStep} /> */}
-                            <Steps stepsData={rowData?.status?.steps}/>
+                            {rowData.status.steps && <Steps stepsData={rowData?.status?.steps}/>}
+                            {!rowData.status.steps &&<div className="noStepsMessage">
+                                אין שלבי מיגרציה עדיין
+                            </div>}
                         </div>
                     </div>
         </>

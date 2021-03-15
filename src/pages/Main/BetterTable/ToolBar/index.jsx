@@ -1,4 +1,5 @@
 import React from 'react';
+import { getMembersOfGroupKart } from 'api/api';
 import clsx from 'clsx';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -20,6 +21,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import DateFilter from 'components/DateFilter';
 import GroupSearch from 'utils/GroupSearch';
+import AutoSearch from 'components/AutoSearch';
 
 const useToolbarStyles = makeStyles((theme) => ({
     root: {
@@ -58,7 +60,9 @@ const useToolbarStyles = makeStyles((theme) => ({
         minWidth: 100
     },
     groupSearchField: {
-        minWidth: 250
+        // minWidth: 250
+        // maxWidth: 150,
+        // padding: 10,
     }
 }));
 
@@ -69,6 +73,22 @@ export default (props) => {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [openDateFilter, setOpenDateFilter] = React.useState(false);
+//     setLastUserSelected,
+//   users,
+//   setUsers,
+//   lastUserSelected,
+
+    const [users, setUsers] = React.useState([]);
+    const [lastUserSelected, setLastUserSelected] = React.useState(null);
+    const [LastUserSelectedUniqueId, setLastUserSelectedUniqueId] = React.useState(null);
+    const [PostStatuses, setPostStatuses] = React.useState([]);
+
+    React.useEffect(()=> {
+        if(lastUserSelected) {
+            groupSearchHandler(lastUserSelected);
+        }
+    },[lastUserSelected]);
+
     const handleChange = (event) => {
         const type = event.target.dataset.name || event.target.value;
         if(type === 'all') {
@@ -103,7 +123,9 @@ export default (props) => {
         setFilters({ ...filters, ['searchTerm']: {term: e.target.value} });
     }
 
-    const groupSearchHandler = (members) => {
+    const groupSearchHandler = async (lastUserSelected) => {
+        console.log(lastUserSelected);
+        const members = await getMembersOfGroupKart(lastUserSelected.id);
         setFilters({ ...filters, ['groupSearchTerm']: members });
     }
 
@@ -151,7 +173,12 @@ export default (props) => {
                             </InputAdornment>
                         ),
                     }} /> */}
-                    <GroupSearch onGettingMembers={groupSearchHandler} />
+                    {/* <GroupSearch onGettingMembers={groupSearchHandler} /> */}
+                    {/* <div className={classes.groupSearchField}>  */}
+                        <AutoSearch lastUserSelected={lastUserSelected} setLastUserSelected={setLastUserSelected}
+                         users={users} setUsers={setUsers} setLastUserSelectedUniqueId={setLastUserSelectedUniqueId}
+                         setPostStatuses={setPostStatuses}/>
+                    {/* </div> */}
                 </div>
                 <div className={classes.filterArea} >
                     <IconButton aria-label="filter" onClick={handleOpenDateFilter}>

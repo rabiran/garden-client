@@ -1,6 +1,6 @@
 export default {
     serverUrl: '',
-    isMock: false,
+    isMock: true,
     domainsMap: [
         ['rabiran.com', 'rabiranuid'],
         ['somedomain.com', 'somedomainuid'],
