@@ -8,18 +8,15 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "@material-ui/core/Select";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import "./style.css";
-import {
-  addImmigrantsApiPromise,
-  getMembersOfGroupKart,
-} from "../../api/api";
+import { addImmigrantsApiPromise, getMembersOfGroupKart } from "../../api/api";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import DialogsTable from "../DialogsTable/index.jsx";
 import AutoSearch from "../AutoSearch/index.jsx";
 import { useSnackbar } from "notistack";
 import {
-  akaUIdDomainsMap,findPrimaryUniqueId
-
+  akaUIdDomainsMap,
+  findPrimaryUniqueId,
 } from "../../utils/Functions/func";
 import {
   Checkbox,
@@ -34,7 +31,6 @@ import {
   MenuItem,
   FormHelperText,
   IconButton,
-  
 } from "@material-ui/core";
 import useStore from "utils/StoreProvider/useStore";
 import DatePicker from "react-datepicker";
@@ -44,7 +40,7 @@ import "react-datepicker/dist/react-datepicker.css";
 export default ({ openWindow, setOpenWindow }) => {
   const storeProvider = useStore();
   const domains = storeProvider.getDomains();
-  const excel = storeProvider.getExcel()
+  const excel = storeProvider.getExcel();
   const domainsMap = storeProvider.getDomainsMap();
   const entityType = storeProvider.getEntityType();
   const { enqueueSnackbar } = useSnackbar();
@@ -57,22 +53,23 @@ export default ({ openWindow, setOpenWindow }) => {
   const [postStatuses, setPostStatuses] = React.useState([]);
   const [userValidation, setUserValidation] = React.useState(false);
   const [uniqueIdValidation, setUniqueIdValidation] = React.useState(false);
-  
+
   const [
     lastUserSelectedUniqueId,
     setLastUserSelectedUniqueId,
   ] = React.useState(null);
 
   const [lastUserSelected, setLastUserSelected] = React.useState(null);
-  const errorMessageFieldNoUsers = "למשתמש שנבחר אין משתמשים בעד וקפיים";
+  const errorMessageFieldNoUsers = "למשתמש אין משתמשים בשתי הרשתות!";
   const errorMessageFieldEmptyP = "שדה ריק נא בחר משתמש!";
-  const errorMessageFieldIsG= "המשתמש שנבחר הוא תפקידן!"
+  const errorMessageFieldIsG = "המשתמש שנבחר הוא תפקידן!";
   const errorMessageUserExistsP = "למשתמש כבר קיימת בקשה!";
-  const errorMessageUserHasOneP = "משתמש כבר קיים בוואן!";
+  const errorMessageUserAlreadyInTbl = "המשתמש כבר קיים בטבלה!";
+  const errorMessageUserHasOneP = "משתמש כבר קיים!";
   const errorMessageFieldEmptyG = "שדה ריק נא בחר קבוצה!";
   const errorMessageGroupExists = "קבוצה כבר קיימת בטבלה!";
-  const errorMessageGroupHasOne = "קבוצה כבר קיימת בוואן!";
-  const selectMessagePerson = "בחר יוז'ר ראשי";
+  const errorMessageGroupHasOne = "קבוצה כבר קיימת!";
+  const selectMessagePerson = "בחר משתמש ראשי";
   const selectMessageGroup = "בחר דומיין";
   const [selectMessage, setSelectMessage] = React.useState(selectMessagePerson);
   const [errorMessageFieldEmpty, setErrorMessageFieldEmpty] = React.useState(
@@ -90,7 +87,7 @@ export default ({ openWindow, setOpenWindow }) => {
 
   const [isPersonSearch, setIsPersonSearch] = React.useState(true);
   const [checkedUser, setCheckedUser] = React.useState(false);
-  const [urgentUser , setUrgentUser ] = React.useState(false);
+  const [urgentUser, setUrgentUser] = React.useState(false);
   const ref = React.createRef();
   const DateCustomInput = React.forwardRef(({ value, onClick }, ref) => (
     <>
@@ -152,7 +149,6 @@ export default ({ openWindow, setOpenWindow }) => {
   }, [isPersonSearch]);
   const handlePersonSearch = (event) => {
     setIsPersonSearch(String(event.target.value) === "true");
-    
   };
 
   const handleChangedDomain = (event) => {
@@ -186,7 +182,7 @@ export default ({ openWindow, setOpenWindow }) => {
       }
 
       if (lastUserSelectedUniqueId !== null) {
-        async function fetchData() {
+        function fetchData() {
           if (lastUserSelected != null) {
             let foundOne = lastUserSelected.domainUsers.find(
               (ds) => ds.dataSource === domains.target
@@ -198,32 +194,23 @@ export default ({ openWindow, setOpenWindow }) => {
               return;
             }
 
-            if(lastUserSelected.entityType === entityType){
+            if (lastUserSelected.entityType === entityType) {
               setErrorMessageField(errorMessageFieldIsG);
               setUserValidation(true);
               setUniqueIdValidation(true);
               return;
-
             }
-            try {
-              let allExistingMigrations = await storeProvider.getTableData();
 
-              if (
-                allExistingMigrations.find(
-                  (el) => el.id.toString() === lastUserSelected.id
-                ) !== undefined
-              ) {
-                setErrorMessageField(errorMessageUserExists);
-                setUserValidation(true);
-                setUniqueIdValidation(true);
+            let allExistingMigrations = storeProvider.getTableData();
 
-                return;
-              }
-            } catch {
-              enqueueSnackbar("תקלה בשרת", {
-                variant: "error",
-                autoHideDuration: 2000,
-              });
+            if (
+              allExistingMigrations.find(
+                (el) => el.id.toString() === lastUserSelected.id
+              ) !== undefined
+            ) {
+              setErrorMessageField(errorMessageUserExists);
+              setUserValidation(true);
+              setUniqueIdValidation(true);
 
               return;
             }
@@ -237,7 +224,7 @@ export default ({ openWindow, setOpenWindow }) => {
                 primaryUniqueId: lastUserSelectedUniqueId,
                 newUser: checkedUser,
                 startDate: startDate,
-                urgentUser: urgentUser
+                urgentUser: urgentUser,
               });
               setUsersSelected(usersSelected.concat(obj));
             } else {
@@ -264,11 +251,11 @@ export default ({ openWindow, setOpenWindow }) => {
         let allExistingMigrations = [];
         try {
           allMembers = await getMembersOfGroupKart(lastUserSelected.id);
-          allExistingMigrations = await storeProvider.getTableData();
+          allExistingMigrations = storeProvider.getTableData();
 
           //REMMEMBER TO STRING if to remove
         } catch {
-          enqueueSnackbar("תקלה בשרת", {
+          enqueueSnackbar("תקלה בקבלת משתמשים של קבוצה", {
             variant: "error",
             autoHideDuration: 2000,
           });
@@ -281,8 +268,7 @@ export default ({ openWindow, setOpenWindow }) => {
             ) === undefined
         );
         allMembers = allMembers.filter(
-          (user) =>
-            user.entityType !== entityType
+          (user) => user.entityType !== entityType
         );
 
         allMembers = allMembers.filter(
@@ -305,15 +291,19 @@ export default ({ openWindow, setOpenWindow }) => {
         let newArr = [];
         allMembers.forEach((user) => {
           user.domainUsers = user.domainUsers?.filter(
-            (el) => akaUIdDomainsMap(el.uniqueID,domains,domainsMap) !== undefined
+            (el) =>
+              akaUIdDomainsMap(el.uniqueID, domains, domainsMap) !== undefined
           );
           if (user.domainUsers.length === 0) {
             return;
           }
-          console.log(lastUserSelectedUniqueId)
+          console.log(lastUserSelectedUniqueId);
           let primaryUniqueId = findPrimaryUniqueId(
             user,
-            lastUserSelectedUniqueId,domains,excel,domainsMap
+            lastUserSelectedUniqueId,
+            domains,
+            excel,
+            domainsMap
           );
 
           if (primaryUniqueId !== undefined) {
@@ -321,7 +311,7 @@ export default ({ openWindow, setOpenWindow }) => {
               primaryUniqueId: primaryUniqueId,
               newUser: checkedUser,
               startDate: startDate,
-              urgentUser: urgentUser
+              urgentUser: urgentUser,
             });
 
             newArr = newArr.concat(obj);
@@ -340,9 +330,9 @@ export default ({ openWindow, setOpenWindow }) => {
   const handleChangedCheckedUser = (e) => {
     setCheckedUser(!checkedUser);
   };
-  const handleChangedUrgentUser =(e) =>{
+  const handleChangedUrgentUser = (e) => {
     setUrgentUser(!urgentUser);
-  }
+  };
 
   const handleRequestClick = async () => {
     let statusResults;
@@ -363,7 +353,7 @@ export default ({ openWindow, setOpenWindow }) => {
     try {
       statusResults = await addImmigrantsApiPromise(usersSelected); //NEED TO CHANGE !!!! method api too\!!
     } catch {
-      enqueueSnackbar("תקלה בשרת", {
+      enqueueSnackbar("תקלה בהוספת בקשה למיגרציה חדשה", {
         variant: "error",
         autoHideDuration: 2000,
       });
@@ -419,9 +409,7 @@ export default ({ openWindow, setOpenWindow }) => {
         <DialogTitle id="form-dialog-title">יצירת משתמש</DialogTitle>
         <DialogContent dividers>
           <div className="dialogContentContainer">
-            
-              <div> נא למלא את הטופס בשביל יצירת משתמש ב.</div>
-            
+            <div>נא למלא את הטופס בשביל יצירת משתמש למיגרציה</div>
 
             <div className="searchingContainer">
               <div>
@@ -464,13 +452,18 @@ export default ({ openWindow, setOpenWindow }) => {
                       errorMessageFieldNoUsers={errorMessageFieldNoUsers}
                       setPostStatuses={setPostStatuses}
                       setLastUserSelectedUniqueId={setLastUserSelectedUniqueId}
+                      errorMessageFieldIsG={errorMessageFieldIsG}
+                      usersSelected={usersSelected}
+                      errorMessageUserHasOne={errorMessageUserHasOne}
+                      errorMessageUserExistsP={errorMessageUserExistsP}
+                      errorMessageUserAlreadyInTbl={errorMessageUserAlreadyInTbl}
                     />
                   </div>
                   <div>
                     <FormControl>
                       <InputLabel>{selectMessage}</InputLabel>
                       <Select
-                        style={{ width: "200px" }}
+                        style={{ width: "250px" }}
                         value={
                           isPersonSearch
                             ? lastUserSelectedUniqueId
@@ -516,32 +509,20 @@ export default ({ openWindow, setOpenWindow }) => {
                     <span>משתמש דחוף</span>
                   </div>
                 </div>
-                <div>
-                  <Fab
-                    color="primary"
-                    variant="extended"
-                    size="medium"
-                    onClick={handleAddUser}
-                  >
-                    <AddIcon />
-                    הוסף
-                  </Fab>
-                </div>
-                <div style={{ overflow: "visible" , width: "200px" }}>
+                <div style={{ overflow: "visible", width: "200px" }}>
                   <DatePicker
-                    
                     {...startDate}
                     customInput={<DateCustomInput ref={ref} />}
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
                     popperPlacement="top-end"
                     popperModifiers={{
-                      offset: { enabled: true, offset: '5px, -10px' },
+                      offset: { enabled: true, offset: "5px, -10px" },
                       preventOverflow: {
                         enabled: true,
                         escapeWithReference: false,
-                        boundariesElement: 'viewport'
-                      }
+                        boundariesElement: "viewport",
+                      },
                     }}
                     dateFormat="dd/MM/yyyy"
                     minDate={new Date()}
@@ -549,6 +530,17 @@ export default ({ openWindow, setOpenWindow }) => {
                     showDisabledMonthNavigation
                   />
                 </div>
+              </div>
+              <div>
+                <Fab
+                  color="primary"
+                  variant="extended"
+                  size="medium"
+                  onClick={handleAddUser}
+                >
+                  <AddIcon />
+                  הוסף
+                </Fab>
               </div>
             </div>
           </div>
@@ -583,9 +575,13 @@ export default ({ openWindow, setOpenWindow }) => {
               >
                 יצירה
               </Button>
-              
+
               {loading && (
-                <CircularProgress thickness={8} size={70} className="buttonProgress" />
+                <CircularProgress
+                  thickness={8}
+                  size={70}
+                  className="buttonProgress"
+                />
               )}
             </div>
           </div>
