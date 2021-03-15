@@ -202,7 +202,9 @@ export default ({ openWindow, setOpenWindow }) => {
             }
 
             let allExistingMigrations = storeProvider.getTableData();
-
+            console.log("person")
+            console.log(allExistingMigrations)
+            console.log(lastUserSelected)
             if (
               allExistingMigrations.find(
                 (el) => el.id.toString() === lastUserSelected.id
@@ -254,13 +256,16 @@ export default ({ openWindow, setOpenWindow }) => {
           allExistingMigrations = storeProvider.getTableData();
 
           //REMMEMBER TO STRING if to remove
-        } catch {
+        } catch (error){
+          console.log(error);
           enqueueSnackbar("תקלה בקבלת משתמשים של קבוצה", {
             variant: "error",
             autoHideDuration: 2000,
           });
           return;
         }
+        console.log("members")
+        console.log(allMembers)
         allMembers = allMembers.filter(
           (member) =>
             allExistingMigrations.find(
@@ -287,6 +292,8 @@ export default ({ openWindow, setOpenWindow }) => {
             usersSelected.find((userSelc) => userSelc.id === el.id) ===
             undefined
         );
+        console.log("after filtering gro")
+        console.log(allMembers)
 
         let newArr = [];
         allMembers.forEach((user) => {
@@ -352,7 +359,10 @@ export default ({ openWindow, setOpenWindow }) => {
     }
     try {
       statusResults = await addImmigrantsApiPromise(usersSelected); //NEED TO CHANGE !!!! method api too\!!
-    } catch {
+      console.log("statuses")
+      console.log(statusResults)
+    } catch (error){
+      console.log(error)
       enqueueSnackbar("תקלה בהוספת בקשה למיגרציה חדשה", {
         variant: "error",
         autoHideDuration: 2000,
