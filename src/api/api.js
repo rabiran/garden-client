@@ -11,6 +11,7 @@ import migratedMock from './statsMocks/migratedMock';
 import totalMigratedMock from './statsMocks/totalMigratedMock';
 import domainsMaps from './domainsMaps'
 import excelConfig from './excelconfig';
+import promiseAllWithFails from 'utils/promiseAllWithFails'
 
 const AuthDataMock = {
     id: '1',
@@ -116,7 +117,7 @@ const addImmigrantsApiPromise = async (usersToCreate) =>{
         }))
     });
     
-    const results =await Promise.allSettled(arrayPromise)
+    const results =await promiseAllWithFails(arrayPromise);
    // console.log(results)
     
     return results;
@@ -137,8 +138,7 @@ const getMembersOfGroupKart = async(groupid) =>{
         await wait(200)
         return users;
     }
-    const res = await request.get(`api/getMembers/${groupid}`
-    ,{timeout: 2000}.catch(err => {throw(err.response)}))
+    const res = await request.get(`api/getMembers/${groupid}`,{timeout: 2000}).catch(err => {throw(err.response)})
     console.log(res.data)
     return res.data;
 }
