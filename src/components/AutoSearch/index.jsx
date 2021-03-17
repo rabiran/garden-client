@@ -152,7 +152,7 @@ function App({
 
       if (
         allExistingMigrations.find(
-          (el) => el.id === value.id
+          (el) => el.personId === value.id
         ) !== undefined
       ) {
         setErrorMessageField(errorMessageUserExistsP);

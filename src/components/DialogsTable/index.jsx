@@ -64,14 +64,14 @@ export default ({ usersSelected, setUsersSelected }) => {
         
         columns={[
           
-          { title: "שם", field: "name", editable: 'never'},
+          { title: "שם מלא", field: "fullName", editable: 'never'},
           { title: "מספר אישי", field: "personalNumber" , editable: 'never'},
         
           { title: "היררכיה", field: "hierarchy", editable: 'never', render:(rowData)=>(
             <p>{rowData?.hierarchy?.join("/")}</p>
           ) },
           {
-            title: "שינוי יוז'ר ראשי",  render: (rowData) => (
+            title: "שינוי משתמש ראשי",  render: (rowData) => (
               <Select
                 native
               

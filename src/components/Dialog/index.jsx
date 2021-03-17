@@ -207,7 +207,7 @@ export default ({ openWindow, setOpenWindow }) => {
             console.log(lastUserSelected)
             if (
               allExistingMigrations.find(
-                (el) => el.id.toString() === lastUserSelected.id
+                (el) => el.personId.toString() === lastUserSelected.id
               ) !== undefined
             ) {
               setErrorMessageField(errorMessageUserExists);
@@ -269,7 +269,7 @@ export default ({ openWindow, setOpenWindow }) => {
         allMembers = allMembers.filter(
           (member) =>
             allExistingMigrations.find(
-              (el) => el.id.toString() === member.id
+              (el) => el.personId.toString() === member.id
             ) === undefined
         );
         allMembers = allMembers.filter(
