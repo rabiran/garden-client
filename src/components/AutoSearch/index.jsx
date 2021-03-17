@@ -226,7 +226,6 @@ function App({
             ? option?.fullName +"/"+ option?.hierarchy?.join("/")
             : option?.name +"/"+ option?.hierarchy?.join("/")
         }
-        
         noOptionsText={"אין תוצאות"}
         filterOptions={(options, state) => options}
         style={{ width: 340 }}

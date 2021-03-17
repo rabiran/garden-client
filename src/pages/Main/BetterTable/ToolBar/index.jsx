@@ -87,6 +87,9 @@ export default (props) => {
         if(lastUserSelected) {
             groupSearchHandler(lastUserSelected);
         }
+        else {
+            setFilters({ ...filters, ['groupSearchTerm']: [] });
+        }
     },[lastUserSelected]);
 
     const handleChange = (event) => {
@@ -126,6 +129,8 @@ export default (props) => {
     const groupSearchHandler = async (lastUserSelected) => {
         console.log(lastUserSelected);
         const members = await getMembersOfGroupKart(lastUserSelected.id);
+        console.log('shut up');
+        console.log(members);
         setFilters({ ...filters, ['groupSearchTerm']: members });
     }
 
@@ -177,7 +182,7 @@ export default (props) => {
                     {/* <div className={classes.groupSearchField}>  */}
                         <AutoSearch lastUserSelected={lastUserSelected} setLastUserSelected={setLastUserSelected}
                          users={users} setUsers={setUsers} setLastUserSelectedUniqueId={setLastUserSelectedUniqueId}
-                         setPostStatuses={setPostStatuses}/>
+                         setPostStatuses={setPostStatuses} />
                     {/* </div> */}
                 </div>
                 <div className={classes.filterArea} >
