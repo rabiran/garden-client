@@ -84,6 +84,7 @@ export default (props) => {
     const [PostStatuses, setPostStatuses] = React.useState([]);
 
     React.useEffect(()=> {
+        console.log("effffect");
         if(lastUserSelected) {
             groupSearchHandler(lastUserSelected);
         }
