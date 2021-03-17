@@ -1,12 +1,63 @@
 export default [
     {
         id: 1,
+        personId: '5',
         phone: '035932937',
         mobilePhone: '35345354',
         status: {
             progress: 'waiting',
-            step: 'target',
-            subStep: 'הסתיים',
+            steps: [
+                {
+                    name: "יוצר תיבת מייל",
+                    progress: "completed",
+                    subSteps: [
+                        {
+                            name: "מדבר עם שרת",
+                            progress: "completed"
+                        },
+                        {
+                            name: "מעביר דברים",
+                            progress: "completed"
+                        },
+                        {
+                            name: "מסיים",
+                            progress: "completed"
+                        },
+                    ]
+                },
+                {
+                    name: "יוצר יוזר",
+                    progress: "inprogress",
+                    subSteps: [
+                        {
+                            name: "מדבר עם שרת",
+                            progress: "completed"
+                        },
+                        {
+                            name: "מחבר את תיבת המייל",
+                            progress: "failed"
+                        },
+                        {
+                            name: "מסיים",
+                            progress: "inprogress"
+                        },
+                    ]
+                },
+                {
+                    name: "סתם עושה משהו",
+                    progress: "inprogress",
+                    subSteps: [
+                        {
+                            name: "מדבר עם שרת",
+                            progress: "inprogress"
+                        },
+                        {
+                            name: "בודק שהכל טוב",
+                            progress: "inprogress"
+                        },
+                    ]
+                }
+            ],
         },
         primaryDomainUser: 'ads',
         hierarchy: 'חברת הירקות/טיפשים/צוות חציל',
@@ -16,58 +67,7 @@ export default [
         // startDate: '02/12/1421, 00:00:00',
         startDate: undefined,
         endDate: '02/08/1529, 00:00:00',
-        steps: [
-            {
-                name: "יוצר תיבת מייל",
-                progress: "completed",
-                subSteps: [
-                    {
-                        name: "מדבר עם שרת",
-                        progress: "completed"
-                    },
-                    {
-                        name: "מעביר דברים",
-                        progress: "completed"
-                    },
-                    {
-                        name: "מסיים",
-                        progress: "completed"
-                    },
-                ]
-            },
-            {
-                name: "יוצר יוזר",
-                progress: "inprogress",
-                subSteps: [
-                    {
-                        name: "מדבר עם שרת",
-                        progress: "completed"
-                    },
-                    {
-                        name: "מחבר את תיבת המייל",
-                        progress: "failed"
-                    },
-                    {
-                        name: "מסיים",
-                        progress: "inprogress"
-                    },
-                ]
-            },
-            {
-                name: "סתם עושה משהו",
-                progress: "inprogress",
-                subSteps: [
-                    {
-                        name: "מדבר עם שרת",
-                        progress: "inprogress"
-                    },
-                    {
-                        name: "בודק שהכל טוב",
-                        progress: "inprogress"
-                    },
-                ]
-            }
-        ],
+        
         viewed: true,
     },
     {
@@ -76,8 +76,58 @@ export default [
         mobilePhone: '35345354',
         status: {
             progress: 'inprogress',
-            step: 'target',
-            subStep: 'מכין פיצה',
+            steps: [
+                {
+                    name: "יוצר תיבת מייל",
+                    progress: "completed",
+                    subSteps: [
+                        {
+                            name: "מדבר עם שרת",
+                            progress: "completed"
+                        },
+                        {
+                            name: "מעביר דברים",
+                            progress: "completed"
+                        },
+                        {
+                            name: "מסיים",
+                            progress: "completed"
+                        },
+                    ]
+                },
+                {
+                    name: "יוצר יוזר",
+                    progress: "inprogress",
+                    subSteps: [
+                        {
+                            name: "מדבר עם שרת",
+                            progress: "completed"
+                        },
+                        {
+                            name: "מחבר את תיבת המייל",
+                            progress: "failed"
+                        },
+                        {
+                            name: "מסיים",
+                            progress: "inprogress"
+                        },
+                    ]
+                },
+                {
+                    name: "סתם עושה משהו",
+                    progress: "inprogress",
+                    subSteps: [
+                        {
+                            name: "מדבר עם שרת",
+                            progress: "inprogress"
+                        },
+                        {
+                            name: "בודק שהכל טוב",
+                            progress: "inprogress"
+                        },
+                    ]
+                }
+            ],
         },
         paused: true,
         primaryDomainUser: 'es',
@@ -86,58 +136,7 @@ export default [
         fullName: 'ביצה קשה',
         identifier: 1234522,
         startDate: '12/05/1523',
-        endDate: '02/08/4810',steps: [
-            {
-                name: "יוצר תיבת מייל",
-                progress: "completed",
-                subSteps: [
-                    {
-                        name: "מדבר עם שרת",
-                        progress: "completed"
-                    },
-                    {
-                        name: "מעביר דברים",
-                        progress: "completed"
-                    },
-                    {
-                        name: "מסיים",
-                        progress: "completed"
-                    },
-                ]
-            },
-            {
-                name: "יוצר יוזר",
-                progress: "inprogress",
-                subSteps: [
-                    {
-                        name: "מדבר עם שרת",
-                        progress: "completed"
-                    },
-                    {
-                        name: "מחבר את תיבת המייל",
-                        progress: "failed"
-                    },
-                    {
-                        name: "מסיים",
-                        progress: "inprogress"
-                    },
-                ]
-            },
-            {
-                name: "סתם עושה משהו",
-                progress: "inprogress",
-                subSteps: [
-                    {
-                        name: "מדבר עם שרת",
-                        progress: "inprogress"
-                    },
-                    {
-                        name: "בודק שהכל טוב",
-                        progress: "inprogress"
-                    },
-                ]
-            }
-        ],
+        endDate: '02/08/4810',
     },
     {
         id: 325435435345,

@@ -12,6 +12,8 @@ import Badge from '@material-ui/core/Badge';
 import Cell from './Cell';
 import Status from 'components/status';
 
+import currentStep from 'utils/currentStep';
+
 export default (props) => {
     const { row, isItemSelected, labelId, handleClick, setViewed, isOpen = false } = props;
     const [open, setOpen] = React.useState(isOpen);
@@ -26,10 +28,10 @@ export default (props) => {
     }
 
     let startDate = (new Date(row.startDate).toLocaleDateString('en-GB'));
-    startDate = startDate === 'Invalid Date' || !startDate ? '-' :  startDate;
+    startDate = startDate === 'Invalid Date' || !startDate ? '-' : startDate;
 
     let endDate = (new Date(row.endDate).toLocaleDateString('en-GB'));
-    endDate = endDate === 'Invalid Date' || !endDate ? '-' :  endDate;
+    endDate = endDate === 'Invalid Date' || !endDate ? '-' : endDate;
 
     return (
         <React.Fragment>
@@ -60,14 +62,19 @@ export default (props) => {
                 <TableCell>{row.fullName}</TableCell>
                 <TableCell>{row.identifier}</TableCell>
                 <TableCell>{startDate}</TableCell>
-                <TableCell className="badgeWrapper">
+
+                <TableCell >
                     {endDate}
+
+                </TableCell>
+                <TableCell className="badgeWrapper">
+                    {currentStep(row.status?.steps)}
                     {!row.viewed && <div className="" ><div className="rowCorner">
-                        <Badge badgeContent={'חדש'} color="primary" anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                        }} />
-                    </div></div>}
+                            <Badge badgeContent={'חדש'} color="primary" anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                            }} />
+                        </div></div>}
                 </TableCell>
                 {/* <TableCell >{row?.status?.step}</TableCell>
                 <TableCell style={{ position: 'relative' }}>
