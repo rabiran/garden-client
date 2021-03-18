@@ -132,7 +132,8 @@ export default (props) => {
         const members = await getMembersOfGroupKart(lastUserSelected.id);
         console.log('shut up');
         console.log(members);
-        setFilters({ ...filters, ['groupSearchTerm']: members });
+        const ids = members?.map(person => person.id);
+        setFilters({ ...filters, ['groupSearchTerm']: ids });
     }
 
     return (

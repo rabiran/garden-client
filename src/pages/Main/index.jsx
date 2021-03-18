@@ -63,19 +63,29 @@ export default () => {
     }
 
     const changePauseState = async (pauseState, ids) => {
-        console.log(pauseState);
-        const method = async (id) => await pauseStateApi(id , pauseState);
-        let { errors, resolved, succesfulIds } = await settledParser(ids, method);
+        // console.log(pauseState);
+        const method = async (id) => await pauseStateApi(id , {paused: pauseState});
+        let results = await settledParser(ids, method);
 
-        for(let error of errors) {
-            const id = error.reason.id;
-            enqueueSnackbar(`נכשל`, { variant: 'error', autoHideDuration: 4000 });
+        for(let result of results) {
+            console.log("shut up");
+            console.log(result);
+            if(result === 'ok') {
+                // const id = good.value;
+                enqueueSnackbar(`התעדכן`, { variant: 'success', autoHideDuration: 4000 });
+            }
+            else {
+                enqueueSnackbar(`נכשל`, { variant: 'error', autoHideDuration: 4000 });
+            }
         }
-        for(let good of resolved) {
-            const id = good.value;
-            enqueueSnackbar(`התעדכן`, { variant: 'success', autoHideDuration: 4000 });
-            succesfulIds.push(id);
-        }
+        // for(let error of errors) {
+        //     const id = error.reason.id;
+        //     enqueueSnackbar(`נכשל`, { variant: 'error', autoHideDuration: 4000 });
+        // }
+        // for(let good of resolved) {
+            
+        //     succesfulIds.push(id);
+        // }
         // const newTableData = tableData.filter((item) => !succesfulIds.includes(item.id));
         // setTableData(newTableData);
     }
