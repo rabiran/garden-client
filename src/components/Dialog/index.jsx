@@ -255,7 +255,6 @@ export default ({ openWindow, setOpenWindow }) => {
           allMembers = await getMembersOfGroupKart(lastUserSelected.id);
           allExistingMigrations = storeProvider.getTableData();
 
-          //REMMEMBER TO STRING if to remove
         } catch (error){
           console.log(error);
           enqueueSnackbar("תקלה בקבלת משתמשים של קבוצה", {
@@ -394,6 +393,7 @@ export default ({ openWindow, setOpenWindow }) => {
         variant: "success",
         autoHideDuration: 2000,
       });
+      await storeProvider.fetchTableData();
       handleClose();
     }
   };

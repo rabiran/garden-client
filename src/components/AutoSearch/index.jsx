@@ -64,27 +64,21 @@ function App({
          
 
         } catch {
-          enqueueSnackbar("תקלה בשרת", {
+          enqueueSnackbar("תקלה בחיפוש משתמש לפי שם", {
             variant: "error",
-          
-          
             autoHideDuration: 2000,
           });
           console.log("Hey")
           setUsers([]);
           return;
         }
-        // let usFiltered = newUsers.filter((usnow) =>
-        //   usnow.name.includes(inputText)
-        // ); //&&  //Remove includes
-        // setUsers(usFiltered); // usfiletered
   
       } else {
         let groupsPerName = [];
         try {
           groupsPerName = await getGroupsPerNameKart(inputText);
         } catch {
-          enqueueSnackbar("תקלה בשרת", {
+          enqueueSnackbar("תקלה בחיפוש קבוצה לפי שם", {
             variant: "error",
             autoHideDuration: 2000,
           });

@@ -1,12 +1,17 @@
 import  React from 'react';
-import Chart from 'components/Chart'
+import PermissionTable from 'components/Permission'
+import users from '../../api/kartUsers'
 // import styles from './styles';
 
 export default () => {
+    const [permissionUsers, setPermissionUsers] = React.useState([])
+    React.useEffect(async()=>{
+        await setPermissionUsers(users);
+    },[])
     return (
         <>
         hey
-            <Chart/>
+            <PermissionTable data={permissionUsers} setData={setPermissionUsers}/>
         </>
     )
 }

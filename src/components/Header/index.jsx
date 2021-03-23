@@ -41,7 +41,9 @@ export default () => {
   const openNotifications = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  const adminPageClick = ()=>{
+    history.push('/admin')
+  }
   const homePageClick = () => {
     history.push('/');
   }
@@ -84,6 +86,9 @@ export default () => {
             <HomeIcon />
           </IconButton>
           <IconButton className='' color="inherit" aria-label="menu" onClick={chartPageClick}>
+            <PieChartIcon />
+          </IconButton>
+          <IconButton className='' color="inherit" aria-label="menu" onClick={adminPageClick}>
             <PieChartIcon />
           </IconButton>
           <div className='header-grow'></div>
