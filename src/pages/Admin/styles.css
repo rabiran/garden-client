@@ -1,0 +1,14 @@
+
+.tblPermission{
+    margin-top: 20px;
+    margin-right:100px;
+    margin-bottom:0;
+    margin-left:100px;
+
+}
+.buttonContainer {
+    bottom: 0;
+    left: 0;
+    margin: 5%;
+    position: fixed;
+}

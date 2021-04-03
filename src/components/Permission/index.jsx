@@ -10,24 +10,22 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableGrid from "@material-ui/core/TableRow";
+import Row from './Row';
+import { Typography } from "@material-ui/core";
 
-
-export default (data,setData) => {
-  const [personKey, setPersonKey] = React.useState([]);
-  const [dataLoaded , setDataLoaded] = React.useState(false);
-
+export default ({ data, setData }) => {
+  const [personsKey, setPersonsKey] = React.useState([]);
 
   React.useEffect(() => {
-    console.log("keys")
-    console.log(data)
-    console.log(Object.keys(data))
-    setPersonKey(Object.keys(data));
-    setDataLoaded(true);
+    if (data[0] != null || data[0] != undefined) {
+      console.log(Object?.keys(data[0]));
+      setPersonsKey(Object?.keys(data[0]));
+    }
   }, [data]);
   const useRowStyles = makeStyles({
     root: {
-      '& > *': {
-        borderBottom: 'unset',
+      "& > *": {
+        borderBottom: "unset",
       },
     },
   });
@@ -37,19 +35,37 @@ export default (data,setData) => {
       width: "100%",
     },
     container: {
-      maxHeight: 440,
+      maxHeight: 1000,
     },
   });
   const classes = useRowStyles();
-  return <> {dataLoaded && <TableContainer component={Paper}>
+  return (
+    <>
+   
+      {
+        
+        <TableContainer component={Paper}>
+         
           <Table>
-            {}
-
-
-
-
+            <TableHead>
+              <TableRow>
+            
+                {/* {personsKey.map((personkeys) => (<TableCell align="right">{personkeys}</TableCell>))} */}
+                <TableCell align="center" >תעודת זהות</TableCell>
+                <TableCell align="center">מספר אישי</TableCell>
+                <TableCell align="center">שם פרטי</TableCell>
+                <TableCell align="center">שם משפחה</TableCell>
+                <TableCell align="center">מספר/י טלפון</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.map((row) => (
+                <Row key={row.id} rowData={row} personKeys={personsKey} />
+              ))}
+            </TableBody>
           </Table>
-    
-    
-    </TableContainer>}</>;
+        </TableContainer>
+      }
+    </>
+  );
 };
