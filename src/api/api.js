@@ -183,7 +183,7 @@ const setViewedApi = async (id) => {
 
 const getPermissionedUsersApi = async () =>{
     if(config.isMock) { await wait(200); return kartUsers;}
-    const res = await request.put(`api/permissionedUsers`).catch(err => { throw (err.response) });
+    const res = await request.get(`api/permissionedUsers`).catch(err => { throw (err.response) });
     return res.data;
     
 }
