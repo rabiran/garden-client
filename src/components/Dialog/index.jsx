@@ -570,9 +570,7 @@ export default ({ openWindow, setOpenWindow }) => {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            ביטול
-          </Button>
+
 
           <div></div>
           <div className="root">
@@ -585,6 +583,9 @@ export default ({ openWindow, setOpenWindow }) => {
               >
                 יצירה
               </Button>
+                        <Button onClick={handleClose} color="primary">
+            ביטול
+          </Button>
 
               {loading && (
                 <CircularProgress

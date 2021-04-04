@@ -35,7 +35,9 @@ function App({
   errorMessageUserHasOne,
   errorMessageUserExistsP,
   usersSelected,
-  errorMessageUserAlreadyInTbl
+  
+  errorMessageUserAlreadyInTbl,
+  isNormalSearch= false,
 
 }) {
   const storeProvider = useStore();
@@ -95,6 +97,12 @@ function App({
   }
 
   const handleSelectedUser = (e, value) => {
+    if(isNormalSearch){
+      setLastUserSelected(value);
+      setTriggeredSearch(true);
+      setUsers([]);
+      return;
+    }
 
     if (!isPersonSearch) {
       setTriggeredSearch(true);
@@ -108,7 +116,7 @@ function App({
     if (value === null) {
       setTriggeredSearch(true);
       setLastUserSelected(null);
-
+      
       setErrorMessageField(errorMessageFieldEmpty);
 
       return;
@@ -188,9 +196,7 @@ function App({
 
   React.useEffect(() => {
 
-    
     if (inputText.length > 2 && triggeredSearch === false) {
-      console.log("quering")
       delayedQuery(inputText,isPersonSearch);
     }
       setTriggeredSearch(false);

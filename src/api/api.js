@@ -4,6 +4,7 @@ import config from 'config';
 import mock from './mock';
 import groups from './groups';
 import users from './users';
+import kartUsers from './kartUsers'
 import wait from 'utils/wait';
 import gardeners from './statsMocks/gardeners';
 import statsMock from './statsMocks/statsMock';
@@ -180,8 +181,15 @@ const setViewedApi = async (id) => {
     return res.data;
 }
 
+const getPermissionedUsersApi = async () =>{
+    if(config.isMock) { await wait(200); return kartUsers;}
+    const res = await request.put(`api/permissionedUsers`).catch(err => { throw (err.response) });
+    return res.data;
+    
+}
+
 export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGroupsPerNameKart ,
 deleteImmigrantApi, pauseStateApi , setViewedApi, excelApi, entityTypeApi,domainsMapApi,
-getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi, retryApi, getMembersOfGroupKart}
+getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi, retryApi, getMembersOfGroupKart ,getPermissionedUsersApi}
 
 

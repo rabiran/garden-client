@@ -12,3 +12,17 @@
     margin: 5%;
     position: fixed;
 }
+
+
+.buttonProgress {
+    
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+
+}
+.requestButtons{
+    display: flex;
+    flex-direction: row-reverse;
+}
