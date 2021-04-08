@@ -17,7 +17,7 @@ import promiseAllWithFails from 'utils/promiseAllWithFails'
 const AuthDataMock = {
     id: '1',
     fullName: 'חציל אפ וי',
-    isAdmin: false
+    isAdmin: true
 }
 
 // const domainsMock = ['1', '2','3'];
@@ -181,15 +181,36 @@ const setViewedApi = async (id) => {
     return res.data;
 }
 
-const getPermissionedUsersApi = async () =>{
+const getAllowedUsersApi = async () =>{
     if(config.isMock) { await wait(200); return kartUsers;}
-    const res = await request.get(`api/permissionedUsers`).catch(err => { throw (err.response) });
+    const res = await request.get(`api/allowed`).catch(err => { throw (err.response) });
     return res.data;
     
+}
+const updateAllowedUserApi = async (id, isAdmin) =>{
+    if(config.isMock) { await wait(200); return;}
+    const data = { isAdmin: isAdmin};
+    const res = await request.put(`api/allowed/${id}`,data).catch(err =>{throw (err.response)});
+    console.log(res);
+    return res.data;
+}
+
+const addAllowedUserApi = async (id , isAdmin=false) =>{
+    if(config.isMock) { await wait(200); return;}
+    const data = {id: id, isAdmin: isAdmin};
+    const res = await request.post(`api/allowed`,data).catch(err => {throw (err.response)});
+    console.log(res);
+    return res.data;
+}
+const deleteAllowedUserApi = async (id) =>{
+    if(config.isMock) { await wait(200); return;}
+    const res = await request.delete(`api/allowed/${id}`).catch(err => {throw (err.response)});
+    console.log(res);
+    return res.data;
 }
 
 export { getImmigrantsApi, getUsernamesPerNameKart , authApi, domainsApi,addImmigrantsApiPromise, getGroupsPerNameKart ,
 deleteImmigrantApi, pauseStateApi , setViewedApi, excelApi, entityTypeApi,domainsMapApi,
-getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi, retryApi, getMembersOfGroupKart ,getPermissionedUsersApi}
+getGardenersStatsApi, getStatusesStatsApi, getMigrationsStatsApi, getTotalMigrationsStatsApi, retryApi, getMembersOfGroupKart ,getAllowedUsersApi, updateAllowedUserApi, addAllowedUserApi, deleteAllowedUserApi}
 
 

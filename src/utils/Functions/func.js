@@ -1,6 +1,7 @@
 import domainsMaps from "../../api/domainsMaps";
 import config from "../../config";
 
+
 /**
  * This function searches domain of the uniqueID in domainsMaps array that belongs to one of the domains listed.
  * @param {string} uniqueID 

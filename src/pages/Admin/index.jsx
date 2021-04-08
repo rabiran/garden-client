@@ -18,17 +18,19 @@ import {
   FormGroup,
   DialogActions,
   CircularProgress,
+  Radio,
+  RadioGroup,
   
 } from "@material-ui/core";
 import AutoSearch from "../../components/AutoSearch";
-import {getPermissionedUsersApi} from '../../api/api';
+import {getAllowedUsersApi, addAllowedUserApi, deleteAllowedUserApi, updateAllowedUserApi} from '../../api/api';
 import { useSnackbar } from "notistack";
 // import styles from './styles';
 
 export default () => {
   const [permissionUsers, setPermissionUsers] = React.useState([]);
   const [isDiaOpen, setIsDiaOpen] = React.useState(false);
-  const [isAllowed, setIsAllowed] = React.useState(true);
+
   const [isAdmin, setIsAdmin] = React.useState(false);
   const [users, setUsers] = React.useState([]);
   const [lastUserSelected, setLastUserSelected] = React.useState(null);
@@ -44,27 +46,49 @@ export default () => {
   };
   const handleClose = () => {
     setUsers([]);
-    setIsAllowed(true);
     setIsAdmin(false);
     setIsDiaOpen(false);
     
   };
 
-  const handleRequestClick = () =>{
+  const handleRequestClick = async () =>{
+   
       if(lastUserSelected === null){
         setUserValidation(true);
         return;
       }
+      try{
+        setLoading(true);
+        const res = await addAllowedUserApi(lastUserSelected.id,isAdmin);
+        setLoading(false);
+        enqueueSnackbar("הוספת הרשאה למשתמש הוצלחה!" ,{
+          variant: "success",
+          autoHideDuration: 2000,
+        });
+        setLastUserSelected(null);
+        let permissionedUsers= await getAllowedUsersApi();
+        setPermissionUsers(permissionedUsers);
+
+      }catch(error){
+        console.log(error);
+        enqueueSnackbar("תקלה בהוספת משתמש חדש", {
+          variant: "error",
+          autoHideDuration: 2000,
+        });
+        setLoading(false);
+      }
+
+
 
       
 
   }
 
   React.useEffect( () => {
-    setLoading(true);
+    //setLoadingPageData(true);
     async function fetchData(){
         try{
-            let permissionedUsers= await getPermissionedUsersApi();
+            let permissionedUsers= await getAllowedUsersApi();
             setPermissionUsers(permissionedUsers);
 
         }catch (error){
@@ -78,12 +102,12 @@ export default () => {
 
     }
     fetchData();
-    setLoading(false);
+    //setLoadingPageData(false);
     
   }, []);
   return (
     <>
-      <Typography variant="h3"> משתמשים מורשים</Typography>
+    
 
       <div class="tblPermission">
         <PermissionTable data={permissionUsers} setData={setPermissionUsers} />
@@ -114,31 +138,27 @@ export default () => {
               <FormLabel component="legend" >
                 <div style={{ color: "#00796b" }}>בחר סוג הרשאה</div>
               </FormLabel>
-              <FormGroup>
+              <RadioGroup value={String(isAdmin)} onChange={(event) =>{ setIsAdmin((event.target.value))}}>
                 <FormControlLabel
-                  value={isAllowed}
+                  value={String(false)}
                   control={
-                    <Checkbox
-                      checked={isAllowed}
-                      onChange={() => setIsAllowed(!isAllowed)}
+                    <Radio                              
                     />
                   }
                   
                   label="מורשה לצפייה ועריכה במערכת"
                 />
                 <FormControlLabel
-                  value={isAdmin}
+                  value={String(true)}
                   
                   control={
-                    <Checkbox
-                      checked={isAdmin}
-                      onChange={() => setIsAdmin(!isAdmin)}
+                    <Radio
                     />
                   }
                   
                   label="מורשה לצפייה ועריכה במערכת והוספת הרשאות למשתמשים"
                 />
-              </FormGroup>
+              </RadioGroup>
             </FormControl>
           </div>
           <AutoSearch
@@ -169,7 +189,7 @@ export default () => {
             יצירה
           </Button>
 
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color="primary" disabled={loading}>
             ביטול
           </Button>
           </div>

@@ -44,7 +44,8 @@ export default [
       "address": "Alexander 2, Jerusalem, Israel",
       "responsibility": "c",
       "responsibilityLocation": "5b50a76713ddf90af494dabc",
-      "clearance": 3
+      "clearance": 3,
+      "isAdmin": true,
     },
     {
         "status": "active",
