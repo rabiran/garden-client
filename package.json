@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^7.2.1",
     "awesome-only-resolves-last-promise": "^1.0.3",
     "axios": "^0.20.0",
+    "gzipper": "^4.4.0",
     "highcharts": "^8.2.2",
     "highcharts-react-official": "^3.0.0",
     "jss-rtl": "^0.3.0",
@@ -33,7 +34,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build2": "react-scripts build",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build && gzipper compress ./build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
