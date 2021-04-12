@@ -5,17 +5,9 @@ import './style.css'
 import Highcharts from 'highcharts'
 import drilldow from "highcharts/modules/drilldown.js";
 import HighchartsReact from 'highcharts-react-official'
-import { CommentSharp } from '@material-ui/icons'
 import Paper from '@material-ui/core/Paper';
 
 export default ({data, isDark, title}) => {
-
-
-    function switchCountKeyToY(dataArray) {
-        let output = dataArray.map(s => ({ y: s.count }));
-        return output;
-
-    }
 
     if(data.drilldown)
         drilldow(Highcharts);
@@ -113,24 +105,6 @@ export default ({data, isDark, title}) => {
 
 
     }
-
-    const options2 = {
-        chart: {
-          type: "pie"
-        },
-        series: [
-          {
-            data: [
-              {
-                y: 100
-              },
-              {
-                y: 50
-              }
-            ]
-          }
-        ]
-      };
       
     return (
         <Paper elevation={3} className="container">

@@ -6,9 +6,6 @@ const domainToHebrew = (domain, domainsConfig) => {
     }
 }
 
-const drillTransform = (data) => {
-    
-}
 export const migratedStatsTransform = (statsData, domainsConfig) => {
     const chartData = statsData.map(obj => {
         return {name: domainToHebrew(obj.name, domainsConfig), y: obj.count}

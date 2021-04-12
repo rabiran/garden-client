@@ -5,13 +5,9 @@ import Steps from 'components/displaySteps';
 import DomainIcon from '@material-ui/icons/Domain';
 import HomeIcon from '@material-ui/icons/Home';
 import PhoneIcon from '@material-ui/icons/Phone';
-import useStore from 'utils/StoreProvider/useStore';
-import Button from '@material-ui/core/Button';
-import PauseIcon from '@material-ui/icons/Pause';
-import AccessibleForwardIcon from '@material-ui/icons/AccessibleForward';
 
 export default ({ rowData }) => {
-    const store = useStore();
+    // const store = useStore();
 
     return (
         <>

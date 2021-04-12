@@ -188,7 +188,7 @@ export default function EnhancedTable({ data = [], deleteFromTable, changePauseS
         return false;
     }
 
-    const paginationFilter = () => (rows.filter(startFilter).filter(endFilter).filter(statusFilters)).length
+    const paginationFilter = () => (rows.filter(startFilter).filter(endFilter).filter(statusFilters).filter(searchFilter).filter(groupSearchFilter)).length
     const pageCount = paginationFilter();
 
     return (
@@ -200,6 +200,7 @@ export default function EnhancedTable({ data = [], deleteFromTable, changePauseS
                     data={data}
                     filters={filters}
                     setFilters={setFilters}
+                    setPage={setPage}
                     handleOpenDelete={handleOpenDelete}
                     handlePause={handlePause} />
                 <TableContainer style={{ maxHeight: 600 }}>

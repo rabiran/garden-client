@@ -1,6 +1,6 @@
 import React from 'react';
 // import './styles.css';
-import LinearProgress from '@material-ui/core/LinearProgress';
+// import LinearProgress from '@material-ui/core/LinearProgress';
 import LoadingContext from './LoadingContext';
 
 export default (props) => {

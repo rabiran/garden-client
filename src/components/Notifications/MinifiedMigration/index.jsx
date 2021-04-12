@@ -2,6 +2,7 @@ import React from 'react';
 import './styles.css';
 import CheckIcon from '@material-ui/icons/Check';
 import IconButton from '@material-ui/core/IconButton';
+import currentStep from 'utils/currentStep';
 
 export default ({ migration, setViewed, openNotification }) => {
 
@@ -10,8 +11,8 @@ export default ({ migration, setViewed, openNotification }) => {
         setViewed(migration.id);
     }
 
-    const subStep = migration?.status?.subStep || "לא קיים";
-    const message = `${migration.fullName} עם תת שלב: ${subStep}`
+    const subStep = currentStep(migration.status.steps) || "-";
+    const message = `${migration.fullName} עם שלב: ${subStep}`
     return (
             <div className="notificationItem"  onClick={()=> openNotification(migration.id) }>
                 <span>

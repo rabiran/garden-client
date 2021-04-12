@@ -56,7 +56,7 @@ div.react-datepicker-popper {
     flex-direction: row;
     flex-wrap:  wrap;
     justify-items: center;
-    justify-content: start;
+    justify-content: flex-start;
 
     
 }

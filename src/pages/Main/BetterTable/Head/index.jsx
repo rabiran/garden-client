@@ -11,8 +11,9 @@ const headCells = [
     { id: 'status', numeric: false, disablePadding: false, label: 'סטטוס' },
     { id: 'fullName', numeric: false, disablePadding: false, label: 'שם מלא' },
     { id: 'identifier', numeric: false, disablePadding: false, label: 'תעודת זהות' },
-    { id: 'startDate', numeric: false, disablePadding: false, label: 'תאריך יצירה' },
+    { id: 'startDate', numeric: false, disablePadding: false, label: 'תאריך מיגרציה' },
     { id: 'endDate', numeric: false, disablePadding: false, label: 'תאריך סיום' },
+    { id: 'step', numeric: false, disablePadding: false, label: 'שלב' },
     // { id: 'currentStep', numeric: false, disablePadding: false, label: 'שלב נוכחי' },
     // { id: 'currentSubStep', numeric: false, disablePadding: false, label: 'תת שלב נוכחי' },
 ];

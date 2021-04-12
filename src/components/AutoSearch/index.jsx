@@ -164,7 +164,7 @@ function App({
         return;
       }
       let foundUser = usersSelected.find(
-        (user) => user.id === lastUserSelected.id
+        (user) => user.id === value.id
       );
       if(foundUser !== undefined){
         setErrorMessageField(errorMessageUserAlreadyInTbl);

@@ -6,8 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-// import FilterListIcon from '@material-ui/icons/FilterList';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
@@ -20,7 +18,6 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import DateFilter from 'components/DateFilter';
-import GroupSearch from 'utils/GroupSearch';
 import AutoSearch from 'components/AutoSearch';
 
 const useToolbarStyles = makeStyles((theme) => ({
@@ -69,7 +66,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 export default (props) => {
     const classes = useToolbarStyles();
-    const { numSelected, data, setRows, filters, setFilters, handleOpenDelete, handlePause } = props;
+    const { numSelected, filters, setFilters, handlePause, setPage } = props;
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [openDateFilter, setOpenDateFilter] = React.useState(false);
@@ -84,11 +81,13 @@ export default (props) => {
     const [PostStatuses, setPostStatuses] = React.useState([]);
 
     React.useEffect(()=> {
+        console.log("effffect");
         if(lastUserSelected) {
             groupSearchHandler(lastUserSelected);
         }
         else {
             setFilters({ ...filters, ['groupSearchTerm']: [] });
+            setPage(0);
         }
     },[lastUserSelected]);
 
@@ -97,11 +96,13 @@ export default (props) => {
         if(type === 'all') {
             const checked = Object.values(filters).every(o => o);
             setFilters({...filters, completed: !checked, inprogress: !checked, failed: !checked, paused: !checked, others: !checked })
+            setPage(0);
 
         }
         else {
             const checked = filters[type];
             setFilters({ ...filters, [type]: !checked });
+            setPage(0);
         }
     };
 
@@ -120,10 +121,12 @@ export default (props) => {
     const setDateFilter = (dateFilter) => {
         const { startDate, endDate } = dateFilter;
         setFilters({...filters, startDate: startDate, endDate: endDate});
+        setPage(0);
     }
 
     const searchHandler = (e) => {
         setFilters({ ...filters, ['searchTerm']: {term: e.target.value} });
+        setPage(0);
     }
 
     const groupSearchHandler = async (lastUserSelected) => {
@@ -131,7 +134,9 @@ export default (props) => {
         const members = await getMembersOfGroupKart(lastUserSelected.id);
         console.log('shut up');
         console.log(members);
-        setFilters({ ...filters, ['groupSearchTerm']: members });
+        const ids = members?.map(person => person.id);
+        setFilters({ ...filters, ['groupSearchTerm']: ids });
+        setPage(0);
     }
 
     return (

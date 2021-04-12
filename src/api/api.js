@@ -90,8 +90,7 @@ const deleteImmigrantApi = async (id) => {
 
 
 const pauseStateApi = async (id, state) => {
-    //console.log(state);
-    if(config.isMock) { await wait(500); return true } //mockSchedules  or []
+    if(config.isMock) { await wait(500); return {status: 200} } //mockSchedules  or []
     const res = await request.put(`api/immigrant/${id}`, state).catch(err => { throw (err.response) });
    // console.log(res);
     return res.data;

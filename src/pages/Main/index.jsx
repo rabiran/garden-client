@@ -1,25 +1,26 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import './styles.css';
 // import Table from './Table';
-import BetterTable from './BetterTable';
+
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import Dialog from '..//../components/Dialog'
-import { getImmigrantsApi, deleteImmigrantApi, pauseStateApi, setViewedApi } from 'api/api';
+import { deleteImmigrantApi, pauseStateApi, setViewedApi } from 'api/api';
 import { useSnackbar } from 'notistack';
-import useLoading from 'utils/LoadingProvider/useLoading';
 import settledParser from 'utils/settledParser';
 import useStore from 'utils/StoreProvider/useStore';
 
+const BetterTable = lazy(() => import('./BetterTable'));
+
 // import useAuth from 'utils/AuthProvider/useAuth';
+
+const renderLoader = () => <p>Loading</p>;
 
 export default () => {
 
-    // const authProvider = useAuth();
     const [openWindow, setOpenWindow] = React.useState(false);
-    const loadingProvider = useLoading();
     const { enqueueSnackbar } = useSnackbar();
-    const [tableData, setTableData] = React.useState();
+    // const [tableData, setTableData] = React.useState();
     const handleClickOpen = () => {
         setOpenWindow(true)
     };
@@ -50,7 +51,7 @@ export default () => {
         let { errors, resolved, succesfulIds } = await settledParser(ids, deleteImmigrantApi);
 
         for(let error of errors) {
-            const id = error.reason.id;
+            // const id = error.reason.id;
             enqueueSnackbar(`נכשל`, { variant: 'error', autoHideDuration: 4000 });
         }
         for(let good of resolved) {
@@ -63,19 +64,29 @@ export default () => {
     }
 
     const changePauseState = async (pauseState, ids) => {
-        console.log(pauseState);
-        const method = async (id) => await pauseStateApi(id , pauseState);
-        let { errors, resolved, succesfulIds } = await settledParser(ids, method);
+        // console.log(pauseState);
+        const method = async (id) => await pauseStateApi(id , {paused: pauseState});
+        let results = await settledParser(ids, method);
 
-        for(let error of errors) {
-            const id = error.reason.id;
-            enqueueSnackbar(`נכשל`, { variant: 'error', autoHideDuration: 4000 });
+        for(let result of results) {
+            console.log("shut up");
+            console.log(result);
+            if(result === 'ok') {
+                // const id = good.value;
+                enqueueSnackbar(`התעדכן`, { variant: 'success', autoHideDuration: 4000 });
+            }
+            else {
+                enqueueSnackbar(`נכשל`, { variant: 'error', autoHideDuration: 4000 });
+            }
         }
-        for(let good of resolved) {
-            const id = good.value;
-            enqueueSnackbar(`התעדכן`, { variant: 'success', autoHideDuration: 4000 });
-            succesfulIds.push(id);
-        }
+        // for(let error of errors) {
+        //     const id = error.reason.id;
+        //     enqueueSnackbar(`נכשל`, { variant: 'error', autoHideDuration: 4000 });
+        // }
+        // for(let good of resolved) {
+            
+        //     succesfulIds.push(id);
+        // }
         // const newTableData = tableData.filter((item) => !succesfulIds.includes(item.id));
         // setTableData(newTableData);
     }
@@ -108,7 +119,9 @@ export default () => {
             {/* <div className='tableFlex'> */}
                 <div className='tableContainer'>
                     {/* <Table data={tableData} deleteFromTable={deleteFromTable} /> */}
-                    <BetterTable data={store.getTableData() || []} deleteFromTable={deleteFromTable} changePauseState={changePauseState} setViewed={setViewed}/>
+                    <Suspense fallback={renderLoader()}>
+                        <BetterTable data={store.getTableData() || []} deleteFromTable={deleteFromTable} changePauseState={changePauseState} setViewed={setViewed}/>
+                    </Suspense>
                 </div>
                 <div className='dialogContainer'>
                     <Fab color="primary" aria-label="add" onClick={handleClickOpen} >

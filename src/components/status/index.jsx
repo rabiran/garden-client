@@ -36,6 +36,12 @@ export default ({progress}) => {
                     </Grid>;
             break;
         }
+        case 'waiting': {
+            status = <Grid container direction="row" alignItems="center"  wrap="nowrap">
+                        <FeedbackIcon/> התחלה 
+                    </Grid>;
+            break;
+        }
         default:
             status = <Grid container direction="row" alignItems="center" className="unknown" wrap="nowrap">
                         <FeedbackIcon/> {progress} 
