@@ -97,7 +97,7 @@ export default () => {
               variant: "error",
               autoHideDuration: 2000,
             });
-            setPermissionUsers(kartUsers);
+            
         }
 
     }
