@@ -10,6 +10,10 @@ import ThemeProvider from 'utils/ThemeProvider/ThemeProvider';
 import LoadingProvider from 'utils/LoadingProvider/LoadingProvider';
 import StoreProvider from 'utils/StoreProvider/storeProvider'
 import LoadingBar from 'utils/LoadingBar';
+
+
+import history from 'utils/history';
+
 // import { Router } from 'react-router';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
@@ -30,6 +34,7 @@ function App() {
                     <Route exact path="/admin" component={AdminPage} />
                     <Route exact path="/unathorized" component={UnathorizedPage} />
                     <Route exact path="/charts" component={Charts} />
+                   
                     {/* <ProtectedRoute exact path="/" component={MainPage} /> */}
                   </Switch>
                 </Router>

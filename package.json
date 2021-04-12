@@ -12,10 +12,15 @@
     "@testing-library/user-event": "^7.2.1",
     "awesome-only-resolves-last-promise": "^1.0.3",
     "axios": "^0.20.0",
+
+    "clsx": "^1.1.1",
+
     "gzipper": "^4.4.0",
+
     "highcharts": "^8.2.2",
     "highcharts-react-official": "^3.0.0",
     "jss-rtl": "^0.3.0",
+    "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "material-table": "^1.69.1",
     "notistack": "^1.0.1",

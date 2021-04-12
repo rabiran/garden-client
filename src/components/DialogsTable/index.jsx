@@ -35,6 +35,16 @@ export default ({ usersSelected, setUsersSelected }) => {
       }))
 
     }
+    const handleCheckedUrgentUserRowData = (rowData,event) => {
+      
+      setUsersSelected(usersSelected.map(user =>{
+        if(user.id === rowData.id){
+          user.urgentUser = !user.urgentUser;
+        }
+        return user;
+      }))
+
+    }
   return (
     <div>
       <Box boxShadow={12} >
@@ -114,6 +124,12 @@ export default ({ usersSelected, setUsersSelected }) => {
             title: "משתמש חדש",
             render: (rowData) =>(                                 
             <Checkbox checked={rowData.newUser} onClick={(e) => handleCheckedUserRowData(rowData,e)}/>                                                           
+            )
+          },
+          {
+            title: "משתמש דחוף",
+            render: (rowData) =>(                                 
+            <Checkbox checked={rowData.urgentUser} onClick={(e) => handleCheckedUrgentUserRowData(rowData,e)}/>                                                           
             )
           },
           { title: "תאריך יעד למיגרציה", field: "startDate" , type: "date" , dateSetting: {format: "dd/MM/yyyy"}

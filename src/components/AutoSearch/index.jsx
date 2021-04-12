@@ -35,7 +35,9 @@ function App({
   errorMessageUserHasOne,
   errorMessageUserExistsP,
   usersSelected,
-  errorMessageUserAlreadyInTbl
+  
+  errorMessageUserAlreadyInTbl,
+  isNormalSearch= false,
 
 }) {
   const storeProvider = useStore();
@@ -64,27 +66,21 @@ function App({
          
 
         } catch {
-          enqueueSnackbar("תקלה בשרת", {
+          enqueueSnackbar("תקלה בחיפוש משתמש לפי שם", {
             variant: "error",
-          
-          
             autoHideDuration: 2000,
           });
           console.log("Hey")
           setUsers([]);
           return;
         }
-        // let usFiltered = newUsers.filter((usnow) =>
-        //   usnow.name.includes(inputText)
-        // ); //&&  //Remove includes
-        // setUsers(usFiltered); // usfiletered
   
       } else {
         let groupsPerName = [];
         try {
           groupsPerName = await getGroupsPerNameKart(inputText);
         } catch {
-          enqueueSnackbar("תקלה בשרת", {
+          enqueueSnackbar("תקלה בחיפוש קבוצה לפי שם", {
             variant: "error",
             autoHideDuration: 2000,
           });
@@ -101,6 +97,12 @@ function App({
   }
 
   const handleSelectedUser = (e, value) => {
+    if(isNormalSearch){
+      setLastUserSelected(value);
+      setTriggeredSearch(true);
+      setUsers([]);
+      return;
+    }
 
     if (!isPersonSearch) {
       setTriggeredSearch(true);
@@ -114,7 +116,7 @@ function App({
     if (value === null) {
       setTriggeredSearch(true);
       setLastUserSelected(null);
-
+      
       setErrorMessageField(errorMessageFieldEmpty);
 
       return;
@@ -194,9 +196,7 @@ function App({
 
   React.useEffect(() => {
 
-    
     if (inputText.length > 2 && triggeredSearch === false) {
-      console.log("quering")
       delayedQuery(inputText,isPersonSearch);
     }
       setTriggeredSearch(false);

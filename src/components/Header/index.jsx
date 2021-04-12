@@ -8,6 +8,7 @@ import logo from 'images/migraine.svg';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import HomeIcon from '@material-ui/icons/Home';
 import PieChartIcon from '@material-ui/icons/PieChart';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import Divider from '@material-ui/core/Divider';
 // import Menu from '@material-ui/core/Menu';
 // import MenuItem from '@material-ui/core/MenuItem';
@@ -38,7 +39,9 @@ export default () => {
   const openNotifications = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  const adminPageClick = ()=>{
+    history.push('/admin')
+  }
   const homePageClick = () => {
     history.push('/');
   }
@@ -82,6 +85,9 @@ export default () => {
           </IconButton>
           <IconButton className='' color="inherit" aria-label="menu" onClick={chartPageClick}>
             <PieChartIcon />
+          </IconButton>
+          <IconButton className='' color="inherit" aria-label="menu" disabled={store.getAuth().isAdmin === false} onClick={adminPageClick}>
+            <GroupAddIcon />
           </IconButton>
           <div className='header-grow'></div>
           <Typography variant="h6">
