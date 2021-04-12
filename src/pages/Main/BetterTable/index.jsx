@@ -200,6 +200,7 @@ export default function EnhancedTable({ data = [], deleteFromTable, changePauseS
                     data={data}
                     filters={filters}
                     setFilters={setFilters}
+                    setPage={setPage}
                     handleOpenDelete={handleOpenDelete}
                     handlePause={handlePause} />
                 <TableContainer style={{ maxHeight: 600 }}>
