@@ -68,6 +68,7 @@ export default () => {
         setLastUserSelected(null);
         let permissionedUsers= await getAllowedUsersApi();
         setPermissionUsers(permissionedUsers);
+        handleClose();
 
       }catch(error){
         console.log(error);
@@ -97,6 +98,7 @@ export default () => {
               variant: "error",
               autoHideDuration: 2000,
             });
+            setPermissionUsers([]);
             
         }
 
