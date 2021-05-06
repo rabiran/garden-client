@@ -1,17 +1,13 @@
 import React from "react";
 
-import { makeStyles } from "@material-ui/core/styles";
+
 import "./styles.css";
 import {
-  Paper,
-  Table,
-  TableBody,
+
   TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
+
   TableRow,
-  TableGrid,
+
   Checkbox,
   IconButton,
   Tooltip,
@@ -24,7 +20,7 @@ export default ({
   key,
   rowData,
   setRowData,
-  personKeys,
+
   rowsSelected,
   setRowsSelected,
   setData,
@@ -36,7 +32,7 @@ export default ({
     console.log(rowData);
 
     let foundSameRow = rowsSelected.find((el) => el.id === rowData.id);
-    if (foundSameRow != undefined) {
+    if (foundSameRow !== undefined) {
       const index = rowsSelected.indexOf(rowData);
       let newArray = rowsSelected.filter((el, indx) => indx !== index);
       setRowsSelected(newArray);

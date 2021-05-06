@@ -7,14 +7,12 @@ import { useSnackbar } from "notistack";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { getUsernamesPerNameKart, getGroupsPerNameKart } from "../../api/api";
 import useStore from "utils/StoreProvider/useStore";
-import config from "../../config"; 
 
 import {
   akaUIdDomainsMap,
   findPrimaryUniqueId
 
 } from "../../utils/Functions/func";
-import domainsMaps from "api/domainsMaps";
 
 function App({
   isPersonSearch = false,
