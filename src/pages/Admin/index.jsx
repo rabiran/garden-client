@@ -1,10 +1,10 @@
 import React from "react";
 import PermissionTable from "components/Permission";
-import kartUsers from "../../api/kartUsers";
+
 import "./styles.css";
 import AddIcon from "@material-ui/icons/Add";
 import {
-  Typography,
+
   Button,
   Fab,
   Dialog,
@@ -14,8 +14,7 @@ import {
   FormLabel,
 
   FormControlLabel,
-  Checkbox,
-  FormGroup,
+
   DialogActions,
   CircularProgress,
   Radio,
@@ -23,7 +22,7 @@ import {
   
 } from "@material-ui/core";
 import AutoSearch from "../../components/AutoSearch";
-import {getAllowedUsersApi, addAllowedUserApi, deleteAllowedUserApi, updateAllowedUserApi} from '../../api/api';
+import {getAllowedUsersApi, addAllowedUserApi} from '../../api/api';
 import { useSnackbar } from "notistack";
 // import styles from './styles';
 
@@ -59,7 +58,7 @@ export default () => {
       }
       try{
         setLoading(true);
-        const res = await addAllowedUserApi(lastUserSelected.id,isAdmin);
+        await addAllowedUserApi(lastUserSelected.id,isAdmin);
         setLoading(false);
         enqueueSnackbar("הוספת הרשאה למשתמש הוצלחה!" ,{
           variant: "success",
@@ -87,7 +86,7 @@ export default () => {
 
   React.useEffect( () => {
     //setLoadingPageData(true);
-    async function fetchData(){
+    const fetchData = async () =>{
         try{
             let permissionedUsers= await getAllowedUsersApi();
             setPermissionUsers(permissionedUsers);

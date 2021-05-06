@@ -5,7 +5,6 @@ import MaterialTable from 'material-table'
 import hebrewLocalization from 'config/tableHebrew';
 import Select from "@material-ui/core/Select";
 import tableIcons from 'config/tableIcons';
-import DatePicker from "react-datepicker";
 import Box from '@material-ui/core/Box'
 import { Checkbox } from "@material-ui/core";
 
@@ -52,24 +51,7 @@ export default ({ usersSelected, setUsersSelected }) => {
         
         style={{ marginTop: "30px"  }}
         title="משתמשים שנוספו"
-        // editable={{onRowUpdate: (newData, oldData) =>
-        //   new Promise((resolve, reject) => {
-        //     setTimeout(() => {
-        //       let dataUpdate = [...usersSelected];
-        //       dataUpdate =dataUpdate.map((el) => {
-        //         if(el.id === newData.id){
-                  
-        //           return newData;
-        //         }
-        //         return el;
-        //       })
-              
-              
-        //       setUsersSelected(dataUpdate);
-
-        //       resolve();
-        //     }, 500)
-        //   }),}}
+         
         localization={hebrewLocalization}
         
         columns={[

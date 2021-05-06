@@ -2,22 +2,16 @@ import React from "react";
 import "./style.css";
 import { makeStyles } from "@material-ui/core/styles";
 
-import {Paper,Table,TableBody,TableCell,TableContainer,TableHead,TablePagination,TableRow,TableGrid,Checkbox} from '@material-ui/core'
+import {Paper,Table,TableBody,TableCell,TableContainer,TableHead,TablePagination,TableRow,Checkbox} from '@material-ui/core'
 import Row from "./Row";
 import EnhancedTableToolbar from "./TableToolBar";
 
 export default ({ data, setData }) => {
-  const [personsKey, setPersonsKey] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsSelected, setRowsSelected] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  React.useEffect(() => {
-    if (data[0] != null || data[0] != undefined) {
-      console.log(Object?.keys(data[0]));
-      setPersonsKey(Object?.keys(data[0]));
-    }
-  }, [data]);
+
   const useRowStyles = makeStyles({
     root: {
       "& > *": {
@@ -80,7 +74,7 @@ export default ({ data, setData }) => {
           </TableHead>
           <TableBody>
             {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-              <Row key={row.id} rowData={row} personKeys={personsKey} rowsSelected={rowsSelected} setRowsSelected={setRowsSelected} data={data} setData={setData} />
+              <Row key={row.id} rowData={row} rowsSelected={rowsSelected} setRowsSelected={setRowsSelected} data={data} setData={setData} />
             ))}
           </TableBody>
         </Table>
