@@ -9,11 +9,7 @@
 }
 
 .row > td {
-    font-weight: 900;
-    font-style: italic;
-    color: gray;
-    /* color: red; */
-    /* color: red; */
+    font-weight: bold !important;
 }
 
 .rowCorner {

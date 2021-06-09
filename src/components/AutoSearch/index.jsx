@@ -187,7 +187,7 @@ function App({
   };
   
   const delayedQuery = React.useCallback(
-    debounce((inputText,isPersonSearch) => searchFunction(inputText,isPersonSearch), 2000),
+    debounce((inputText,isPersonSearch) => searchFunction(inputText,isPersonSearch), 1000),
     []
   );
 
